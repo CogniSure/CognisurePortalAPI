@@ -1,0 +1,110 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0": {
+      "Common/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Common.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Common.dll": {}
+        }
+      },
+      "Extention/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Extention.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Extention.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Common/1.0.0": {
+      "type": "project",
+      "path": "../Common/Common.csproj",
+      "msbuildProject": "../Common/Common.csproj"
+    },
+    "Extention/1.0.0": {
+      "type": "project",
+      "path": "../Extention/Extention.csproj",
+      "msbuildProject": "../Extention/Extention.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net6.0": [
+      "Common >= 1.0.0",
+      "Extention >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\ArunaKumarM\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\MyProjects\\PortalApi\\Repository\\Repository.csproj",
+      "projectName": "Repository",
+      "projectPath": "C:\\MyProjects\\PortalApi\\Repository\\Repository.csproj",
+      "packagesPath": "C:\\Users\\ArunaKumarM\\.nuget\\packages\\",
+      "outputPath": "C:\\MyProjects\\PortalApi\\Repository\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\ArunaKumarM\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "projectReferences": {
+            "C:\\MyProjects\\PortalApi\\Common\\Common.csproj": {
+              "projectPath": "C:\\MyProjects\\PortalApi\\Common\\Common.csproj"
+            },
+            "C:\\MyProjects\\PortalApi\\Extention\\Extention.csproj": {
+              "projectPath": "C:\\MyProjects\\PortalApi\\Extention\\Extention.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net6.0": {
+        "targetAlias": "net6.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

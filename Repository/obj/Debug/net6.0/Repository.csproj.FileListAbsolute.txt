@@ -1,0 +1,17 @@
+C:\MyProjects\PortalApi\Repository\bin\Debug\net6.0\Repository.deps.json
+C:\MyProjects\PortalApi\Repository\bin\Debug\net6.0\Repository.dll
+C:\MyProjects\PortalApi\Repository\bin\Debug\net6.0\Repository.pdb
+C:\MyProjects\PortalApi\Repository\bin\Debug\net6.0\Common.dll
+C:\MyProjects\PortalApi\Repository\bin\Debug\net6.0\Extention.dll
+C:\MyProjects\PortalApi\Repository\bin\Debug\net6.0\Common.pdb
+C:\MyProjects\PortalApi\Repository\bin\Debug\net6.0\Extention.pdb
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\Repository.csproj.AssemblyReference.cache
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\Repository.AssemblyInfoInputs.cache
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\Repository.AssemblyInfo.cs
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\Repository.csproj.CoreCompileInputs.cache
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\Repository.csproj.CopyComplete
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\Repository.dll
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\refint\Repository.dll
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\Repository.pdb
+C:\MyProjects\PortalApi\Repository\obj\Debug\net6.0\ref\Repository.dll
