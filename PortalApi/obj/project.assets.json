@@ -510,19 +510,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ArunaKumarM\\.nuget\\packages\\": {}
+    "C:\\Users\\ArabindaM\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\MyProjects\\PortalApi\\PortalApi\\PortalApi.csproj",
+      "projectUniqueName": "D:\\Project\\App\\CogniSure\\CognisurePortalAPI\\PortalApi\\PortalApi.csproj",
       "projectName": "PortalApi",
-      "projectPath": "C:\\MyProjects\\PortalApi\\PortalApi\\PortalApi.csproj",
-      "packagesPath": "C:\\Users\\ArunaKumarM\\.nuget\\packages\\",
-      "outputPath": "C:\\MyProjects\\PortalApi\\PortalApi\\obj\\",
+      "projectPath": "D:\\Project\\App\\CogniSure\\CognisurePortalAPI\\PortalApi\\PortalApi.csproj",
+      "packagesPath": "C:\\Users\\ArabindaM\\.nuget\\packages\\",
+      "outputPath": "D:\\Project\\App\\CogniSure\\CognisurePortalAPI\\PortalApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ArunaKumarM\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ArabindaM\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -536,8 +536,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\MyProjects\\PortalApi\\Repository\\Repository.csproj": {
-              "projectPath": "C:\\MyProjects\\PortalApi\\Repository\\Repository.csproj"
+            "D:\\Project\\App\\CogniSure\\CognisurePortalAPI\\Repository\\Repository.csproj": {
+              "projectPath": "D:\\Project\\App\\CogniSure\\CognisurePortalAPI\\Repository\\Repository.csproj"
             }
           }
         }

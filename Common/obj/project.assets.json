@@ -8,19 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\ArunaKumarM\\.nuget\\packages\\": {}
+    "C:\\Users\\ArabindaM\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\MyProjects\\PortalApi\\Common\\Common.csproj",
+      "projectUniqueName": "D:\\Project\\App\\CogniSure\\CognisurePortalAPI\\Common\\Common.csproj",
       "projectName": "Common",
-      "projectPath": "C:\\MyProjects\\PortalApi\\Common\\Common.csproj",
-      "packagesPath": "C:\\Users\\ArunaKumarM\\.nuget\\packages\\",
-      "outputPath": "C:\\MyProjects\\PortalApi\\Common\\obj\\",
+      "projectPath": "D:\\Project\\App\\CogniSure\\CognisurePortalAPI\\Common\\Common.csproj",
+      "packagesPath": "C:\\Users\\ArabindaM\\.nuget\\packages\\",
+      "outputPath": "D:\\Project\\App\\CogniSure\\CognisurePortalAPI\\Common\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ArunaKumarM\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ArabindaM\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

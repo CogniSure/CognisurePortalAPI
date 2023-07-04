@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fwzuwgbzxPcIBipO4u1pYFjzQoiHDUVbaW4zAfUX9193gInOZmw2ThqZPHj3O1MfIBhQtETVqjQn12QaDsxYLg==",
+  "dgSpecHash": "my8J/ANU3v0soKr2zdh7xoaw050feqjdsXC9HSCIg3YhI1hp1aCTow1z8uTant1VCfM2crGjl04Wey/8hP+4kA==",
   "success": true,
-  "projectFilePath": "C:\\MyProjects\\PortalApi\\Extention\\Extention.csproj",
+  "projectFilePath": "D:\\Project\\App\\CogniSure\\CognisurePortalAPI\\Extention\\Extention.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
