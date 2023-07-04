@@ -10,15 +10,3 @@ C:\MyProjects\PortalApi\Extention\obj\Debug\net6.0\Extention.dll
 C:\MyProjects\PortalApi\Extention\obj\Debug\net6.0\refint\Extention.dll
 C:\MyProjects\PortalApi\Extention\obj\Debug\net6.0\Extention.pdb
 C:\MyProjects\PortalApi\Extention\obj\Debug\net6.0\ref\Extention.dll
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\bin\Debug\net6.0\Extention.deps.json
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\bin\Debug\net6.0\Extention.dll
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\bin\Debug\net6.0\Extention.pdb
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\obj\Debug\net6.0\Extention.csproj.AssemblyReference.cache
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\obj\Debug\net6.0\Extention.GeneratedMSBuildEditorConfig.editorconfig
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\obj\Debug\net6.0\Extention.AssemblyInfoInputs.cache
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\obj\Debug\net6.0\Extention.AssemblyInfo.cs
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\obj\Debug\net6.0\Extention.csproj.CoreCompileInputs.cache
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\obj\Debug\net6.0\Extention.dll
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\obj\Debug\net6.0\refint\Extention.dll
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\obj\Debug\net6.0\Extention.pdb
-D:\Project\App\CogniSure\CognisurePortalAPI\Extention\obj\Debug\net6.0\ref\Extention.dll
