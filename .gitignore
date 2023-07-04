@@ -3,3 +3,6 @@
 *.pdb
 *.vsidx
 *.cache
+.vs/PortalApi/v17/.suo
+PortalApi/obj/Debug/net7.0/PortalApi.csproj.AssemblyReference.cache
+Repository/obj/Debug/net6.0/Repository.csproj.AssemblyReference.cache
