@@ -1,28 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Portal.Repository.Dashboard;
+using Portal.Repository.Inbox;
 using System;
 
-namespace PortalApi.Controllers;
+namespace PortalApi.Controllers.Inbox;
 
 [ApiController]
 [Route("[controller]")]
-public class DashboardController : ControllerBase
+public class InboxController : ControllerBase
 {
     
-    private readonly ILogger<DashboardController> _logger;
-    public IDashboardRepository _dashboardRepository;
+    private readonly ILogger<InboxController> _logger;
+    public IInboxRepository _inboxRepository;
     private readonly IConfiguration _configuration;
-    public DashboardController(ILogger<DashboardController> logger, IDashboardRepository dashboardRepository, IConfiguration configuration)
+
+
+    public InboxController(ILogger<InboxController> logger, IInboxRepository inboxRepository, IConfiguration configuration)
     {
         _logger = logger;
-        _dashboardRepository = dashboardRepository;
+        _inboxRepository = inboxRepository;
         _configuration = configuration;
     }
 
-    [HttpGet(Name = "Dashboard")]
-    public string Dashboard()
+    [HttpGet(Name = "Inbox")]
+    public string GetToken()
     {
         try
         {
@@ -32,7 +34,7 @@ public class DashboardController : ControllerBase
             }
 
             _logger.LogInformation(tokenApi);
-            return _dashboardRepository.GetDashboardData();
+            return _inboxRepository.GetInboxData();
         }
         catch (Exception ex)
         {
