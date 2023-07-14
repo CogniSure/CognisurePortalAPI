@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MsSqlDatabase.Interface;
+using MsSqlAdapter.Interface;
 using System.Data;
 using System.Data.SqlClient;
 

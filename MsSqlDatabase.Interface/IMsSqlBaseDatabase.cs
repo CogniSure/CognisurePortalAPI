@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace MsSqlDatabase.Interface
+namespace MsSqlAdapter.Interface
 {
     public interface IMsSqlBaseDatabase
     {

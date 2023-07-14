@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MsSqlDatabase.Interface
+namespace MsSqlAdapter.Interface
 {
     public interface IMsSqlDatabase
     {

@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{EA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSqlServices", "SqlServices\MsSqlServices.csproj", "{191EE11B-E201-4336-B03D-0DC4854A6C63}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSqlDatabase.Interface", "MsSqlDatabase.Interface\MsSqlDatabase.Interface.csproj", "{AA9B0267-5CA7-4F05-96E5-9EA87BAAE258}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsSqlAdapter.Interface", "MsSqlDatabase.Interface\MsSqlAdapter.Interface.csproj", "{AA9B0267-5CA7-4F05-96E5-9EA87BAAE258}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{688B7224-F439-4BE2-8E3D-1C413BF8DE40}"
 EndProject

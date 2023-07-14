@@ -12,8 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MsSqlAdapter\MsSqlAdapter.csproj" />
+    <ProjectReference Include="..\MsSqlDatabase.Interface\MsSqlAdapter.Interface.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
     <ProjectReference Include="..\Services.Repository\Services.Repository.csproj" />
+    <ProjectReference Include="..\SqlServices\MsSqlServices.csproj" />
   </ItemGroup>
 
 </Project>

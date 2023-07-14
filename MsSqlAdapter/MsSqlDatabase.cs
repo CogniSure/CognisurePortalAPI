@@ -1,4 +1,4 @@
-﻿using MsSqlDatabase.Interface;
+﻿using MsSqlAdapter.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Models.DTO;
-using MsSqlDatabase.Interface;
+using MsSqlAdapter.Interface;
 using Services.MsSqlServices.Interface;
 using System.Data;
 using System.Data.SqlClient;

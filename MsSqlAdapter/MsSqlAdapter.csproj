@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MsSqlDatabase.Interface\MsSqlDatabase.Interface.csproj" />
+    <ProjectReference Include="..\MsSqlDatabase.Interface\MsSqlAdapter.Interface.csproj" />
   </ItemGroup>
 
 </Project>
