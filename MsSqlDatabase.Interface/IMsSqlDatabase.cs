@@ -9,6 +9,7 @@ namespace MsSqlDatabase.Interface
 {
     public interface IMsSqlDatabase
     {
+        DataSet GetURL(long userId, string pageName, string widgetCode, string action);
         DataSet GetUser(string email);
         DataSet GetUsersAccountManager(string email);
         bool IsValidUser(string email, out string generalMessage, out string technicalMessage);

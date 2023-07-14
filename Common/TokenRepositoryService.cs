@@ -15,13 +15,13 @@ namespace Common
     {
         public IConfiguration Configuration { get; }
         //readonly SimpleCache cacheProvider;
-        private readonly MsSqlDataHelperInterface msSqlDataHelper;
+        private readonly IMsSqlDataHelper msSqlDataHelper;
         //private readonly MongoDatabaseInterface mmongoDataHelper;
         public TokenRepositoryService(
                 //IMapperProvider<ServicesMapperProfile> mapperProvider,
                 //ILogger<TokenRepositoryService> logger,
                 IConfiguration configuration,
-                MsSqlDataHelperInterface msSqlDataHelper
+                IMsSqlDataHelper msSqlDataHelper
                 //SimpleCache cacheProvider
               //MongoDatabaseInterface mmongoDataHelper
               )

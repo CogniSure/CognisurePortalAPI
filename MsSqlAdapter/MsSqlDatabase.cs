@@ -16,7 +16,15 @@ namespace MsSqlAdapter
         {
             BaseDatabase = baseDatabase;
         }
-
+        public DataSet GetURL(long userId, string pageName, string widgetCode, string action)
+        {
+            var parameters = new List<IDataParameter>();
+            parameters.Add(BaseDatabase.Param("@userId", userId));
+            parameters.Add(BaseDatabase.Param("@pageName", pageName));
+            parameters.Add(BaseDatabase.Param("@widgetCode", widgetCode));
+            parameters.Add(BaseDatabase.Param("@action", action));
+            return BaseDatabase.GetData("sp_get_user_widget_maping", parameters);
+        }
         public DataSet GetUser(string email)
         {
             var parameters = new List<IDataParameter>();
@@ -149,5 +157,7 @@ namespace MsSqlAdapter
         {
             throw new NotImplementedException();
         }
+
+       
     }
 }

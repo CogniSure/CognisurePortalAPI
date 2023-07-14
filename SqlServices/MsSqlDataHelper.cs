@@ -11,7 +11,7 @@ using System.Security.Principal;
 
 namespace SqlServices
 {
-    public class MsSqlDataHelper : MsSqlDataHelperInterface
+    public class MsSqlDataHelper : IMsSqlDataHelper
     {
         private readonly IMsSqlDatabase Database;
         public IConfiguration Configuration { get; }
@@ -20,11 +20,31 @@ namespace SqlServices
             this.Database = Database;
             this.Configuration = Configuration;
         }
-
+        public WidgetConfiguration GetURL(long userId, string pageName, string widgetCode, string action)
+        {
+            var dst = Database.GetURL(userId,pageName,widgetCode,action);
+            return WidgetList(dst);
+        }
         public User GetUser(string email)
         {
             var dst = Database.GetUser(email);
             return UserList(dst);
+        }
+        private static WidgetConfiguration WidgetList(DataSet dst)
+        {
+            if (dst != null && dst.Tables != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
+            {
+                var widget = new WidgetConfiguration
+                {
+                    PageName = string.Format("{0}", dst.Tables[0].Rows[0]["PageName"]),
+                    WidgetName = string.Format("{0}", dst.Tables[0].Rows[0]["WidgetName"]),
+                    WidgetCode = string.Format("{0}", dst.Tables[0].Rows[0]["WidgetCode"]),
+                    WidgetURL = string.Format("{0}", dst.Tables[0].Rows[0]["URL"]),
+                    Configuration = string.Format("{0}", dst.Tables[0].Rows[0]["Configuration"]),
+                };
+                return widget;
+            }
+            return new WidgetConfiguration();
         }
         private static User UserList(DataSet dst)
         {

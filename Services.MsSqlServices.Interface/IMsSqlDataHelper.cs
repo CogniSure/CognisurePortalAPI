@@ -4,8 +4,9 @@ using System.Security.Principal;
 
 namespace Services.MsSqlServices.Interface
 {
-    public interface MsSqlDataHelperInterface
+    public interface IMsSqlDataHelper
     {
+        WidgetConfiguration GetURL(long userId, string pageName, string widgetCode, string action);
         User GetUser(string email);
         User GetUsersAccountManager(string email);
         bool IsValidUser(string email, out string generalMessage, out string technicalMessage);
