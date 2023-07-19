@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Extention\Extention.csproj" />
     <ProjectReference Include="..\Services.Common.Interface\Services.Common.Interface.csproj" />
     <ProjectReference Include="..\Services.MsSqlServices.Interface\Services.MsSqlServices.Interface.csproj" />
   </ItemGroup>

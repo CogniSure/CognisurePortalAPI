@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Common.Interface",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.MsSqlServices.Interface", "Services.MsSqlServices.Interface\Services.MsSqlServices.Interface.csproj", "{70E7D4E5-9692-45B2-AECE-B558A5545CA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Repository", "Services.Repository\Services.Repository.csproj", "{4E7FA7C6-9928-42D0-9E9D-5EB80782097F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Repository.Interface", "Services.Repository\Services.Repository.Interface.csproj", "{4E7FA7C6-9928-42D0-9E9D-5EB80782097F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

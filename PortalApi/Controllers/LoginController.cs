@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Models.DTO;
 using Portal.Repository.Login;
+using Services.Common.Interface;
+using Services.Repository.Interface;
 using System;
 
 namespace PortalApi.Controllers.Login;
@@ -13,33 +17,23 @@ public class LoginController : ControllerBase
     
     private readonly ILogger<DashboardController> _logger;
     public ILoginRepository _loginRepository;
+    public ITokenService _tokenRepository;
     private readonly IConfiguration _configuration;
 
 
-    public LoginController(ILogger<DashboardController> logger, ILoginRepository loginRepository, IConfiguration configuration)
+    public LoginController(ILogger<DashboardController> logger, ILoginRepository loginRepository, ITokenService tokenRepository, IConfiguration configuration)
     {
         _logger = logger;
         _loginRepository = loginRepository;
+        _tokenRepository = tokenRepository;
         _configuration = configuration;
     }
 
-    [HttpGet(Name = "Login")]
-    public string GetToken()
+    [Route("login")]
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<OperationResult<OAuthTokenResponse>> GetToken(string username, string password)
     {
-        try
-        {
-            var tokenApi = _configuration.GetSection("TokenApi")?.Value;
-            if(tokenApi == null) {
-                throw new ArgumentException("Tokoen api url not found");
-            }
-
-            _logger.LogInformation(tokenApi);
-            return _loginRepository.GetToken();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error: {0}",ex.Message);
-            return null;
-        }
+        return await _tokenRepository.GetUserToken(username, password);
     }
 }
