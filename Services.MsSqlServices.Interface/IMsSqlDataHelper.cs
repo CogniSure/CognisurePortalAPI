@@ -11,13 +11,13 @@ namespace Services.MsSqlServices.Interface
         User GetUsersAccountManager(string email);
         bool IsValidUser(string email, out string generalMessage, out string technicalMessage);
         bool EmailPassword(string toEmail);
-        //List<Account> GetAccountDetails(int userID);
+        List<Account> GetAccountDetails(int userID);
         bool ChangePassword(int userId, string currentPassword, string newPassword, out string generalMessage, out string technicalMessage);
         bool ResetPassword(string email, string newPassword, out string generalMessage, out string technicalMessage);
         DataSet GetKeyValuesByKeyCategoryName(string keyCategoryName);
-        //List<AccountNotification> GetUserAccountAndNotifications(int userID, int accountID);
-        //List<Notification> GetAllNotifications(int userID, int accountID);
-        //List<NewsFeed> GetAllNewsFeed(int userID);
+        List<AccountNotification> GetUserAccountAndNotifications(int userID, int accountID);
+        List<Notification> GetAllNotifications(int userID, int accountID);
+        List<NewsFeed> GetAllNewsFeed(int userID);
         //List<FinancialReport> GetAllFinancialReports(int userID, int accountID);
 
         bool DismissNotifications(int userId, int accountId, int notificationID = 0);

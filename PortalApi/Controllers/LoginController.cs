@@ -16,12 +16,12 @@ public class LoginController : ControllerBase
 {
     
     private readonly ILogger<DashboardController> _logger;
-    public ILoginRepository _loginRepository;
+    public IUserRepository _loginRepository;
     public ITokenService _tokenRepository;
     private readonly IConfiguration _configuration;
 
 
-    public LoginController(ILogger<DashboardController> logger, ILoginRepository loginRepository, ITokenService tokenRepository, IConfiguration configuration)
+    public LoginController(ILogger<DashboardController> logger, IUserRepository loginRepository, ITokenService tokenRepository, IConfiguration configuration)
     {
         _logger = logger;
         _loginRepository = loginRepository;

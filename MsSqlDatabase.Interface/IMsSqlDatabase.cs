@@ -25,5 +25,9 @@ namespace MsSqlAdapter.Interface
 
         DataSet GetUserAccountAndNotifications(int userID, int accountID);
         bool ReadAllNotifications(int userId, int accountID);
+
+        bool InsertContactUs(string email, string FirstName, string LastName,
+            string MiddleName, string phoneNumber, string message, string companyName, string designation,
+            string interests, out string generalMessage, out string technicalMessage);
     }
 }

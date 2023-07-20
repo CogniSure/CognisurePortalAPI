@@ -158,6 +158,30 @@ namespace MsSqlAdapter
             throw new NotImplementedException();
         }
 
-       
+        public bool InsertContactUs(string email, string FirstName, string LastName,
+             string MiddleName, string phoneNumber, string message, string companyName, string designation,
+             string interests, out string generalMessage, out string technicalMessage)
+        {
+            generalMessage = string.Empty;
+            technicalMessage = string.Empty;
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(BaseDatabase.Param("@Email", email));
+            parameters.Add(BaseDatabase.Param("@FirstName", FirstName));
+            parameters.Add(BaseDatabase.Param("@LastName", LastName));
+            parameters.Add(BaseDatabase.Param("@PhoneNumber", phoneNumber));
+            parameters.Add(BaseDatabase.Param("@MiddleName", MiddleName));
+            parameters.Add(BaseDatabase.Param("@CompanyName", companyName));
+            parameters.Add(BaseDatabase.Param("@Designation", designation));
+            parameters.Add(BaseDatabase.Param("@Message", message));
+            parameters.Add(BaseDatabase.Param("@Interests", interests));
+            parameters.Add(BaseDatabase.ParamOut("@IsSuccess", SqlDbType.Bit));
+            parameters.Add(BaseDatabase.ParamOut("@GeneralMessage", 8000));
+            parameters.Add(BaseDatabase.ParamOut("@TechnicalMessage", 8000));
+
+            bool result = BaseDatabase.Execute("sp_InsertContactUs", parameters, out generalMessage, out technicalMessage);
+
+
+            return result;
+        }
     }
 }

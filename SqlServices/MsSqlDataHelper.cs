@@ -135,10 +135,10 @@ namespace SqlServices
             bool result = Database.EmailPassword(toEmail);
             return result;
         }
-        //public List<Account> GetAccountDetails(int userID)
-        //{
-        //    return ConvertDataTable<Account>(Database.GetAccountDetails(userID).Tables[0]);
-        //}
+        public List<Account> GetAccountDetails(int userID)
+        {
+            return ConvertDataTable<Account>(Database.GetAccountDetails(userID).Tables[0]);
+        }
 
         private static List<T> ConvertDataTable<T>(DataTable dt)
         {
@@ -204,11 +204,6 @@ namespace SqlServices
             throw new NotImplementedException();
         }
 
-        public bool InsertContactUs(ContactUs user, out string generalMessage, out string technicalMessage)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool AddWidgetList(int userid, int clientwidgetid, out string generalMessage, out string technicalMessage)
         {
             throw new NotImplementedException();
@@ -218,130 +213,130 @@ namespace SqlServices
         {
             throw new NotImplementedException();
         }
-        // public List<Notification> GetAllNotifications(int userID, int accountID)
-        // {
-        //     var list = Database.GetAllNotifications(userID, accountID);
-        //     return NotificationList(list);
-        // }
-        // public List<NewsFeed> GetAllNewsFeed(int userID)
-        // {
-        //     var dst = Database.GetAllNewsFeed(userID);
-        //     var newsList = new List<NewsFeed>();
-        //     if (dst.Tables[0].Rows.Count > 0)
-        //     {
-        //         foreach (DataRow dr in dst.Tables[0].Rows)
-        //         {
-        //             var notification = new NewsFeed
-        //             {
-        //                 NewsCategory = string.Format("{0}", dr["CategoryName"]),
-        //                 TitleName = string.Format("{0}", dr["TitleName"]),
-        //                 Link = string.Format("{0}", dr["Link"]),
-        //             };
-        //             newsList.Add(notification);
-        //         }
-        //     }
-        //     return newsList;
-        // }
+        public List<Notification> GetAllNotifications(int userID, int accountID)
+        {
+            var list = Database.GetAllNotifications(userID, accountID);
+            return NotificationList(list);
+        }
+        public List<NewsFeed> GetAllNewsFeed(int userID)
+        {
+            var dst = Database.GetAllNewsFeed(userID);
+            var newsList = new List<NewsFeed>();
+            if (dst.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow dr in dst.Tables[0].Rows)
+                {
+                    var notification = new NewsFeed
+                    {
+                        NewsCategory = string.Format("{0}", dr["CategoryName"]),
+                        TitleName = string.Format("{0}", dr["TitleName"]),
+                        Link = string.Format("{0}", dr["Link"]),
+                    };
+                    newsList.Add(notification);
+                }
+            }
+            return newsList;
+        }
 
-        // public List<AccountNotification> GetUserAccountAndNotifications(int userID, int accountID)
-        // {
-        //     var list = Database.GetUserAccountAndNotifications(userID, accountID);
-        //     return AccountNotificationList(list);
-        // }
-        //private static List<AccountNotification> AccountNotificationList(DataSet dst)
-        // {
-        //     var notificationList = new List<AccountNotification>();
-        //     if (dst.Tables[0].Rows.Count > 0)
-        //     {
-        //         foreach (DataRow dr in dst.Tables[0].Rows)
-        //         {
-        //             var notification = new AccountNotification
-        //             {
-        //                 AccountName = string.Format("{0}", dr["AccountName"]),
-        //                 NotificationCount = Convert.ToInt32(string.Format("{0}", dr["NotificationCount"])),
-        //                 AddedBy = string.Format("{0}", dr["AddedBy"]),
-        //                 ModifiedBy = string.Format("{0}", dr["ModifiedBy"]),
-        //                 AccountID = Convert.ToInt32(dr["AccountID"]),
-        //             };
-        //             var _a = DateTime.Now;
-        //             var _m = DateTime.Now;
+        public List<AccountNotification> GetUserAccountAndNotifications(int userID, int accountID)
+        {
+            var list = Database.GetUserAccountAndNotifications(userID, accountID);
+            return AccountNotificationList(list);
+        }
+        private static List<AccountNotification> AccountNotificationList(DataSet dst)
+        {
+            var notificationList = new List<AccountNotification>();
+            if (dst.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow dr in dst.Tables[0].Rows)
+                {
+                    var notification = new AccountNotification
+                    {
+                        AccountName = string.Format("{0}", dr["AccountName"]),
+                        NotificationCount = Convert.ToInt32(string.Format("{0}", dr["NotificationCount"])),
+                        AddedBy = string.Format("{0}", dr["AddedBy"]),
+                        ModifiedBy = string.Format("{0}", dr["ModifiedBy"]),
+                        AccountID = Convert.ToInt32(dr["AccountID"]),
+                    };
+                    var _a = DateTime.Now;
+                    var _m = DateTime.Now;
 
-        //             if (DateTime.TryParse(string.Format("{0}", dr["AddedOn"]), out _a))
-        //             {
-        //                 notification.AddedOn = _a;
-        //             }
+                    if (DateTime.TryParse(string.Format("{0}", dr["AddedOn"]), out _a))
+                    {
+                        notification.AddedOn = _a;
+                    }
 
-        //             if (DateTime.TryParse(string.Format("{0}", dr["ModifiedOn"]), out _m))
-        //             {
-        //                 notification.ModifiedOn = _m;
-        //             }
+                    if (DateTime.TryParse(string.Format("{0}", dr["ModifiedOn"]), out _m))
+                    {
+                        notification.ModifiedOn = _m;
+                    }
 
-        //             notificationList.Add(notification);
-        //         }
+                    notificationList.Add(notification);
+                }
 
-        //     }
-        //     return notificationList;
+            }
+            return notificationList;
 
-        // }
+        }
 
-        // private static List<Notification> NotificationList(DataSet dst)
-        // {
-        //     List<Notification> notificationList = new List<Notification>();
-        //     if (dst.Tables[0].Rows.Count > 0)
-        //     {
-        //         foreach (DataRow dr in dst.Tables[0].Rows)
-        //         {
-        //             var notification = new Notification
+        private static List<Notification> NotificationList(DataSet dst)
+        {
+            List<Notification> notificationList = new List<Notification>();
+            if (dst.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow dr in dst.Tables[0].Rows)
+                {
+                    var notification = new Notification
 
-        //             {
-        //                 NotificationID = Convert.ToInt32(dr["NotificationID"]),
-        //                 NotificationName = string.Format("{0}", dr["NotificationName"]),
-        //                 Description = string.Format("{0}", dr["Description"]),
-        //                 IsNotificationRead = Convert.ToBoolean(dr["IsNotificationRead"]),
-        //                 IsActive = Convert.ToBoolean(dr["IsActive"]),
-        //                 AlertTypeID = Convert.ToInt32(dr["AlertTypeID"]),
-        //                 UserID = Convert.ToInt32(dr["UserID"]),
-        //                 AddedBy = string.Format("{0}", dr["AddedBy"]),
-        //                 ModifiedBy = string.Format("{0}", dr["ModifiedBy"]),
-        //                 AccountID = Convert.ToInt32(dr["AccountID"]),
-        //             };
-        //             var _a = DateTime.Now;
-        //             var _m = DateTime.Now;
+                    {
+                        NotificationID = Convert.ToInt32(dr["NotificationID"]),
+                        NotificationName = string.Format("{0}", dr["NotificationName"]),
+                        Description = string.Format("{0}", dr["Description"]),
+                        IsNotificationRead = Convert.ToBoolean(dr["IsNotificationRead"]),
+                        IsActive = Convert.ToBoolean(dr["IsActive"]),
+                        AlertTypeID = Convert.ToInt32(dr["AlertTypeID"]),
+                        UserID = Convert.ToInt32(dr["UserID"]),
+                        AddedBy = string.Format("{0}", dr["AddedBy"]),
+                        ModifiedBy = string.Format("{0}", dr["ModifiedBy"]),
+                        AccountID = Convert.ToInt32(dr["AccountID"]),
+                    };
+                    var _a = DateTime.Now;
+                    var _m = DateTime.Now;
 
-        //             if (DateTime.TryParse(string.Format("{0}", dr["AddedOn"]), out _a))
-        //             {
-        //                 notification.AddedOn = _a;
-        //             }
+                    if (DateTime.TryParse(string.Format("{0}", dr["AddedOn"]), out _a))
+                    {
+                        notification.AddedOn = _a;
+                    }
 
-        //             if (DateTime.TryParse(string.Format("{0}", dr["ModifiedOn"]), out _m))
-        //             {
-        //                 notification.ModifiedOn = _m;
-        //             }
+                    if (DateTime.TryParse(string.Format("{0}", dr["ModifiedOn"]), out _m))
+                    {
+                        notification.ModifiedOn = _m;
+                    }
 
-        //             notificationList.Add(notification);
-        //         }
+                    notificationList.Add(notification);
+                }
 
-        //     }
-        //     return notificationList;
+            }
+            return notificationList;
 
-        // }
+        }
 
         // public bool ActiveInActiveBenefitPlan(int benefitPlanID, bool isActive)
         // {
         //     bool result = Database.ActiveInActiveBenefitPlan(benefitPlanID, isActive);
         //     return result;
         // }
-        //public bool InsertContactUs(ContactUs user, out string generalMessage, out string technicalMessage)
-        //{
-        //    generalMessage = string.Empty;
-        //    technicalMessage = string.Empty;
+        public bool InsertContactUs(ContactUs user, out string generalMessage, out string technicalMessage)
+        {
+            generalMessage = string.Empty;
+            technicalMessage = string.Empty;
 
-        //    bool result = Database.InsertContactUs(user.Email, user.FirstName, user.LastName,
-        //        user.MiddleName, user.PhoneNumber, user.Message,
-        //           user.CompanyName, user.Designation, user.Interests,
-        //        out generalMessage, out technicalMessage);
-        //    return result;
-        //}
+            bool result = Database.InsertContactUs(user.Email, user.FirstName, user.LastName,
+                user.MiddleName, user.PhoneNumber, user.Message,
+                   user.CompanyName, user.Designation, user.Interests,
+                out generalMessage, out technicalMessage);
+            return result;
+        }
 
         //public List<Widget> WidgetList(int userid)
         //{
