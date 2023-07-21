@@ -25,7 +25,7 @@ namespace Portal.Repository.Login
                 IMsSqlDataHelper msSqlDataHelper,
                 SimpleCache cacheProvider,
                 IConfiguration configuration,
-                 ILogger<TokenService> logger
+                 ILogger<UserRepository> logger
               )
         {
             this.cacheProvider = cacheProvider;

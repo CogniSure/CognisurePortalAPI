@@ -8,13 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Extention\Extention.csproj" />
     <ProjectReference Include="..\Models.DTO\Models.DTO.csproj" />
     <ProjectReference Include="..\MsSqlDatabase.Interface\MsSqlAdapter.Interface.csproj" />
+    <ProjectReference Include="..\Services.Common.Interface\Services.Common.Interface.csproj" />
     <ProjectReference Include="..\Services.MsSqlServices.Interface\Services.MsSqlServices.Interface.csproj" />
   </ItemGroup>
 

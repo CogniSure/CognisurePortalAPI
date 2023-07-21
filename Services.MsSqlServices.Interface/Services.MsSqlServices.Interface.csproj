@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Models.DTO\Models.DTO.csproj" />
+    <ProjectReference Include="..\Services.Common.Interface\Services.Common.Interface.csproj" />
+    <ProjectReference Include="..\Services.Repository\Services.Repository.Interface.csproj" />
   </ItemGroup>
 
 </Project>
