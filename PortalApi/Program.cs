@@ -138,9 +138,9 @@ void SetupApplicationDependencies(IServiceCollection services)
 
 }
 
-builder.Services.AddCors(p => p.AddPolicy("corspolicy", build => {
-    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
+//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build => {
+//    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+//}));
 
 var app = builder.Build();
     app.UseSwagger();

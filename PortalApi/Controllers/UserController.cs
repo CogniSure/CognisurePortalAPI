@@ -13,6 +13,7 @@ using System;
 namespace PortalApi.Controllers.Login;
 
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
