@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Services.Repository
 {
-    public class URLRepository : IURLRepository
+    public class URLService : IURLService
     {
         private readonly IMsSqlDataHelper helper;
         public IConfiguration Configuration { get; }
-        public URLRepository(IMsSqlDataHelper helper, IConfiguration Configuration) : base()
+        public URLService(IMsSqlDataHelper helper, IConfiguration Configuration) : base()
         {
             this.helper = helper;
             this.Configuration = Configuration;

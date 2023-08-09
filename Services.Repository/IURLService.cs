@@ -2,7 +2,7 @@
 
 namespace Services.Repository.Interface
 {
-    public interface IURLRepository
+    public interface IURLService
     {
         Task<OperationResult<WidgetConfiguration>> GetURL(long userId,string pageName, string widgetCode, string action);
     }

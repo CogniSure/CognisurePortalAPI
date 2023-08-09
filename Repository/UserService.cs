@@ -15,17 +15,17 @@ using System.Text;
 
 namespace Portal.Repository.Login
 {
-    public class UserRepository : IUserRepository
+    public class UserService : IUserService
     {
         private readonly IMsSqlDataHelper msSqlDataHelper;
         readonly SimpleCache cacheProvider;
         public IConfiguration Configuration { get; }
 
-        public UserRepository(
+        public UserService(
                 IMsSqlDataHelper msSqlDataHelper,
                 SimpleCache cacheProvider,
                 IConfiguration configuration,
-                 ILogger<UserRepository> logger
+                 ILogger<UserService> logger
               )
         {
             this.cacheProvider = cacheProvider;

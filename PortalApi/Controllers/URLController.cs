@@ -13,11 +13,11 @@ namespace PortalApi.Controllers
     public class URLController : ControllerBase
     {
         //private readonly ILogger<DashboardController> _logger;
-        public IURLRepository _urlRepository;
+        public IURLService _urlRepository;
         private readonly IConfiguration _configuration;
 
 
-        public URLController( IURLRepository loginRepository, IConfiguration configuration)
+        public URLController( IURLService loginRepository, IConfiguration configuration)
         {
             //_logger = logger;
             _urlRepository = loginRepository;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Services.Repository.Interface
 {
-    public interface IUserRepository
+    public interface IUserService
     {
         Task<OperationResult<User>> GetUserDetails(string email);
         Task<OperationResult<User>> GetUsersAccountManagerDetails(string email);

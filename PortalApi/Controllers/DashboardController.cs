@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Portal.Repository.Dashboard;
+using Services.Repository.Interface;
 using System;
 
 namespace PortalApi.Controllers;

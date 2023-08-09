@@ -51,12 +51,12 @@ namespace MsSqlServices
                  configuration,
                    loggerFactory.CreateLogger<NotificationService>());
         }
-        public IUserRepository UserService()
+        public IUserService UserService()
         {
-            return new UserRepository(msSqlDataHelper,
+            return new UserService(msSqlDataHelper,
                  cacheProvider,
                  configuration,
-                   loggerFactory.CreateLogger<UserRepository>());
+                   loggerFactory.CreateLogger<UserService>());
         }
         public IContactUsService ContactUsService()
         {

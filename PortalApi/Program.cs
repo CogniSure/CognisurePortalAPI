@@ -92,10 +92,10 @@ void SetupApplicationDependencies(IServiceCollection services)
 
     });
     //services.AddSingleton<IMapperProvider<WebServiceMapperProfile>, MapperProvider<WebServiceMapperProfile>>();
-    builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
-    builder.Services.AddScoped<IUserRepository, UserRepository>();
-    builder.Services.AddScoped<IInboxRepository, InboxRepository>();
-    builder.Services.AddScoped<IURLRepository, URLRepository>();
+    builder.Services.AddScoped<IDashboardRepository, DashboardService>();
+    builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<IInboxRepository, InboxService>();
+    builder.Services.AddScoped<IURLService, URLService>();
     builder.Services.AddScoped<IMsSqlDataHelper, MsSqlDataHelper>();
     builder.Services.AddScoped<IMsSqlDatabase, MsSqlDatabase>();
     builder.Services.AddScoped<IMsSqlBaseDatabase, MsSqlBaseDatabase>();

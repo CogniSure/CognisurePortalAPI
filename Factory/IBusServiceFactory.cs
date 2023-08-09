@@ -12,7 +12,7 @@ namespace Services.MsSqlServices.Interface
     {
         ITokenService TokenService();
         INotificationService NotificationService();
-        IUserRepository UserService();
+        IUserService UserService();
         IContactUsService ContactUsService();
         //IWidgetService WidgetService();
         //I2FAService TwoFactorAuthenticationService();

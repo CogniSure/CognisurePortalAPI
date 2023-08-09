@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Portal.Repository.Inbox;
+using Services.Repository.Interface;
 using System;
 
 namespace PortalApi.Controllers.Inbox;
