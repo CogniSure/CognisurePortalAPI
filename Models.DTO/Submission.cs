@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Repository.Interface
+namespace Models.DTO
 {
-    public interface IInboxRepository
+    public class Submission
     {
-        string GetInboxData();
     }
 }

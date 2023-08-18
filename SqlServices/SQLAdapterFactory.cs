@@ -89,6 +89,11 @@ namespace MsSqlServices
                    configuration,
                      loggerFactory.CreateLogger<NewsFeedService>());
         }
+
+        public ISubmissionService SubmissionService()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

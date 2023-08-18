@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MsSqlServices;
+using ApiServices;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -76,11 +77,11 @@ void SetupApplicationDependencies(IServiceCollection services)
                     var configure = new SqlDIConfiguration();
                     return configure.CreateIBusServiceFactory(serviceProvider);
                 }
-            //case "mongo":
-            //    {
-            //        var configure = new CS.CoreAPI.Adapters.Mongo.Services.DIConfiguration();
-            //        return configure.CreateIBusServiceFactory(serviceProvider);
-            //    }
+            case "api":
+                {
+                    var configure = new ApiDIConfiguration();
+                    return configure.CreateIBusServiceFactory(serviceProvider);
+                }
 
             default:
                 {
@@ -94,7 +95,7 @@ void SetupApplicationDependencies(IServiceCollection services)
     //services.AddSingleton<IMapperProvider<WebServiceMapperProfile>, MapperProvider<WebServiceMapperProfile>>();
     builder.Services.AddScoped<IDashboardRepository, DashboardService>();
     builder.Services.AddScoped<IUserService, UserService>();
-    builder.Services.AddScoped<IInboxRepository, InboxService>();
+    builder.Services.AddScoped<ISubmissionService, SubmissionService>();
     builder.Services.AddScoped<IURLService, URLService>();
     builder.Services.AddScoped<IMsSqlDataHelper, MsSqlDataHelper>();
     builder.Services.AddScoped<IMsSqlDatabase, MsSqlDatabase>();

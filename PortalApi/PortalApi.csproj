@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApiServices\ApiServices.csproj" />
     <ProjectReference Include="..\Factory\Factory.csproj" />
     <ProjectReference Include="..\MsSqlAdapter\MsSqlAdapter.csproj" />
     <ProjectReference Include="..\MsSqlDatabase.Interface\MsSqlAdapter.Interface.csproj" />

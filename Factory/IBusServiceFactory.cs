@@ -14,7 +14,7 @@ namespace Services.Factory.Interface
         INotificationService NotificationService();
         IUserService UserService();
         IContactUsService ContactUsService();
-        //IWidgetService WidgetService();
+        ISubmissionService SubmissionService();
         //I2FAService TwoFactorAuthenticationService();
         IDownloadService DownloadService();
         INewsFeedService NewsFeedService();
