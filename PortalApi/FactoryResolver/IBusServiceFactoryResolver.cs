@@ -1,4 +1,4 @@
-﻿using Services.MsSqlServices.Interface;
+﻿using Services.Factory.Interface;
 
 namespace PortalApi.FactoryResolver
 {

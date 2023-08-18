@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Repository\Repository.csproj" />
-    <ProjectReference Include="..\SqlServices\MsSqlServices.csproj" />
+    <ProjectReference Include="..\Services.Common.Interface\Services.Common.Interface.csproj" />
+    <ProjectReference Include="..\Services.Repository\Services.Repository.Interface.csproj" />
   </ItemGroup>
 
 </Project>

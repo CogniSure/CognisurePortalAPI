@@ -2,11 +2,11 @@
 using Extention;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Portal.Repository.Login;
 using Services.Common.Interface;
 using Services.MsSqlServices.Interface;
 using Services.Repository.Interface;
-using SqlServices;
+using Services.Factory.Interface;
+using Portal.Repository.Login;
 using System;
 using System.Collections.Generic;
 using System.Linq;

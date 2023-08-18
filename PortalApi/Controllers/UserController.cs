@@ -6,7 +6,7 @@ using Models.DTO;
 using Portal.Repository.Login;
 using PortalApi.FactoryResolver;
 using Services.Common.Interface;
-using Services.MsSqlServices.Interface;
+using Services.Factory.Interface;
 using Services.Repository.Interface;
 using System;
 
