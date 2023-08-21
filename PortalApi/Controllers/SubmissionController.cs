@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,8 @@ namespace PortalApi.Controllers.Inbox;
 
 [ApiController]
 [Route("[controller]")]
+
+[Authorize]
 public class SubmissionController : ControllerBase
 {
     
