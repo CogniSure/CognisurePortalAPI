@@ -9,6 +9,6 @@ namespace Services.Repository.Interface
 {
     public interface ISubmissionService
     {
-        Task<OperationResult<Submission>> GetSubmissionData(string submissionId,string userEmail);
+        Task<OperationResult<SubmissionData>> GetSubmissionData(string submissionId,string userEmail);
     }
 }

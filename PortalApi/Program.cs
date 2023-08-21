@@ -56,7 +56,7 @@ SetupApplicationDependencies(builder.Services);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddHttpClient();
 void SetupApplicationDependencies(IServiceCollection services)
 {
     //services.AddScoped<IAPIConfiguration, APIConfiguration>();

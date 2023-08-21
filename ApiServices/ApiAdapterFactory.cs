@@ -19,7 +19,7 @@ namespace ApiServices
     {
         private readonly ILoggerFactory loggerFactory;
         private readonly IApiHelper apiHelper;
-
+        private readonly IHttpClientFactory clientFactory;
         private readonly IMsSqlDataHelper msSqlDataHelper;
         readonly SimpleCache cacheProvider;
         public IConfiguration configuration { get; }
@@ -27,12 +27,13 @@ namespace ApiServices
                 IMsSqlDataHelper msSqlDataHelper,
                 SimpleCache cacheProvider,
                 IConfiguration configuration,
-                ILoggerFactory loggerFactory
+                ILoggerFactory loggerFactory,
+                IHttpClientFactory clientFactory
               )
         {
             this.loggerFactory = loggerFactory;
             this.cacheProvider = cacheProvider;
-
+            this.clientFactory = clientFactory;
             this.apiHelper = apiHelper;
             this.msSqlDataHelper = msSqlDataHelper;
             this.configuration = configuration;
@@ -70,7 +71,7 @@ namespace ApiServices
 
         public ISubmissionService SubmissionService()
         {
-            return new SubmissionService(apiHelper, msSqlDataHelper);
+            return new SubmissionService(apiHelper, msSqlDataHelper,clientFactory);
         }
     }
 }

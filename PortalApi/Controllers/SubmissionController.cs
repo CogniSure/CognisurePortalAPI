@@ -33,7 +33,7 @@ public class SubmissionController : ControllerBase
     }
 
     [HttpGet(Name = "submission/{submissionid}/{useremail}")]
-    public async Task<OperationResult<Submission>> GetSubmissionById(string submissionid,string useremail)
+    public async Task<OperationResult<SubmissionData>> GetSubmissionById(string submissionid,string useremail)
     {
         try
         {
