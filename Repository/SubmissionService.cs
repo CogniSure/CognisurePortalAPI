@@ -47,21 +47,7 @@ namespace Portal.Repository.Inbox
         {
             string apiToken = await GetUserToken(userEmail);
             SubmissionData submissionData = await getSubmissionData(apiToken, submissionId);
-            // using (var httpClient = getClient("https://pcqa.cognisure.ai:1099"))
-            // {
-            //     using (var response = httpClient.GetAsync("/token?"+
-            //         "grant_type=password&username=niranjansn@cognisure.ai&password=Iamniru@1"))
-            //     {
-            //         var apiResponse =  response.Result;
-            //         //if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            //         //{
-            //         //    //string apiResponse = await response.Content.ReadAsStringAsync();
-            //         //    //reservation = JsonConvert.DeserializeObject<Reservation>(apiResponse);
-            //         //}
-            //         //else
-            //         //ViewBag.StatusCode = response.StatusCode;
-            //     }
-            //}
+            
             return new OperationResult<SubmissionData>(submissionData, true); ;
         }
         private async Task<SubmissionData> getSubmissionData(string token,string submissionId)
