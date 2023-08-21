@@ -2,8 +2,10 @@
 using Extention;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Portal.Repository.Inbox;
 using Services.Common.Interface;
 using Services.Factory.Interface;
+using Services.MsSqlServices.Interface;
 using Services.Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -16,10 +18,13 @@ namespace ApiServices
     public class ApiAdapterFactory : IBusServiceFactory
     {
         private readonly ILoggerFactory loggerFactory;
-        private readonly IApiHelper msSqlDataHelper;
+        private readonly IApiHelper apiHelper;
+
+        private readonly IMsSqlDataHelper msSqlDataHelper;
         readonly SimpleCache cacheProvider;
         public IConfiguration configuration { get; }
-        public ApiAdapterFactory(IApiHelper msSqlDataHelper,
+        public ApiAdapterFactory(IApiHelper apiHelper,
+                IMsSqlDataHelper msSqlDataHelper,
                 SimpleCache cacheProvider,
                 IConfiguration configuration,
                 ILoggerFactory loggerFactory
@@ -27,6 +32,8 @@ namespace ApiServices
         {
             this.loggerFactory = loggerFactory;
             this.cacheProvider = cacheProvider;
+
+            this.apiHelper = apiHelper;
             this.msSqlDataHelper = msSqlDataHelper;
             this.configuration = configuration;
             this.loggerFactory = loggerFactory;
@@ -63,7 +70,7 @@ namespace ApiServices
 
         public ISubmissionService SubmissionService()
         {
-            throw new NotImplementedException();
+            return new SubmissionService(apiHelper, msSqlDataHelper);
         }
     }
 }

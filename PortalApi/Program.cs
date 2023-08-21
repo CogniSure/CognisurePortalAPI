@@ -21,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MsSqlServices;
 using ApiServices;
+using ApiServices.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -66,6 +67,7 @@ void SetupApplicationDependencies(IServiceCollection services)
 
 
     new SqlDIConfiguration().Setup(services);
+    new ApiDIConfiguration().Setup(services);
     //new CS.CoreAPI.Adapters.Mongo.Services.DIConfiguration().Setup(services);
 
     services.AddTransient<IBusServiceFactoryResolver>(serviceProvider => key =>
@@ -98,6 +100,7 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<ISubmissionService, SubmissionService>();
     builder.Services.AddScoped<IURLService, URLService>();
     builder.Services.AddScoped<IMsSqlDataHelper, MsSqlDataHelper>();
+    builder.Services.AddScoped<IApiHelper, ApiHelper>();
     builder.Services.AddScoped<IMsSqlDatabase, MsSqlDatabase>();
     builder.Services.AddScoped<IMsSqlBaseDatabase, MsSqlBaseDatabase>();
     builder.Services.AddScoped<ITokenService, TokenService>();
