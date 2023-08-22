@@ -36,10 +36,11 @@ public class SubmissionController : ControllerBase
     }
 
     [HttpGet(Name = "submission/{submissionid}/{useremail}")]
-    public async Task<OperationResult<SubmissionData>> GetSubmissionById(string submissionid,string useremail)
+    public async Task<OperationResult<SubmissionData>> GetSubmissionById(string submissionid)
     {
         try
         {
+            var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
             return await iBusServiceFactory.SubmissionService().GetSubmissionData(submissionid, useremail);
         }
         catch (Exception ex)
