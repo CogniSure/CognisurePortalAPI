@@ -35,32 +35,52 @@ namespace Common
 
         public async Task<OperationResult<OAuthTokenResponse>> GetUserToken(string username, string password)
         {
-            var user = msSqlDataHelper.GetUser(username);
-            if (user != null && user.Password == password)
+            //string conn = Configuration["ConnectionStrings:SQLConnection"];
+            //return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", conn);
+            try
             {
-                //var dbname = "mongo";
-                //await cacheProvider.Add($"dbname_{user.Email}", dbname);
-
-                await cacheProvider.Add($"userid_{user.Email}", string.Format("{0}", user.UserID));
-                var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                   , new Claim(ClaimTypes.NameIdentifier, string.Format("{0}",user.UserID)),
-                };
-                var token = GetToken(authClaims);
+                var user = msSqlDataHelper.GetUser(username);
                 var response = new OAuthTokenResponse
                 {
-                    AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+                    AccessToken = "",
                     TokenType = "bearer",
-                    ExpiresIn = token.ValidTo.Second,
-                    Username = username
+                    ExpiresIn = 1000000,
+                    Username = user.Email
 
                 };
                 return new OperationResult<OAuthTokenResponse>(response, true);
-
-
             }
+            catch (Exception ex)
+            {
+
+                return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "","dasda"+ex.Message+":"+ex.InnerException.ToString());
+            }
+            
+            //if (user != null && user.Password == password)
+            //{
+            //    //var dbname = "mongo";
+            //    //await cacheProvider.Add($"dbname_{user.Email}", dbname);
+
+            //    await cacheProvider.Add($"userid_{user.Email}", string.Format("{0}", user.UserID));
+            //    var authClaims = new List<Claim>
+            //    {
+            //        new Claim(ClaimTypes.Name, user.Email),
+            //        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            //       , new Claim(ClaimTypes.NameIdentifier, string.Format("{0}",user.UserID)),
+            //    };
+            //    var token = GetToken(authClaims);
+            //    var response = new OAuthTokenResponse
+            //    {
+            //        AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+            //        TokenType = "bearer",
+            //        ExpiresIn = token.ValidTo.Second,
+            //        Username = username
+
+            //    };
+            //    return new OperationResult<OAuthTokenResponse>(response, true);
+
+
+            //}
             return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "UserName or Password didnot matched");
         }
 

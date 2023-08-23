@@ -35,7 +35,7 @@ public class SubmissionController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpGet(Name = "submission/{submissionid}/{useremail}")]
+    [HttpGet(Name = "submission/{submissionid}")]
     public async Task<OperationResult<SubmissionData>> GetSubmissionById(string submissionid)
     {
         try

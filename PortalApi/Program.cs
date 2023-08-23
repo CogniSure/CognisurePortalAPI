@@ -149,7 +149,6 @@ void SetupApplicationDependencies(IServiceCollection services)
 var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
-
 app.UseCors("corspolicy");
 app.UseHttpsRedirection();
 

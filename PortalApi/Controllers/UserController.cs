@@ -14,7 +14,7 @@ namespace PortalApi.Controllers.Login;
 
 [ApiController]
 [Authorize]
-[Route("[controller]")]
+[Route("api")]
 public class UserController : ControllerBase
 {
     
