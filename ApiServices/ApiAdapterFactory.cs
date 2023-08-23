@@ -73,5 +73,9 @@ namespace ApiServices
         {
             return new SubmissionService(apiHelper, msSqlDataHelper,clientFactory);
         }
+        public ISubmissionInboxService SubmissionInboxService()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

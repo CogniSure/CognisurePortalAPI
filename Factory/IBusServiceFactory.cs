@@ -18,5 +18,7 @@ namespace Services.Factory.Interface
         //I2FAService TwoFactorAuthenticationService();
         IDownloadService DownloadService();
         INewsFeedService NewsFeedService();
+
+        ISubmissionInboxService SubmissionInboxService();
     }
 }

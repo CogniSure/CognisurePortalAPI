@@ -29,5 +29,6 @@ namespace MsSqlAdapter.Interface
         bool InsertContactUs(string email, string FirstName, string LastName,
             string MiddleName, string phoneNumber, string message, string companyName, string designation,
             string interests, out string generalMessage, out string technicalMessage);
+        DataSet GetAllSubmission(int userID, int UploadedUserID, int FileReceivedChannelID, string keyword, DateTime? SubmissionFromDate, DateTime? submissionTodate);
     }
 }

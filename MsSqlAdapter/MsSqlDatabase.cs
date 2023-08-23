@@ -183,5 +183,18 @@ namespace MsSqlAdapter
 
             return result;
         }
+        public DataSet GetAllSubmission(int userID, int UploadedUserID, int FileReceivedChannelID,string keyword, DateTime? SubmissionFromDate, DateTime? submissionTodate)
+        {
+            var parameters = new List<IDataParameter>
+            {
+                BaseDatabase.Param("@UserID", userID),
+                BaseDatabase.Param("@UploadedUserID", UploadedUserID),
+                BaseDatabase.Param("@FileReceivedChannelID", FileReceivedChannelID),
+                BaseDatabase.Param("@keyword", keyword),
+                BaseDatabase.Param("@SubmissionFromDate", SubmissionFromDate),
+                BaseDatabase.Param("@submissionTodate", submissionTodate)
+            };
+            return BaseDatabase.GetData("sp_GetAllSubmissionsByUserId", parameters);
+        }
     }
 }

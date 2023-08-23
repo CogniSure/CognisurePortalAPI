@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Portal.Repository.Inbox;
 
 namespace MsSqlServices
 {
@@ -93,6 +94,14 @@ namespace MsSqlServices
         public ISubmissionService SubmissionService()
         {
             throw new NotImplementedException();
+        }
+
+        public ISubmissionInboxService SubmissionInboxService()
+        {
+            return new SubmissionInboxService(msSqlDataHelper,
+                 cacheProvider,
+                 configuration,
+                   loggerFactory.CreateLogger<SubmissionInboxService>());
         }
     }
 

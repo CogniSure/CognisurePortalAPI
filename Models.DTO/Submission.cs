@@ -6,9 +6,39 @@ using System.Threading.Tasks;
 
 namespace Models.DTO
 {
+    public class InboxFilter
+    {
+        public int UserId { get; set; }
+        public int UploadedUserID { get; set; }
+        public int SubmissionId { get; set; }
+        public string MessageId { get; set; }
+        public string keyword { get; set; }
+        public Nullable<DateTime> SubmissionFromDate { get; set; }
+        public Nullable<DateTime> SubmissionToDate { get; set; }
+        public int FileReceivedChanelId { get; set; }
+        public int AddedById { get; set; }
+    }
     public class Submission
     {
-        public SubmissionData[] SubmissionData { get; set; }
+        public int SubmissionId { get; set; }
+        public string? MessageId { get; set; }
+        public Nullable<DateTime> SubmissionDate { get; set; }
+        public int FileReceivedChanelId { get; set; }
+        public string? FileReceivedChanelName { get; set; }
+        public string? AddedByName { get; set; }
+        public Nullable<DateTime> AddedByDate { get; set; }
+        public int AccountId { get; set; }
+        public string? AccountName { get; set; }
+        public string? InsureName { get; set; }
+        public int SubmissionStatusId { get; set; }
+        public string? SubmissionStatusName { get; set; }
+        public Nullable<DateTime> EffectiveDate { get; set; }
+        public string? TypeOfBusiness { get; set; }
+        public string? AgencyName { get; set; }
+        public string? LineOfBusiness { get; set; }
+        public string? Priority { get; set; }
+        public string? RiskScore { get; set; }
+        public SubmissionData[]? SubmissionData { get; set; }
     }
 
     public class SubmissionData

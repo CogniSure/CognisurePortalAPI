@@ -494,5 +494,47 @@ namespace SqlServices
         //    }
         //    return downloadFileData;
         //}
+
+
+
+        public List<Submission> GetAllSubmission(InboxFilter ObjinboxFilter)
+        {
+            var list = Database.GetAllSubmission(ObjinboxFilter.UserId, ObjinboxFilter.UploadedUserID, ObjinboxFilter.FileReceivedChanelId, ObjinboxFilter.keyword, ObjinboxFilter.SubmissionFromDate, ObjinboxFilter.SubmissionToDate);
+            return GetAllSubmissionList(list);
+        }
+        private static List<Submission> GetAllSubmissionList(DataSet dst)
+        {
+            var SubmissionList = new List<Submission>();
+            if (dst.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow dr in dst.Tables[0].Rows)
+                {
+                    var ObjSubmission = new Submission
+                    {
+                        SubmissionId = Convert.ToInt32(dr["SubmissionId"]),
+                        MessageId = string.Format("{0}", dr["MessageId"]),
+                        SubmissionDate =Convert.ToDateTime(dr["SubmissionDate"]),
+                        FileReceivedChanelId = Convert.ToInt32(dr["FileReceivedChanelId"]),
+                        FileReceivedChanelName = string.Format("{0}", dr["FileReceivedChanelName"]),
+                        AddedByName = string.Format("{0}", dr["AddedByName"]),
+                        AddedByDate = Convert.ToDateTime(dr["AddedByDate"]),
+                        AccountId = Convert.ToInt32(dr["AccountId"]),
+                        AccountName = string.Format("{0}", dr["AccountName"]),
+                        InsureName = string.Format("{0}", dr["InsureName"]),
+                        SubmissionStatusId = Convert.ToInt32(dr["SubmissionStatusId"]),
+                        SubmissionStatusName = string.Format("{0}", dr["SubmissionStatusName"]),
+                        EffectiveDate = Convert.ToDateTime(dr["EffectiveDate"]),
+                        TypeOfBusiness = string.Format("{0}", dr["TypeOfBusiness"]),
+                        AgencyName = string.Format("{0}", dr["AgencyName"]),
+                        LineOfBusiness = string.Format("{0}", dr["LineOfBusiness"]),
+                        Priority = string.Format("{0}", dr["Priority"]),
+                        RiskScore = string.Format("{0}", dr["RiskScore"]),
+                    };
+
+                    SubmissionList.Add(ObjSubmission);
+                }
+            }
+            return SubmissionList;
+        }
     }
 }
