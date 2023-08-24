@@ -22,7 +22,7 @@ namespace Models.DTO
     {
         public int SubmissionId { get; set; }
         public string? MessageId { get; set; }
-        public Nullable<DateTime> SubmissionDate { get; set; }
+        public string SubmissionDate { get; set; }
         public int FileReceivedChanelId { get; set; }
         public string? FileReceivedChanelName { get; set; }
         public string? AddedByName { get; set; }
@@ -32,7 +32,7 @@ namespace Models.DTO
         public string? InsureName { get; set; }
         public int SubmissionStatusId { get; set; }
         public string? SubmissionStatusName { get; set; }
-        public Nullable<DateTime> EffectiveDate { get; set; }
+        public string? EffectiveDate { get; set; }
         public string? TypeOfBusiness { get; set; }
         public string? AgencyName { get; set; }
         public string? LineOfBusiness { get; set; }

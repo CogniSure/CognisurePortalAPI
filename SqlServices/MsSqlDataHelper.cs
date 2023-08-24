@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.Reflection;
 using System.Security.Principal;
 
@@ -504,6 +505,7 @@ namespace SqlServices
         }
         private static List<Submission> GetAllSubmissionList(DataSet dst)
         {
+            CultureInfo culture = new CultureInfo("en-US");
             var SubmissionList = new List<Submission>();
             if (dst.Tables[0].Rows.Count > 0)
             {
@@ -513,17 +515,21 @@ namespace SqlServices
                     {
                         SubmissionId = Convert.ToInt32(dr["SubmissionId"]),
                         MessageId = string.Format("{0}", dr["MessageId"]),
-                        SubmissionDate =Convert.ToDateTime(dr["SubmissionDate"]),
+                        //SubmissionDate = dr["SubmissionDate"] == DBNull.Value ? null :Convert.ToDateTime(dr["SubmissionDate"]),
+                        SubmissionDate = string.Format("{0}", dr["SubmissionDate"]),
                         FileReceivedChanelId = Convert.ToInt32(dr["FileReceivedChanelId"]),
                         FileReceivedChanelName = string.Format("{0}", dr["FileReceivedChanelName"]),
                         AddedByName = string.Format("{0}", dr["AddedByName"]),
-                        AddedByDate = Convert.ToDateTime(dr["AddedByDate"]),
+                        AddedByDate = dr["AddedByDate"] == DBNull.Value ? null : Convert.ToDateTime(dr["AddedByDate"]),
                         AccountId = Convert.ToInt32(dr["AccountId"]),
                         AccountName = string.Format("{0}", dr["AccountName"]),
                         InsureName = string.Format("{0}", dr["InsureName"]),
                         SubmissionStatusId = Convert.ToInt32(dr["SubmissionStatusId"]),
                         SubmissionStatusName = string.Format("{0}", dr["SubmissionStatusName"]),
-                        EffectiveDate = Convert.ToDateTime(dr["EffectiveDate"]),
+                        //EffectiveDate = null,
+                        EffectiveDate = string.Format("{0}", dr["EffectiveDate"]),
+                        //EffectiveDate = dr["EffectiveDate"] == DBNull.Value ? null : Convert.ToDateTime(string.Format("{0:MM/dd/yyyy}", dr["EffectiveDate"]), culture),
+
                         TypeOfBusiness = string.Format("{0}", dr["TypeOfBusiness"]),
                         AgencyName = string.Format("{0}", dr["AgencyName"]),
                         LineOfBusiness = string.Format("{0}", dr["LineOfBusiness"]),

@@ -66,7 +66,8 @@ namespace Common
                 {
                     new Claim(ClaimTypes.Name, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                   , new Claim(ClaimTypes.NameIdentifier, string.Format("{0}",user.UserID)),
+                   , new Claim(ClaimTypes.NameIdentifier, string.Format("{0}",user.UserID))
+                   , new Claim("UserId", string.Format("{0}",user.UserID))
                 };
                 var token = GetToken(authClaims);
                 var response = new OAuthTokenResponse

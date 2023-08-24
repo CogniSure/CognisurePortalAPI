@@ -8,7 +8,7 @@ namespace PortalApi.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
+    [Route("api")]
     public class InboxController : ControllerBase
     {
         private readonly ILogger<InboxController> _logger;
@@ -24,12 +24,13 @@ namespace PortalApi.Controllers
             _configuration = configuration;
         }
         [Route("AllSubmission")]
-        [HttpGet]
-        public async Task<OperationResult<List<Submission>>> GetAllSubmission(InboxFilter ObjFilter)
+        [HttpPost]
+        public async Task<OperationResult<List<Submission>>> GetAllSubmission()
         {
             try
             {
-                ObjFilter.UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault().Value);
+                InboxFilter ObjFilter = new InboxFilter();
+                ObjFilter.UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(C=>C.Type=="UserId").Value);
                 return await iBusServiceFactory.SubmissionInboxService().GetAllSubmission(ObjFilter);
             }
             catch (Exception ex)
