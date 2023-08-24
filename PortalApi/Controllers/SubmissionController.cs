@@ -13,7 +13,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace PortalApi.Controllers.Inbox;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api")]
 
 [Authorize]
 public class SubmissionController : ControllerBase
@@ -34,7 +34,7 @@ public class SubmissionController : ControllerBase
         this.iBusServiceFactory = iBusServiceFactoryResolver("api");
         _configuration = configuration;
     }
-    [Route("submission/{submissionid}")]
+    [Route("submission")]
     [HttpGet]
     public async Task<OperationResult<SubmissionData>> GetSubmissionById(string submissionid)
     {
@@ -49,7 +49,7 @@ public class SubmissionController : ControllerBase
             return null;
         }
     }
-    [Route("submission360/{submissionid}")]
+    [Route("submission360")]
     [HttpGet]
     public async Task<OperationResult<Submission360>> DownloadSubmission360(string submissionid)
     {
