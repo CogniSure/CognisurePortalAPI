@@ -34,8 +34,8 @@ public class SubmissionController : ControllerBase
         this.iBusServiceFactory = iBusServiceFactoryResolver("api");
         _configuration = configuration;
     }
-
-    [HttpGet(Name = "submission/{submissionid}")]
+    [Route("submission/{submissionid}")]
+    [HttpGet]
     public async Task<OperationResult<SubmissionData>> GetSubmissionById(string submissionid)
     {
         try
@@ -46,6 +46,21 @@ public class SubmissionController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}",ex.Message);
+            return null;
+        }
+    }
+    [Route("submission360/{submissionid}")]
+    [HttpGet]
+    public async Task<OperationResult<Submission360>> DownloadSubmission360(string submissionid)
+    {
+        try
+        {
+            var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
+            return await iBusServiceFactory.SubmissionService().DownloadSubmission360(submissionid, useremail);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
             return null;
         }
     }

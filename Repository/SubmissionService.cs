@@ -50,6 +50,42 @@ namespace Portal.Repository.Inbox
             
             return new OperationResult<SubmissionData>(submissionData, true); ;
         }
+        public async Task<OperationResult<Submission360>> DownloadSubmission360(string submissionId, string userEmail)
+        {
+            string apiToken = await GetUserToken(userEmail);
+            Submission360 submissionData = await getSubmission360Data(apiToken, submissionId);
+
+            return new OperationResult<Submission360 >(submissionData, true); ;
+        }
+        private async Task<Submission360> getSubmission360Data(string token, string submissionId)
+        {
+            Submission360 submissions = new Submission360();
+            var request = new HttpRequestMessage(HttpMethod.Get,
+                "https://pcqa.cognisure.ai:1099/api/submission/submission360/?Id=" + submissionId)
+            {
+                Headers =
+                {
+                    { HeaderNames.Accept, "application/json" },
+                    {HeaderNames.Authorization, "Bearer "+ token }
+                },
+            };
+            var clientHandler = new HttpClientHandler();
+            var client = clientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+
+                var obj = JObject.Parse(result);
+
+                submissions = JsonConvert.DeserializeObject<Submission360>(obj.ToString());
+                
+            }
+            return submissions;
+        }
         private async Task<SubmissionData> getSubmissionData(string token,string submissionId)
         {
             //string submissionId = "A1_Id";
