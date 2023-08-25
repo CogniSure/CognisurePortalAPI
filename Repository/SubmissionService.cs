@@ -28,12 +28,14 @@ namespace Portal.Repository.Inbox
         readonly SimpleCache cacheProvider;
         public IConfiguration Configuration { get; }
 
+
+        public string ApiURl;
         public SubmissionService(
                 IApiHelper apiDataHelper,
                 IMsSqlDataHelper msSqlDataHelper,
-                IHttpClientFactory clientFactory
+                IHttpClientFactory clientFactory,
               //SimpleCache cacheProvider,
-              //IConfiguration configuration,
+              IConfiguration configuration
               //ILogger<NotificationService> logger
               )
         {
@@ -41,6 +43,8 @@ namespace Portal.Repository.Inbox
             this.apiDataHelper = apiDataHelper;
             this.msSqlDataHelper = msSqlDataHelper;
             this.clientFactory = clientFactory;
+            this.Configuration = configuration;
+            ApiURl = Configuration["SubmissionApi"];
             //this.Configuration = configuration;
         }
         public async Task<OperationResult<SubmissionData>> GetSubmissionData(string submissionId, string userEmail)
@@ -61,7 +65,7 @@ namespace Portal.Repository.Inbox
         {
             Submission360 submissions = new Submission360();
             var request = new HttpRequestMessage(HttpMethod.Get,
-                "https://pcqa.cognisure.ai:1099/api/submission/submission360/?Id=" + submissionId)
+                ApiURl+"api/submission/submission360/?Id=" + submissionId)
             {
                 Headers =
                 {
@@ -91,7 +95,7 @@ namespace Portal.Repository.Inbox
             //string submissionId = "A1_Id";
             SubmissionData submissions = new SubmissionData();
             var request = new HttpRequestMessage(HttpMethod.Get,
-                "https://pcqa.cognisure.ai:1099/api/submission/commonjson/?id=" + submissionId)
+                ApiURl + "api/submission/commonjson/?id=" + submissionId)
             {
                 Headers =
                 {
@@ -134,7 +138,7 @@ namespace Portal.Repository.Inbox
             string apiToken = "";
             User usr = msSqlDataHelper.GetUser(userEmail);
             var request = new HttpRequestMessage(HttpMethod.Post,
-                "https://pcqa.cognisure.ai:1099/token")
+                ApiURl + "token")
             {
                 Headers =
                 {

@@ -71,7 +71,7 @@ namespace ApiServices
 
         public ISubmissionService SubmissionService()
         {
-            return new SubmissionService(apiHelper, msSqlDataHelper,clientFactory);
+            return new SubmissionService(apiHelper, msSqlDataHelper,clientFactory, configuration);
         }
         public ISubmissionInboxService SubmissionInboxService()
         {
