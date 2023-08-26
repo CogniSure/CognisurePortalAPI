@@ -2,7 +2,9 @@
 using Extention;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Models.DTO;
 using Portal.Repository.Inbox;
+using Repository;
 using Services.Common.Interface;
 using Services.Factory.Interface;
 using Services.MsSqlServices.Interface;
@@ -77,5 +79,11 @@ namespace ApiServices
         {
             throw new NotImplementedException();
         }
+
+        public IChatService ChatService()
+        {
+            return new ChatService(apiHelper, msSqlDataHelper, clientFactory, configuration);
+        }
+
     }
 }

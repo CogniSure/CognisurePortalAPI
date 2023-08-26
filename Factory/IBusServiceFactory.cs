@@ -20,5 +20,6 @@ namespace Services.Factory.Interface
         INewsFeedService NewsFeedService();
 
         ISubmissionInboxService SubmissionInboxService();
+        IChatService ChatService();
     }
 }

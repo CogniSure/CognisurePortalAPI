@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Portal.Repository.Inbox;
+using Models.DTO;
 
 namespace MsSqlServices
 {
@@ -102,6 +103,11 @@ namespace MsSqlServices
                  cacheProvider,
                  configuration,
                    loggerFactory.CreateLogger<SubmissionInboxService>());
+        }
+
+        public IChatService ChatService()
+        {
+            throw new NotImplementedException();
         }
     }
 
