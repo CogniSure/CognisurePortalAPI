@@ -66,7 +66,7 @@ namespace Repository
                 string chatToken = "";
                 var custparams = new
                 {
-                    value = data[0].FileContent.Split(',')[1]
+                    value = data[0].FileContent.Split(',')[data[0].FileContent.Split(',').Length-1]
                 };
 
                 //string body = JsonConvert.SerializeObject(custparams);

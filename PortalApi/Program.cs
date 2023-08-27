@@ -106,9 +106,10 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<IMsSqlBaseDatabase, MsSqlBaseDatabase>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddSingleton<SimpleCache>();
+    string ChatbotSection = builder.Configuration.GetValue<string>("ChatbotAPI");
     builder.Services.AddHttpClient("chatclient",client =>
     {
-        client.BaseAddress = new Uri("http://anranjan.pythonanywhere.com/");
+        client.BaseAddress = new Uri(ChatbotSection);
     });
     services.AddSwaggerGen(c =>
     {
