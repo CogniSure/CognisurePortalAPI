@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection;
 using System.Reflection.Metadata;
+using System.Net.Http.Json;
 
 namespace Repository
 {
@@ -27,7 +28,6 @@ namespace Repository
         private readonly IApiHelper apiDataHelper;
         readonly SimpleCache cacheProvider;
         public IConfiguration Configuration { get; }
-
 
         public string ApiURl;
         public ChatService(
@@ -47,12 +47,12 @@ namespace Repository
             ApiURl = Configuration["ChatbotAPI"];
             //this.Configuration = configuration;
         }
-        public Task<OperationResult<string>> UploaFiles(List<UploadData> data)
-        {
-            throw new NotImplementedException();
-        }
+        //public Task<OperationResult<string>> UploadFiles(List<UploadData> data)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public async Task<OperationResult<string>> DownloadSubmission360(List<UploadData> data)
+        public async Task<OperationResult<string>> UploadFiles(List<UploadData> data)
         {
             //string apiToken = await GetUserToken(userEmail);
             string chatData = await UploadCopilotFile(data);
@@ -61,87 +61,81 @@ namespace Repository
         }
         private async Task<string> UploadCopilotFile(List<UploadData> data)
         {
-            string chatToken = "";
-            var custparams = new
+            try
             {
-                value = data[0].FileContent
-            };
-
-            string body = JsonConvert.SerializeObject(custparams);
-
-            var dataItemJson = new StringContent(body);
-            var request = new HttpRequestMessage(HttpMethod.Post,
-                ApiURl)
-            {
-                Headers =
+                string chatToken = "";
+                var custparams = new
                 {
-                    { HeaderNames.Accept, "application/json" }
-                },
-                Content = dataItemJson
-            };
+                    value = data[0].FileContent.Split(',')[1]
+                };
+
+                //string body = JsonConvert.SerializeObject(custparams);
+
+                //var dataItemJson = new StringContent(body);
+                ////dataItemJson.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //var request = new HttpRequestMessage(HttpMethod.Post,
+                //    ApiURl+ "api/upload_document")
+                //{
+                //    Headers =
+                //{
+                //    { HeaderNames.Accept, "application/json" }
+                //},
+                //    Content = dataItemJson
+                //};
 
 
-            var clientHandler = new HttpClientHandler();
-            var client = clientFactory.CreateClient();
-            //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage response = await client.SendAsync(request);
+                //var clientHandler = new HttpClientHandler();
+                var client = clientFactory.CreateClient("chatclient");
+                //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpResponseMessage response = await client.PostAsJsonAsync($"api/upload_document", custparams);
 
-            if (response.IsSuccessStatusCode)
-            {
-                chatToken = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    chatToken = await response.Content.ReadAsStringAsync();
 
-                //var obj = JObject.Parse(result);
+                    //var obj = JObject.Parse(result);
 
-                //submissions = JsonConvert.DeserializeObject<Submission360>(obj.ToString());
+                    //submissions = JsonConvert.DeserializeObject<Submission360>(obj.ToString());
+
+                }
+                return chatToken;
 
             }
-            return chatToken;
+            catch (Exception ex)
+            {
+                return "";
+            }
+            
         }
 
-        public Task<OperationResult<string>> AskCoPilot(string uniqId, string message)
+        public async Task<OperationResult<string>> AskCoPilot(string uniqId, string message)
         {
-            throw new NotImplementedException();
+            string chatData = await MessageCoPilot(uniqId, message);
+            
+            return new OperationResult<string>(chatData, true); ;
         }
         private async Task<string> MessageCoPilot(string uniqId, string message)
         {
             string chatToken = "";
             var custparams = new
             {
-                uniqId = uniqId,
-                message = message
+                fileGUID = uniqId,
+                question = message
             };
 
             string body = JsonConvert.SerializeObject(custparams);
 
-            var dataItemJson = new StringContent(body);
-            var request = new HttpRequestMessage(HttpMethod.Post,ApiURl)
-               // ApiURl+ "/? uniqId = " + uniqId + "message = ?" + message)
-            {
-                Headers =
-                {
-                    { HeaderNames.Accept, "application/json" }
-                },
-                Content = dataItemJson
-            };
-
-
-            var clientHandler = new HttpClientHandler();
-            var client = clientFactory.CreateClient();
-            //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            HttpResponseMessage response = await client.SendAsync(request);
+            var client = clientFactory.CreateClient("chatclient");
+            HttpResponseMessage response = await client.PostAsJsonAsync($"api/get_chat_history", custparams);
 
             if (response.IsSuccessStatusCode)
             {
                 chatToken = await response.Content.ReadAsStringAsync();
-
-                //var obj = JObject.Parse(result);
-
-                //submissions = JsonConvert.DeserializeObject<Submission360>(obj.ToString());
-
             }
             return chatToken;
         }
+
+       
     }
 }

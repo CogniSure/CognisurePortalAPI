@@ -10,7 +10,7 @@ namespace Services.Repository.Interface
     public interface IChatService
     {
 
-        Task<OperationResult<string>> UploaFiles(List<UploadData> data);
+        Task<OperationResult<string>> UploadFiles(List<UploadData> data);
         Task<OperationResult<string>> AskCoPilot(string uniqId, string message);
     }
 }

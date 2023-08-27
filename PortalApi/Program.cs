@@ -22,6 +22,7 @@ using System.Text;
 using MsSqlServices;
 using ApiServices;
 using ApiServices.Interface;
+using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -105,7 +106,10 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<IMsSqlBaseDatabase, MsSqlBaseDatabase>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddSingleton<SimpleCache>();
-
+    builder.Services.AddHttpClient("chatclient",client =>
+    {
+        client.BaseAddress = new Uri("http://anranjan.pythonanywhere.com/");
+    });
     services.AddSwaggerGen(c =>
     {
         c.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "CogniSure Portal API", Version = "v1" });

@@ -32,7 +32,7 @@ namespace PortalApi.Controllers
             {
                 List<UploadData> uploadedFile = new List<UploadData>();
                 uploadedFile.Add(files);
-                return await iBusServiceFactory.ChatService().UploaFiles(uploadedFile);
+                return await iBusServiceFactory.ChatService().UploadFiles(uploadedFile);
             }
             catch (Exception ex)
             {
@@ -41,8 +41,8 @@ namespace PortalApi.Controllers
             }
         }
         [Route("AskCopilot")]
-        [HttpPost]
-        public async Task<OperationResult<string>> UploadCopilotFIles(string uniqId,string message)
+        [HttpGet]
+        public async Task<OperationResult<string>> AskCoPilot(string uniqId,string message)
         {
             try
             {
