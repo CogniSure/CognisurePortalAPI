@@ -505,14 +505,17 @@ namespace SqlServices
         }
         private static List<Submission> GetAllSubmissionList(DataSet dst)
         {
+            DateParse DP;
             CultureInfo culture = new CultureInfo("en-US");
             var SubmissionList = new List<Submission>();
             if (dst.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow dr in dst.Tables[0].Rows)
                 {
+                    DP = new DateParse();
                     var ObjSubmission = new Submission
                     {
+                        
                         SubmissionId = Convert.ToInt32(dr["SubmissionId"]),
                         MessageId = string.Format("{0}", dr["MessageId"]),
                         //SubmissionDate = dr["SubmissionDate"] == DBNull.Value ? null :Convert.ToDateTime(dr["SubmissionDate"]),
@@ -527,7 +530,7 @@ namespace SqlServices
                         SubmissionStatusId = Convert.ToInt32(dr["SubmissionStatusId"]),
                         SubmissionStatusName = string.Format("{0}", dr["SubmissionStatusName"]),
                         //EffectiveDate = null,
-                        EffectiveDate = string.Format("{0}", dr["EffectiveDate"]),
+                       // EffectiveDate = Convert.ToString(DP.GetDates(string.Format("{0}", dr["EffectiveDate"])).Min()),
                         //EffectiveDate = dr["EffectiveDate"] == DBNull.Value ? null : Convert.ToDateTime(string.Format("{0:MM/dd/yyyy}", dr["EffectiveDate"]), culture),
 
                         TypeOfBusiness = string.Format("{0}", dr["TypeOfBusiness"]),
@@ -536,6 +539,11 @@ namespace SqlServices
                         Priority = string.Format("{0}", dr["Priority"]),
                         RiskScore = string.Format("{0}", dr["RiskScore"]),
                     };
+                    var listdates = DP.GetDates(Convert.ToString(dr["EffectiveDate"]));
+                    if(listdates.Count > 0)
+                    {
+                        ObjSubmission.EffectiveDate = Convert.ToString(listdates.Min());
+                    }
 
                     SubmissionList.Add(ObjSubmission);
                 }
