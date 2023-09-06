@@ -37,13 +37,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Factory", "Factory\Factory.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIAdapter", "APIAdapter", "{7D1E934E-48D3-4878-9323-B4C1921E9ED1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIAdapter", "APIAdapter\APIAdapter.csproj", "{CBB3835A-9D2C-4689-A139-AFC01E75B0D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIAdapter", "APIAdapter\APIAdapter.csproj", "{CBB3835A-9D2C-4689-A139-AFC01E75B0D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIAdapter.Interface", "APIAdapter.Interface\APIAdapter.Interface.csproj", "{ACD01A74-DEBA-4B5B-AA1A-B177CA3C0317}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIAdapter.Interface", "APIAdapter.Interface\APIAdapter.Interface.csproj", "{ACD01A74-DEBA-4B5B-AA1A-B177CA3C0317}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiServices", "ApiServices\ApiServices.csproj", "{28F1CB6D-99A8-4921-BA84-835C608B16EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiServices", "ApiServices\ApiServices.csproj", "{28F1CB6D-99A8-4921-BA84-835C608B16EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiServices.Interface", "ApiServices.Interface\ApiServices.Interface.csproj", "{8A72B427-3DE2-430A-80DF-9D058455929B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiServices.Interface", "ApiServices.Interface\ApiServices.Interface.csproj", "{8A72B427-3DE2-430A-80DF-9D058455929B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Filter", "Filter", "{B5B14170-FC62-4C75-8F3F-F3D567E9A4E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Throttle.Filter", "Throttle\Throttle.Filter.csproj", "{A5A9D6BE-7464-417B-AD47-DDED5972657C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ErrorHandling", "ErrorHandling", "{31C0E631-A1A7-4AD5-81B2-A8CAD502097A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Global.Errorhandling", "Global.Exception\Global.Errorhandling.csproj", "{418F8A41-FD91-4898-ABBD-BCBBD83898CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +123,14 @@ Global
 		{8A72B427-3DE2-430A-80DF-9D058455929B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A72B427-3DE2-430A-80DF-9D058455929B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A72B427-3DE2-430A-80DF-9D058455929B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5A9D6BE-7464-417B-AD47-DDED5972657C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5A9D6BE-7464-417B-AD47-DDED5972657C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5A9D6BE-7464-417B-AD47-DDED5972657C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5A9D6BE-7464-417B-AD47-DDED5972657C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{418F8A41-FD91-4898-ABBD-BCBBD83898CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{418F8A41-FD91-4898-ABBD-BCBBD83898CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{418F8A41-FD91-4898-ABBD-BCBBD83898CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{418F8A41-FD91-4898-ABBD-BCBBD83898CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,6 +151,8 @@ Global
 		{ACD01A74-DEBA-4B5B-AA1A-B177CA3C0317} = {7D1E934E-48D3-4878-9323-B4C1921E9ED1}
 		{28F1CB6D-99A8-4921-BA84-835C608B16EA} = {EA2E5E63-6CEC-473F-9B2B-8F4D31C05634}
 		{8A72B427-3DE2-430A-80DF-9D058455929B} = {9BAF822B-728D-4536-B6A3-A6D557DA4312}
+		{A5A9D6BE-7464-417B-AD47-DDED5972657C} = {B5B14170-FC62-4C75-8F3F-F3D567E9A4E3}
+		{418F8A41-FD91-4898-ABBD-BCBBD83898CE} = {31C0E631-A1A7-4AD5-81B2-A8CAD502097A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {99241E23-C373-4638-A6F3-4D71B0283AF9}

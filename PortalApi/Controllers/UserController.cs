@@ -1,3 +1,4 @@
+using Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ using Services.Common.Interface;
 using Services.Factory.Interface;
 using Services.Repository.Interface;
 using System;
+using System.Security.Claims;
 
 namespace PortalApi.Controllers.Login;
 
@@ -38,21 +40,95 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<OperationResult<OAuthTokenResponse>> GetToken(string username, string password)
     {
-        return await iBusServiceFactory.TokenService().GetUserToken(username, password);
+        try
+        {
+            var response = await iBusServiceFactory.TokenService().GetUserToken(username, password);
+            //setTokenCookie(response);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "500", "Internal Server Error");
+        }
+       
     }
+
+    [Route("refreshtoken")]
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<OperationResult<OAuthTokenResponse>> GetRefreshToken(OAuthTokenResponse objOAuthTokenResponse)
+    {
+        try
+        {
+            if (objOAuthTokenResponse is null)
+                return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "401", "Bad Request!");
+            var principal = iBusServiceFactory.TokenService().GetPrincipalFromExpiredToken(objOAuthTokenResponse.AccessToken);
+            User user = new User();
+            user.Email = principal.Identity.Name; //this is mapped to the Name claim by default
+            user.UserID = Convert.ToInt32(principal.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var response = await iBusServiceFactory.TokenService().GetUserRefreshToken(user, objOAuthTokenResponse.RefreshToken);
+            //setTokenCookie(response);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "500", "Internal Server Error");
+        }
+    }
+
+    [Route("logout")]
+    [HttpPost]
+    public async Task<OperationResult<OAuthTokenResponse>> RevokeToken()
+    {
+        try
+        {
+            var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
+
+            var response = await iBusServiceFactory.TokenService().RevokeToken(useremail);
+            //setTokenCookie(response);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "500", "Internal Server Error");
+        }
+    }
+
     [Route("forgotpassword/{email}")]
     [HttpPost]
     [AllowAnonymous]
     public async Task<OperationResult<string>> ForgotPassword(string email)
     {
-        return await iBusServiceFactory.UserService().ForgotPassword(email);
+        try
+        {
+            return await iBusServiceFactory.UserService().ForgotPassword(email);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<string>(string.Empty, false, "500", "Internal Server Error");
+        }
+       
     }
     [Route("contactus")]
     [HttpPost]
     [AllowAnonymous]
     public async Task<OperationResult<string>> ContactUs(ContactUs contactUs)
     {
-        return await iBusServiceFactory.ContactUsService().ContactUs(contactUs);
+        try
+        {
+            return await iBusServiceFactory.ContactUsService().ContactUs(contactUs);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<string>(string.Empty, false, "500", "Internal Server Error");
+        }
+       
     }
 
     [Route("resetpassword/{email}/{newPassword}")]
@@ -60,20 +136,47 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<OperationResult<string>> ResetPassword(string email, string newPassword)
     {
-        return await iBusServiceFactory.UserService().ResetPassword(email, newPassword);
+        try
+        {
+            return await iBusServiceFactory.UserService().ResetPassword(email, newPassword);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<string>(string.Empty, false, "500", "Internal Server Error");
+        }
+        
     }
 
     [Route("changepassword/{userId}/{currentPassword}/{newPassword}")]
     [HttpPost]
     public async Task<OperationResult<string>> ChangePassword(int userId, string currentPassword, string newPassword)
     {
-        return await iBusServiceFactory.UserService().ChangePassword(userId, currentPassword, newPassword);
+        try
+        {
+            return await iBusServiceFactory.UserService().ChangePassword(userId, currentPassword, newPassword);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<string>(string.Empty, false, "500", "Internal Server Error");
+        }
+      
     }
 
     [HttpGet("accounts/{userId}")]
     public async Task<OperationResult<List<Account>>> GetAccountDetails(int userId)
     {
-        return await iBusServiceFactory.UserService().GetAccountDetails(userId);
+        try
+        {
+            return await iBusServiceFactory.UserService().GetAccountDetails(userId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<List<Account>>(new List<Account>(), false, "500", "Internal Server Error");
+        }
+       
     }
     //[HttpPost("qlikreload/{reloadtype}")]
     //public async Task<OperationResult<string>> QlikReload(string reloadtype)
@@ -91,11 +194,29 @@ public class UserController : ControllerBase
     [HttpGet("userdetails/{email}")]
     public async Task<OperationResult<User>> UserDetails(string email)
     {
-        return await iBusServiceFactory.UserService().GetUserDetails(email);
+        try
+        {
+            return await iBusServiceFactory.UserService().GetUserDetails(email);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<User>(new User(), false, "500", "Internal Server Error");
+        }
+       
     }
     [HttpGet("usersaccountmanagerdetails/{email}")]
     public async Task<OperationResult<User>> AccountManagerDetails(string email)
     {
-        return await iBusServiceFactory.UserService().GetUsersAccountManagerDetails(email);
+        try
+        {
+            return await iBusServiceFactory.UserService().GetUsersAccountManagerDetails(email);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return new OperationResult<User>(new User(), false, "500", "Internal Server Error");
+        }
+        
     }
 }

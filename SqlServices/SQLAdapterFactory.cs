@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Portal.Repository.Inbox;
 using Models.DTO;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MsSqlServices
 {
@@ -23,11 +24,13 @@ namespace MsSqlServices
         private readonly ILoggerFactory loggerFactory;
         private readonly IMsSqlDataHelper msSqlDataHelper;
         readonly SimpleCache cacheProvider;
+        private readonly IMemoryCache _memoryCache;
         public IConfiguration configuration { get; }
         public SQLAdapterFactory(IMsSqlDataHelper msSqlDataHelper,
                 SimpleCache cacheProvider,
                 IConfiguration configuration,
-                ILoggerFactory loggerFactory
+                ILoggerFactory loggerFactory,
+                IMemoryCache memoryCache
               )
         {
             this.loggerFactory = loggerFactory;
@@ -35,14 +38,15 @@ namespace MsSqlServices
             this.msSqlDataHelper = msSqlDataHelper;
             this.configuration = configuration;
             this.loggerFactory = loggerFactory;
+            this._memoryCache = memoryCache;
         }
 
         ITokenService IBusServiceFactory.TokenService()
         {
             return new TokenService(msSqlDataHelper,
-            cacheProvider,
+            //cacheProvider,
                  configuration,
-                 loggerFactory.CreateLogger<TokenService>());
+                 loggerFactory.CreateLogger<TokenService>(), _memoryCache);
         }
 
 

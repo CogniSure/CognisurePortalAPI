@@ -23,6 +23,7 @@ using MsSqlServices;
 using ApiServices;
 using ApiServices.Interface;
 using Repository;
+using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -33,10 +34,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-
-// Adding Jwt Bearer
-.AddJwtBearer(options =>
+}).AddJwtBearer(options =>
 {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;
@@ -106,6 +104,8 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<IMsSqlBaseDatabase, MsSqlBaseDatabase>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddSingleton<SimpleCache>();
+    //builder.Services.AddTransient<IMemoryCache, MemoryCache>();
+    builder.Services.AddMemoryCache();
     string ChatbotSection = builder.Configuration.GetValue<string>("ChatbotAPI");
     builder.Services.AddHttpClient("chatclient",client =>
     {
@@ -156,7 +156,7 @@ var app = builder.Build();
     app.UseSwaggerUI();
 app.UseCors("corspolicy");
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
