@@ -15,15 +15,18 @@ using Extention;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
-using PortalApi.FactoryResolver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MsSqlServices;
 using ApiServices;
 using ApiServices.Interface;
+using Global.Errorhandling;
 using Repository;
 using Microsoft.Extensions.Caching.Memory;
+using Throttle.Filter;
+using Microsoft.Extensions.Options;
+using Services.Factory.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -52,7 +55,9 @@ builder.Services.AddAuthentication(options =>
 SetupApplicationDependencies(builder.Services);
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options => {
+    options.Filters.Add<ThrottleFilter>();
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
@@ -95,6 +100,7 @@ void SetupApplicationDependencies(IServiceCollection services)
     });
     //services.AddSingleton<IMapperProvider<WebServiceMapperProfile>, MapperProvider<WebServiceMapperProfile>>();
     builder.Services.AddScoped<IDashboardRepository, DashboardService>();
+    builder.Services.AddScoped<ThrottleFilter>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ISubmissionService, SubmissionService>();
     builder.Services.AddScoped<IURLService, URLService>();
@@ -152,7 +158,9 @@ void SetupApplicationDependencies(IServiceCollection services)
 //}));
 
 var app = builder.Build();
-    app.UseSwagger();
+app.UseHttpStatusCodeExceptionMiddleware();
+//app.UseThrottleMiddleware();
+app.UseSwagger();
     app.UseSwaggerUI();
 app.UseCors("corspolicy");
 app.UseHttpsRedirection();

@@ -11,6 +11,7 @@ namespace Services.MsSqlServices.Interface
         User GetUsersAccountManager(string email);
         bool IsValidUser(string email, out string generalMessage, out string technicalMessage);
         bool EmailPassword(string toEmail);
+        DataSet GetUserThrottle(string email);
         List<Account> GetAccountDetails(int userID);
         bool ChangePassword(int userId, string currentPassword, string newPassword, out string generalMessage, out string technicalMessage);
         bool ResetPassword(string email, string newPassword, out string generalMessage, out string technicalMessage);

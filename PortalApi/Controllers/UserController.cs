@@ -5,12 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models.DTO;
 using Portal.Repository.Login;
-using PortalApi.FactoryResolver;
 using Services.Common.Interface;
 using Services.Factory.Interface;
 using Services.Repository.Interface;
 using System;
 using System.Security.Claims;
+using Throttle.Filter;
 
 namespace PortalApi.Controllers.Login;
 
@@ -38,6 +38,7 @@ public class UserController : ControllerBase
     [Route("login")]
     [HttpPost]
     [AllowAnonymous]
+   // [ThrottleFilter(ThrottleGroup: "identity")]
     public async Task<OperationResult<OAuthTokenResponse>> GetToken(string username, string password)
     {
         try

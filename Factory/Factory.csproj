@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApiServices.Interface\ApiServices.Interface.csproj" />
     <ProjectReference Include="..\Services.Common.Interface\Services.Common.Interface.csproj" />
     <ProjectReference Include="..\Services.Repository\Services.Repository.Interface.csproj" />
   </ItemGroup>

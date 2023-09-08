@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models.DTO;
 using Portal.Repository.Inbox;
-using PortalApi.FactoryResolver;
 using Services.Factory.Interface;
 using Services.Repository.Interface;
 using System;

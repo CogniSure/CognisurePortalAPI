@@ -196,5 +196,11 @@ namespace MsSqlAdapter
             };
             return BaseDatabase.GetData("sp_GetAllSubmissionsByUserId", parameters);
         }
+        public DataSet GetUserThrottle(string email)
+        {
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(BaseDatabase.Param("@Email", email));
+            return BaseDatabase.GetData("sp_GetUser_Throttle", parameters);
+        }
     }
 }

@@ -136,6 +136,10 @@ namespace SqlServices
             bool result = Database.EmailPassword(toEmail);
             return result;
         }
+        public DataSet GetUserThrottle(string email)
+        {
+            return Database.GetUserThrottle(email);
+        }
         public List<Account> GetAccountDetails(int userID)
         {
             return ConvertDataTable<Account>(Database.GetAccountDetails(userID).Tables[0]);

@@ -10,6 +10,7 @@ namespace Services.Repository.Interface
 {
     public interface IUserService
     {
+        public ThrottleData GetUserThrottle(string ThrottleGroup);
         Task<OperationResult<User>> GetUserDetails(string email);
         Task<OperationResult<User>> GetUsersAccountManagerDetails(string email);
         Task<OperationResult<string>> ForgotPassword(string email);

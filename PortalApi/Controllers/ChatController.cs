@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Models.DTO;
 using Newtonsoft.Json.Linq;
-using PortalApi.FactoryResolver;
 using Services.Factory.Interface;
 
 namespace PortalApi.Controllers

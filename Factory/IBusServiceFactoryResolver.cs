@@ -1,6 +1,6 @@
-﻿using Services.Factory.Interface;
+﻿
 
-namespace PortalApi.FactoryResolver
+namespace Services.Factory.Interface
 {
     public delegate IBusServiceFactory IBusServiceFactoryResolver(string key);
 }
