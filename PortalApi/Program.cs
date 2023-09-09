@@ -55,9 +55,11 @@ builder.Services.AddAuthentication(options =>
 SetupApplicationDependencies(builder.Services);
 // Add services to the container.
 
-builder.Services.AddControllers(options => {
-    options.Filters.Add<ThrottleFilter>();
-});
+//builder.Services.AddControllers(options =>
+//{
+//    options.Filters.Add<ThrottleFilter>();
+//});
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
@@ -100,6 +102,7 @@ void SetupApplicationDependencies(IServiceCollection services)
     });
     //services.AddSingleton<IMapperProvider<WebServiceMapperProfile>, MapperProvider<WebServiceMapperProfile>>();
     builder.Services.AddScoped<IDashboardRepository, DashboardService>();
+    builder.Services.AddScoped<ThrottleAttribute>();
     builder.Services.AddScoped<ThrottleFilter>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ISubmissionService, SubmissionService>();

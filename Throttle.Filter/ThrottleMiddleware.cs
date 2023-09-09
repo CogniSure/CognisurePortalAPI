@@ -20,15 +20,14 @@ namespace Throttle.Filter
         private string _throttleGroup;
         private readonly RequestDelegate _next;
         private readonly ILogger<ThrottleMiddleware> logger;
-        //private readonly IBusServiceFactory _iBusServiceFactory;
+        private readonly IBusServiceFactory iBusServiceFactory;
 
-        public ThrottleMiddleware(RequestDelegate next,ILoggerFactory loggerFactory, [CallerMemberName] string ThrottleGroup = "identity")
+        public ThrottleMiddleware(RequestDelegate next, IBusServiceFactoryResolver iBusServiceFactoryResolver, [CallerMemberName] string ThrottleGroup = null)
         {
             _next = next;
-            logger = loggerFactory?.CreateLogger<ThrottleMiddleware>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             _throttleGroup = ThrottleGroup;
             _throttler = new Throttler(ThrottleGroup);
-            //_iBusServiceFactory = iBusServiceFactory;
+           // this.iBusServiceFactory = iBusServiceFactoryResolver("mssql");
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -53,10 +52,10 @@ namespace Throttle.Filter
         {
             if (_throttleGroup == "identity")
             {
-                var ss= context.User.Identity.Name;
-                _throttler.ThrottleGroup = "Siddaroodh";// context.User.Identity.Name;
+                //var ss= context.User.Identity.Name;
+                _throttler.ThrottleGroup =  context.User.Identity.Name;
 
-                //var throttle = _iBusServiceFactory.UserService().GetUserThrottle(_throttler.ThrottleGroup);
+                //var throttle = iBusServiceFactory.UserService().GetUserThrottle(_throttler.ThrottleGroup);
                 ////var throttle = Ibus.GetUserThrottle(_throttler.ThrottleGroup);
                 //_throttler.RequestLimit = throttle.RequestLimit;
                 //_throttler._timeoutInSeconds = throttle.TimeoutInSeconds;

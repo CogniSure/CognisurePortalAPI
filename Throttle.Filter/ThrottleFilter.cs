@@ -8,26 +8,27 @@ using System.Runtime.CompilerServices;
 
 namespace Throttle.Filter
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    //[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class ThrottleFilter : ActionFilterAttribute
     {
         private Throttler _throttler;
         private string _throttleGroup;
         private readonly IBusServiceFactory _iBusServiceFactory;
 
-        public ThrottleFilter(IBusServiceFactoryResolver iBusServiceFactoryResolver,[CallerMemberName] string ThrottleGroup = null)
-        {
-            _throttleGroup = ThrottleGroup;
-            _throttler = new Throttler(ThrottleGroup);
-            this._iBusServiceFactory = iBusServiceFactoryResolver("mssql");
-        }
-        //public ThrottleFilter([CallerMemberName] string ThrottleGroup = null)
+        //public ThrottleFilter(IBusServiceFactoryResolver iBusServiceFactoryResolver,[CallerMemberName] string ThrottleGroup = null)
         //{
         //    _throttleGroup = ThrottleGroup;
         //    _throttler = new Throttler(ThrottleGroup);
+        //    this._iBusServiceFactory = iBusServiceFactoryResolver("mssql");
         //}
+        public ThrottleFilter([CallerMemberName] string ThrottleGroup = null)
+        {
+            _throttleGroup = ThrottleGroup;
+            _throttler = new Throttler(ThrottleGroup);
+        }
         public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
+            
             setIdentityAsThrottleGroup(actionContext.HttpContext);
             if (_throttler.ThrottleGroup != null && _throttler.RequestShouldBeThrottled)
             {
@@ -37,10 +38,8 @@ namespace Throttle.Filter
                     StatusCode = 429, // Too Many Requests
                     ContentType = "text/plain"
                 };
-
                 addThrottleHeaders(actionContext.HttpContext.Response);
             }
-
 
             base.OnActionExecuting(actionContext);
         }
@@ -49,7 +48,9 @@ namespace Throttle.Filter
         {
             setIdentityAsThrottleGroup(actionExecutedContext.HttpContext);
             if (_throttler.ThrottleGroup != null && actionExecutedContext.Exception == null)
+            {
                 _throttler.IncrementRequestCount();
+            }
             addThrottleHeaders(actionExecutedContext.HttpContext.Response);
             base.OnActionExecuted(actionExecutedContext);
         }
@@ -59,9 +60,11 @@ namespace Throttle.Filter
             if (_throttleGroup == "identity")
             {
                 _throttler.ThrottleGroup = actionContext.User.Identity.Name;
-                var throttle = _iBusServiceFactory.UserService().GetUserThrottle(_throttler.ThrottleGroup);
-                _throttler.RequestLimit = throttle.RequestLimit;
-                _throttler._timeoutInSeconds = throttle.TimeoutInSeconds;
+                //var throttle = _iBusServiceFactory.UserService().GetUserThrottle(_throttler.ThrottleGroup);
+                //_throttler.RequestLimit = throttle.RequestLimit;
+                //_throttler._timeoutInSeconds = throttle.TimeoutInSeconds;
+                _throttler.RequestLimit = 3;
+                _throttler._timeoutInSeconds = 60;
             }
 
             if (_throttleGroup == "ipaddress")
@@ -73,7 +76,7 @@ namespace Throttle.Filter
             if (response == null) return;
 
             foreach (var header in _throttler.GetRateLimitHeaders())
-                response.Headers.Add(header.Key, header.Value);
+                response.Headers.TryAdd(header.Key, header.Value);
         }
 
     }

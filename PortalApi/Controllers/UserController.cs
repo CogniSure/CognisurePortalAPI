@@ -38,7 +38,7 @@ public class UserController : ControllerBase
     [Route("login")]
     [HttpPost]
     [AllowAnonymous]
-   // [ThrottleFilter(ThrottleGroup: "identity")]
+    [ThrottleFilter(ThrottleGroup: "identity")]
     public async Task<OperationResult<OAuthTokenResponse>> GetToken(string username, string password)
     {
         try
