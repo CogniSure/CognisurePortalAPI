@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using Portal.Repository.Inbox;
 using Models.DTO;
 using Microsoft.Extensions.Caching.Memory;
+using MsSqlAdapter;
+using MsSqlAdapter.Interface;
 
 namespace MsSqlServices
 {
@@ -26,11 +28,13 @@ namespace MsSqlServices
         readonly SimpleCache cacheProvider;
         private readonly IMemoryCache _memoryCache;
         public IConfiguration configuration { get; }
+        public IMsSqlDatabaseException _iMsSqlDatabaseException { get; }
         public SQLAdapterFactory(IMsSqlDataHelper msSqlDataHelper,
                 SimpleCache cacheProvider,
                 IConfiguration configuration,
                 ILoggerFactory loggerFactory,
-                IMemoryCache memoryCache
+                IMemoryCache memoryCache,
+                IMsSqlDatabaseException iMsSqlDatabaseException
               )
         {
             this.loggerFactory = loggerFactory;
@@ -39,8 +43,12 @@ namespace MsSqlServices
             this.configuration = configuration;
             this.loggerFactory = loggerFactory;
             this._memoryCache = memoryCache;
+            this._iMsSqlDatabaseException = iMsSqlDatabaseException;
         }
-
+        IExceptionService IBusServiceFactory.ExceptionService()
+        {
+            return new ExceptionService(_iMsSqlDatabaseException);
+        }
         ITokenService IBusServiceFactory.TokenService()
         {
             return new TokenService(msSqlDataHelper,
@@ -113,6 +121,8 @@ namespace MsSqlServices
         {
             throw new NotImplementedException();
         }
+
+       
     }
 
 }

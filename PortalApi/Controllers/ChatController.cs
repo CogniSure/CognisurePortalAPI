@@ -37,6 +37,8 @@ namespace PortalApi.Controllers
             {
                 _logger.LogError("Error: {0}", ex.Message);
                 return null;
+                //return await iBusServiceFactory.ExceptionService<string>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+                //"0", "ChatController", "UploadCopilotFIles");
             }
         }
         [Route("AskCopilot")]
@@ -51,6 +53,8 @@ namespace PortalApi.Controllers
             {
                 _logger.LogError("Error: {0}", ex.Message);
                 return null;
+                //return await iBusServiceFactory.ExceptionService<string>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+                // "0", "ChatController", "AskCoPilot");
             }
         }
     }

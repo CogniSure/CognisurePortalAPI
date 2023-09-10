@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MsSqlAdapter;
+using MsSqlAdapter.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;

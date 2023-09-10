@@ -36,6 +36,8 @@ namespace PortalApi.Controllers
             {
                 _logger.LogError("Error: {0}", ex.Message);
                 return null;
+                // return await iBusServiceFactory.ExceptionService<List<Submission>>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+                //"0", "InboxController", "GetAllSubmission");
             }
         }
     }

@@ -21,7 +21,8 @@ public class SubmissionController : ControllerBase
     private readonly ILogger<SubmissionController> _logger;
     public ISubmissionService _inboxRepository;
     private readonly IConfiguration _configuration;
-    private readonly IBusServiceFactory iBusServiceFactory;
+    private readonly IBusServiceFactory iBusServiceFactoryAPI;
+    //private readonly IBusServiceFactory iBusServiceFactorySQL;
 
     public SubmissionController(ILogger<SubmissionController> logger,
         ISubmissionService inboxRepository, IConfiguration configuration,
@@ -30,7 +31,8 @@ public class SubmissionController : ControllerBase
     {
         _logger = logger;
         _inboxRepository = inboxRepository;
-        this.iBusServiceFactory = iBusServiceFactoryResolver("api");
+        this.iBusServiceFactoryAPI = iBusServiceFactoryResolver("api");
+       // this.iBusServiceFactorySQL = iBusServiceFactoryResolver("api");
         _configuration = configuration;
     }
     [Route("submission")]
@@ -40,12 +42,14 @@ public class SubmissionController : ControllerBase
         try
         {
             var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
-            return await iBusServiceFactory.SubmissionService().GetSubmissionData(submissionid, useremail);
+            return await iBusServiceFactoryAPI.SubmissionService().GetSubmissionData(submissionid, useremail);
         }
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}",ex.Message);
             return null;
+            //return await iBusServiceFactorySQL.ExceptionService<SubmissionData>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //   "0", "SubmissionController", "GetSubmissionById");
         }
     }
     [Route("submission360")]
@@ -55,12 +59,14 @@ public class SubmissionController : ControllerBase
         try
         {
             var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
-            return await iBusServiceFactory.SubmissionService().DownloadSubmission360(submissionid, useremail);
+            return await iBusServiceFactoryAPI.SubmissionService().DownloadSubmission360(submissionid, useremail);
         }
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
             return null;
+            //return await iBusServiceFactorySQL.ExceptionService<Submission360>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "SubmissionController", "DownloadSubmission360");
         }
     }
 }

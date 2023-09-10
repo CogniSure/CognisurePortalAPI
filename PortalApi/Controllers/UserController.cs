@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models.DTO;
+using MsSqlAdapter.Interface;
 using Portal.Repository.Login;
 using Services.Common.Interface;
 using Services.Factory.Interface;
@@ -25,14 +26,18 @@ public class UserController : ControllerBase
     //public ITokenService _tokenRepository;
     private readonly IBusServiceFactory iBusServiceFactory;
     private readonly IConfiguration _configuration;
+    private readonly IMsSqlDatabaseException ExceptionDB;
 
 
     public UserController(ILogger<DashboardController> logger,
-                            IBusServiceFactoryResolver iBusServiceFactoryResolver, IConfiguration configuration)
+                            IBusServiceFactoryResolver iBusServiceFactoryResolver, 
+                            IConfiguration configuration,
+                            IMsSqlDatabaseException iMsSqlDatabaseException)
     {
         _logger = logger; 
-        this.iBusServiceFactory = iBusServiceFactoryResolver("mssql");
+        iBusServiceFactory = iBusServiceFactoryResolver("mssql");
         _configuration = configuration;
+        ExceptionDB = iMsSqlDatabaseException;
     }
 
     [Route("login")]
@@ -44,13 +49,17 @@ public class UserController : ControllerBase
         try
         {
             var response = await iBusServiceFactory.TokenService().GetUserToken(username, password);
+            int i = Convert.ToInt32("a");
+
             //setTokenCookie(response);
             return response;
         }
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "500", "Internal Server Error");
+            ExceptionDB.AddError("", string.Format("{0}",ex.InnerException), ex.Message, string.Format("{0}", ex.Source), string.Format("{0}", ex.StackTrace), string.Format("{0}", ex.TargetSite),
+               "0", "UserController", "GetToken");
+             return null;
         }
        
     }
@@ -76,7 +85,9 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "500", "Internal Server Error");
+            return null;
+            //return await iBusServiceFactory.ExceptionService<OAuthTokenResponse>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "UserController", "GetRefreshToken");
         }
     }
 
@@ -95,7 +106,9 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "500", "Internal Server Error");
+            return null;
+            //return await iBusServiceFactory.ExceptionService<OAuthTokenResponse>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "UserController", "RevokeToken");
         }
     }
 
@@ -111,7 +124,9 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<string>(string.Empty, false, "500", "Internal Server Error");
+            return null;
+            //return await iBusServiceFactory.ExceptionService<string>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "UserController", "ForgotPassword");
         }
        
     }
@@ -127,7 +142,9 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<string>(string.Empty, false, "500", "Internal Server Error");
+            return null;
+            //return await iBusServiceFactory.ExceptionService<string>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "UserController", "ContactUs");
         }
        
     }
@@ -144,7 +161,9 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<string>(string.Empty, false, "500", "Internal Server Error");
+            return null;
+            //return await iBusServiceFactory.ExceptionService<string>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "UserController", "ResetPassword");
         }
         
     }
@@ -160,7 +179,9 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<string>(string.Empty, false, "500", "Internal Server Error");
+            return null;
+            //return await iBusServiceFactory.ExceptionService<string>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "UserController", "ChangePassword");
         }
       
     }
@@ -175,7 +196,9 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<List<Account>>(new List<Account>(), false, "500", "Internal Server Error");
+            return null;
+            //return await iBusServiceFactory.ExceptionService<List<Account>>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "UserController", "GetAccountDetails");
         }
        
     }
@@ -202,7 +225,9 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<User>(new User(), false, "500", "Internal Server Error");
+            return null;
+            //return await iBusServiceFactory.ExceptionService<User>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "UserController", "UserDetails");
         }
        
     }
@@ -216,7 +241,9 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
-            return new OperationResult<User>(new User(), false, "500", "Internal Server Error");
+            return null;
+            //return await iBusServiceFactory.ExceptionService<User>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //     "0", "UserController", "AccountManagerDetails");
         }
         
     }

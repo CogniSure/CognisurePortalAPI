@@ -13,7 +13,7 @@ namespace Throttle.Filter
     {
         private Throttler _throttler;
         private string _throttleGroup;
-        private readonly IBusServiceFactory _iBusServiceFactory;
+        //private readonly IBusServiceFactory _iBusServiceFactory;
 
         //public ThrottleFilter(IBusServiceFactoryResolver iBusServiceFactoryResolver,[CallerMemberName] string ThrottleGroup = null)
         //{

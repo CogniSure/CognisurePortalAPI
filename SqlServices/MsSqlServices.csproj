@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Extention\Extention.csproj" />
     <ProjectReference Include="..\Factory\Factory.csproj" />
     <ProjectReference Include="..\Models.DTO\Models.DTO.csproj" />
+    <ProjectReference Include="..\MsSqlAdapter\MsSqlAdapter.csproj" />
     <ProjectReference Include="..\MsSqlDatabase.Interface\MsSqlAdapter.Interface.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
     <ProjectReference Include="..\Services.Common.Interface\Services.Common.Interface.csproj" />

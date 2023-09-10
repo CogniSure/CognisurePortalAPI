@@ -102,7 +102,6 @@ void SetupApplicationDependencies(IServiceCollection services)
     });
     //services.AddSingleton<IMapperProvider<WebServiceMapperProfile>, MapperProvider<WebServiceMapperProfile>>();
     builder.Services.AddScoped<IDashboardRepository, DashboardService>();
-    builder.Services.AddScoped<ThrottleAttribute>();
     builder.Services.AddScoped<ThrottleFilter>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ISubmissionService, SubmissionService>();
@@ -111,8 +110,10 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<IApiHelper, ApiHelper>();
     builder.Services.AddScoped<IMsSqlDatabase, MsSqlDatabase>();
     builder.Services.AddScoped<IMsSqlBaseDatabase, MsSqlBaseDatabase>();
+    builder.Services.AddScoped<IMsSqlDatabaseException, MsSqlDatabaseException>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddSingleton<SimpleCache>();
+
     //builder.Services.AddTransient<IMemoryCache, MemoryCache>();
     builder.Services.AddMemoryCache();
     string ChatbotSection = builder.Configuration.GetValue<string>("ChatbotAPI");
