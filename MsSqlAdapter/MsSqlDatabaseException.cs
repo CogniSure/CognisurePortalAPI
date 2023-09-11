@@ -1,10 +1,5 @@
 ﻿using MsSqlAdapter.Interface;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MsSqlAdapter
 {
@@ -16,7 +11,7 @@ namespace MsSqlAdapter
         {
             BaseDatabase = baseDatabase;
         }
-        public void AddError(string hresult, string innerexception, string message
+        public async Task AddError(string hresult, string innerexception, string message
          , string source, string stacktrace, string targetsite, string addedby, string ControllerName, string ActionName)
         {
 
@@ -36,23 +31,23 @@ namespace MsSqlAdapter
 
         }
 
-        public void AddError(Exception exe, string addedby, string ControllerName, string ActionName)
+        public async Task AddError(Exception exe, string addedby, string ControllerName, string ActionName)
         {
 
-            AddError("", string.Format("{0}", exe.InnerException), exe.Message, exe.Source, exe.StackTrace
-                , exe.TargetSite.ToString(), addedby, ControllerName, ActionName);
+            await AddError("", string.Format("{0}", exe.InnerException), exe.Message, string.Format("{0}", exe.Source), string.Format("{0}", exe.StackTrace)
+                , string.Format("{0}", exe.TargetSite), addedby, ControllerName, ActionName);
         }
 
-        public void AddError(Exception exe, string ControllerName, string ActionName)
+        public async Task AddError(Exception exe, string ControllerName, string ActionName)
         {
 
-            AddError("", string.Format("{0}", exe.InnerException), exe.Message, exe.Source, exe.StackTrace
-                , exe.TargetSite.ToString(), "", ControllerName, ActionName);
+            await AddError("", string.Format("{0}", exe.InnerException), exe.Message, string.Format("{0}", exe.Source), string.Format("{0}", exe.StackTrace)
+                , string.Format("{0}", exe.TargetSite), "", ControllerName, ActionName);
         }
 
-        public void AddError(string errorText, string ControllerName, string ActionName)
+        public async Task AddError(string errorText, string ControllerName, string ActionName)
         {
-            AddError("", "", errorText, "", "", "", "", ControllerName, ActionName);
+            await AddError("", "", errorText, "", "", "", "", ControllerName, ActionName);
         }
     }
 }

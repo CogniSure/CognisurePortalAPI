@@ -62,11 +62,11 @@ namespace SqlServices
                     IsActive = Convert.ToBoolean(dst.Tables[0].Rows[0]["IsActive"]),
                     IsVerified = Convert.ToBoolean(dst.Tables[0].Rows[0]["IsVerified"]),
                     ClientID = Convert.ToInt32(dst.Tables[0].Rows[0]["ClientID"]),
-                    ClientCode = dst.Tables[0].Rows[0]["ClientCode"].ToString(),
-                    ClientName = dst.Tables[0].Rows[0]["ClientName"].ToString(),
-                    UserTypeName = dst.Tables[0].Rows[0]["UserTypeName"].ToString(),
+                    ClientCode = string.Format("{0}", dst.Tables[0].Rows[0]["ClientCode"]),
+                    ClientName = string.Format("{0}", dst.Tables[0].Rows[0]["ClientName"]),
+                    UserTypeName = string.Format("{0}", dst.Tables[0].Rows[0]["UserTypeName"]),
                     UserTypeID = Convert.ToInt32(dst.Tables[0].Rows[0]["UserTypeID"]),
-                    PhoneNumber = dst.Tables[0].Rows[0]["PhoneNumber"].ToString(),
+                    PhoneNumber = string.Format("{0}", dst.Tables[0].Rows[0]["PhoneNumber"]),
                     AddedBy = string.Format("{0}", dst.Tables[0].Rows[0]["AddedBy"]),
                     ModifiedBy = string.Format("{0}", dst.Tables[0].Rows[0]["ModifiedBy"]),
                     AddedByID = Convert.ToInt32(dst.Tables[0].Rows[0]["AddedByID"]),
@@ -97,7 +97,7 @@ namespace SqlServices
 
         }
 
-        public static byte[] FiletoByteArray(string filePath)
+        public static byte[]? FiletoByteArray(string filePath)
         {
 
             if (File.Exists(filePath))
@@ -135,10 +135,6 @@ namespace SqlServices
         {
             bool result = Database.EmailPassword(toEmail);
             return result;
-        }
-        public DataSet GetUserThrottle(string email)
-        {
-            return Database.GetUserThrottle(email);
         }
         public List<Account> GetAccountDetails(int userID)
         {
@@ -543,7 +539,7 @@ namespace SqlServices
                         Priority = string.Format("{0}", dr["Priority"]),
                         RiskScore = string.Format("{0}", dr["RiskScore"]),
                     };
-                    var listdates = DP.GetDates(Convert.ToString(dr["EffectiveDate"]));
+                    var listdates = DP.GetDates(string.Format("{0}", dr["EffectiveDate"]));
                     if(listdates.Count > 0)
                     {
                         ObjSubmission.EffectiveDate = Convert.ToString(listdates.Min());

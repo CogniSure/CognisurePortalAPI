@@ -11,7 +11,7 @@ namespace Services.Factory.Interface
 {
     public interface IBusServiceFactory
     {
-        IExceptionService ExceptionService();
+        IConfigurationService ConfigurationService();
         ITokenService TokenService();
         INotificationService NotificationService();
         IUserService UserService();

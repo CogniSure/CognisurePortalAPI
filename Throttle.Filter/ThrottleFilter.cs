@@ -13,19 +13,24 @@ namespace Throttle.Filter
     {
         private Throttler _throttler;
         private string _throttleGroup;
-        //private readonly IBusServiceFactory _iBusServiceFactory;
+        private readonly IBusServiceFactory _iBusServiceFactory;
 
-        //public ThrottleFilter(IBusServiceFactoryResolver iBusServiceFactoryResolver,[CallerMemberName] string ThrottleGroup = null)
-        //{
-        //    _throttleGroup = ThrottleGroup;
-        //    _throttler = new Throttler(ThrottleGroup);
-        //    this._iBusServiceFactory = iBusServiceFactoryResolver("mssql");
-        //}
-        public ThrottleFilter([CallerMemberName] string ThrottleGroup = null)
+        public ThrottleFilter(IBusServiceFactoryResolver iBusServiceFactoryResolver, [CallerMemberName] string ThrottleGroup = null)
         {
             _throttleGroup = ThrottleGroup;
             _throttler = new Throttler(ThrottleGroup);
+            this._iBusServiceFactory = iBusServiceFactoryResolver("mssql");
         }
+        //public ThrottleFilter(IBusServiceFactoryResolver iBusServiceFactoryResolver)
+        //{
+        //    this._iBusServiceFactory = iBusServiceFactoryResolver("mssql");
+        //}
+        //public ThrottleFilter([CallerMemberName] string ThrottleGroup = null)
+        //{
+        //    IBusServiceFactoryResolver iBusServiceFactoryResolver;
+        //    _throttleGroup = ThrottleGroup;
+        //    _throttler = new Throttler(ThrottleGroup);
+        //}
         public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
             
@@ -60,11 +65,9 @@ namespace Throttle.Filter
             if (_throttleGroup == "identity")
             {
                 _throttler.ThrottleGroup = actionContext.User.Identity.Name;
-                //var throttle = _iBusServiceFactory.UserService().GetUserThrottle(_throttler.ThrottleGroup);
-                //_throttler.RequestLimit = throttle.RequestLimit;
-                //_throttler._timeoutInSeconds = throttle.TimeoutInSeconds;
-                _throttler.RequestLimit = 3;
-                _throttler._timeoutInSeconds = 60;
+                var throttle = _iBusServiceFactory.ConfigurationService().GetUserThrottle(_throttler.ThrottleGroup);
+                _throttler.RequestLimit = throttle.RequestLimit;
+                _throttler._timeoutInSeconds = throttle.TimeoutInSeconds;
             }
 
             if (_throttleGroup == "ipaddress")

@@ -29,12 +29,14 @@ namespace MsSqlServices
         private readonly IMemoryCache _memoryCache;
         public IConfiguration configuration { get; }
         public IMsSqlDatabaseException _iMsSqlDatabaseException { get; }
+        public IMsSqlDatabaseConfiguration _iMsSqlDatabaseConfiguration { get; }
         public SQLAdapterFactory(IMsSqlDataHelper msSqlDataHelper,
                 SimpleCache cacheProvider,
                 IConfiguration configuration,
                 ILoggerFactory loggerFactory,
                 IMemoryCache memoryCache,
-                IMsSqlDatabaseException iMsSqlDatabaseException
+                IMsSqlDatabaseException iMsSqlDatabaseException,
+                IMsSqlDatabaseConfiguration iMsSqlDatabaseConfiguration
               )
         {
             this.loggerFactory = loggerFactory;
@@ -44,10 +46,7 @@ namespace MsSqlServices
             this.loggerFactory = loggerFactory;
             this._memoryCache = memoryCache;
             this._iMsSqlDatabaseException = iMsSqlDatabaseException;
-        }
-        IExceptionService IBusServiceFactory.ExceptionService()
-        {
-            return new ExceptionService(_iMsSqlDatabaseException);
+            _iMsSqlDatabaseConfiguration = iMsSqlDatabaseConfiguration;
         }
         ITokenService IBusServiceFactory.TokenService()
         {
@@ -56,7 +55,10 @@ namespace MsSqlServices
                  configuration,
                  loggerFactory.CreateLogger<TokenService>(), _memoryCache);
         }
-
+        IConfigurationService IBusServiceFactory.ConfigurationService()
+        {
+            return new ConfigurationService(_iMsSqlDatabaseConfiguration);
+        }
 
         public INotificationService NotificationService()
         {

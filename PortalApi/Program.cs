@@ -43,8 +43,8 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = new TokenValidationParameters()
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidAudience = configuration["JWT:ValidAudience"],
         ValidIssuer = configuration["JWT:ValidIssuer"],
         ValidateLifetime = true,
@@ -97,8 +97,6 @@ void SetupApplicationDependencies(IServiceCollection services)
                     return configure.CreateIBusServiceFactory(serviceProvider);
                 }
         }
-
-
     });
     //services.AddSingleton<IMapperProvider<WebServiceMapperProfile>, MapperProvider<WebServiceMapperProfile>>();
     builder.Services.AddScoped<IDashboardRepository, DashboardService>();
@@ -111,8 +109,10 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<IMsSqlDatabase, MsSqlDatabase>();
     builder.Services.AddScoped<IMsSqlBaseDatabase, MsSqlBaseDatabase>();
     builder.Services.AddScoped<IMsSqlDatabaseException, MsSqlDatabaseException>();
+    builder.Services.AddScoped<IExceptionService, ExceptionService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddSingleton<SimpleCache>();
+
 
     //builder.Services.AddTransient<IMemoryCache, MemoryCache>();
     builder.Services.AddMemoryCache();

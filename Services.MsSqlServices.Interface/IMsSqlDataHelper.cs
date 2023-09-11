@@ -11,7 +11,6 @@ namespace Services.MsSqlServices.Interface
         User GetUsersAccountManager(string email);
         bool IsValidUser(string email, out string generalMessage, out string technicalMessage);
         bool EmailPassword(string toEmail);
-        DataSet GetUserThrottle(string email);
         List<Account> GetAccountDetails(int userID);
         bool ChangePassword(int userId, string currentPassword, string newPassword, out string generalMessage, out string technicalMessage);
         bool ResetPassword(string email, string newPassword, out string generalMessage, out string technicalMessage);
@@ -24,7 +23,7 @@ namespace Services.MsSqlServices.Interface
         bool DismissNotifications(int userId, int accountId, int notificationID = 0);
         bool ReadAllNotifications(int userId, int accountID);
         bool ActiveInActiveBenefitPlan(int benefitPlanID, bool isActive);
-        
+
         bool InsertContactUs(ContactUs user, out string generalMessage, out string technicalMessage);
         //List<Widget> WidgetList(int userid);
         bool AddWidgetList(int userid, int clientwidgetid, out string generalMessage, out string technicalMessage);
@@ -32,7 +31,7 @@ namespace Services.MsSqlServices.Interface
         bool Is2faEnabled(string username, out string generalMessage, out string technicalMessage);
         //DownloadFileData Download(string type, string guid);
 
-       List<Submission> GetAllSubmission(InboxFilter ObjInboxFilter);
+        List<Submission> GetAllSubmission(InboxFilter ObjInboxFilter);
 
     }
 }

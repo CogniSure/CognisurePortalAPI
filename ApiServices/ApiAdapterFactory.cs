@@ -85,7 +85,7 @@ namespace ApiServices
             return new ChatService(apiHelper, msSqlDataHelper, clientFactory, configuration);
         }
 
-        public IExceptionService ExceptionService()
+        public IConfigurationService ConfigurationService()
         {
             throw new NotImplementedException();
         }

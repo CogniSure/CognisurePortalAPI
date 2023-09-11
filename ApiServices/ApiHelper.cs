@@ -16,8 +16,6 @@ namespace ApiServices
 {
     public class ApiHelper : IApiHelper
     {
-        
-
        
     }
 }

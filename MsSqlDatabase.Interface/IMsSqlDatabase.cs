@@ -30,6 +30,5 @@ namespace MsSqlAdapter.Interface
             string MiddleName, string phoneNumber, string message, string companyName, string designation,
             string interests, out string generalMessage, out string technicalMessage);
         DataSet GetAllSubmission(int userID, int UploadedUserID, int FileReceivedChannelID, string keyword, DateTime? SubmissionFromDate, DateTime? submissionTodate);
-        DataSet GetUserThrottle(string email);
     }
 }

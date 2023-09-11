@@ -29,8 +29,7 @@ namespace Throttle.Filter
             ThrottleInfo throttleInfo = new ThrottleInfo();
             if (ThrottleGroup!=null)
             {
-                throttleInfo =
-                _cache.ContainsKey(ThrottleGroup) ? _cache[ThrottleGroup] : null;
+                throttleInfo = _cache.ContainsKey(ThrottleGroup) ? _cache[ThrottleGroup] : null;
             }
 
             if (throttleInfo == null || throttleInfo.ExpiresAt <= DateTime.Now)

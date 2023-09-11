@@ -53,20 +53,7 @@ namespace Portal.Repository.Login
                 }
             }
         }
-        public ThrottleData GetUserThrottle(string email)
-        {
-            var dst = msSqlDataHelper.GetUserThrottle(email);
-
-            if (dst != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
-            {
-                return new ThrottleData
-                {
-                    RequestLimit = Convert.ToInt32(dst.Tables[0].Rows[0]["ApiRequestLimitPerSecond"]),
-                    TimeoutInSeconds = Convert.ToInt32(dst.Tables[0].Rows[0]["ApiTimeoutInSeconds"])
-                };
-            }
-            return new ThrottleData();
-        }
+       
 
         public async Task<OperationResult<string>> ResetPassword(string email, string newPassword)
         {
