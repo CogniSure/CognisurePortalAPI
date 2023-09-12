@@ -44,8 +44,7 @@ public class UserController : ControllerBase
     [Route("login")]
     [HttpPost]
     [AllowAnonymous]
-    [TypeFilter(typeof(CustomFilterAttribute))]
-    [TypeFilter(typeof(ThrottleFilter), Arguments = new object[] { "identity" })]
+   
 
     public async Task<OperationResult<OAuthTokenResponse>> GetToken(string username, string password)
     {
@@ -97,9 +96,10 @@ public class UserController : ControllerBase
     {
         try
         {
-            var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
+            var useremail = string.Format("{0}", HttpContext.User.Claims.FirstOrDefault().Value);
+            var AuthorizationToken = string.Format("{0}", HttpContext.Request.Headers["Authorization"]);
 
-            var response = await iBusServiceFactory.TokenService().RevokeToken(useremail);
+            var response = await iBusServiceFactory.TokenService().RevokeToken(useremail, AuthorizationToken);
             //setTokenCookie(response);
             return response;
         }
@@ -217,6 +217,8 @@ public class UserController : ControllerBase
     //}
 
     [HttpGet("userdetails/{email}")]
+    [TypeFilter(typeof(CustomFilterAttribute))]
+    [TypeFilter(typeof(ThrottleFilter), Arguments = new object[] { "identity" })]
     public async Task<OperationResult<User>> UserDetails(string email)
     {
         try

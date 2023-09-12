@@ -55,7 +55,7 @@ namespace Throttle.Filter
         {
             if (_throttleGroup == "identity")
             {
-                _throttler.ThrottleGroup = actionContext.User.Identity.Name;
+                _throttler.ThrottleGroup = actionContext.User.Claims.FirstOrDefault().Value;
                 var throttle = _iBusServiceFactory.ConfigurationService().GetUserThrottle(_throttler.ThrottleGroup);
                 _throttler.RequestLimit = throttle.RequestLimit;
                 _throttler._timeoutInSeconds = throttle.TimeoutInSeconds;

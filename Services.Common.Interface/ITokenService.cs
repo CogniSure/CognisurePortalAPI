@@ -12,7 +12,7 @@ namespace Services.Common.Interface
     {
         Task<OperationResult<OAuthTokenResponse>> GetUserToken(string username, string password);
         Task<OperationResult<OAuthTokenResponse>> GetUserRefreshToken(User user, string refreshToken);
-        Task<OperationResult<OAuthTokenResponse>> RevokeToken(string Email);
+        Task<OperationResult<OAuthTokenResponse>> RevokeToken(string Email, string AuthorizationToken);
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 }

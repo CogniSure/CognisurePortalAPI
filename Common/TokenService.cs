@@ -161,15 +161,22 @@ namespace Common
                 );
             return token;
         }
-        public async Task<OperationResult<OAuthTokenResponse>> RevokeToken(string Email)
+        public async Task<OperationResult<OAuthTokenResponse>> RevokeToken(string Email,string AuthorizationToken)
         {
 
             var cacheEntryOptions = new MemoryCacheEntryOptions()
-                   .SetSlidingExpiration(TimeSpan.FromMinutes(0))
-                   .SetAbsoluteExpiration(TimeSpan.FromMinutes(0))
+                   .SetSlidingExpiration(TimeSpan.FromMinutes(1))
+                   .SetAbsoluteExpiration(TimeSpan.FromMinutes(1))
                    .SetSize(1024);
 
             _memoryCache.Set($"userid_{Email}", "", cacheEntryOptions);
+
+            var cacheAT = new MemoryCacheEntryOptions()
+                   .SetSlidingExpiration(TimeSpan.FromMinutes(20))
+                   .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
+                   .SetSize(1024);
+
+            _memoryCache.Set($"userid_Blacklist_{Email}", AuthorizationToken, cacheAT);
 
             var response = new OAuthTokenResponse
             {
