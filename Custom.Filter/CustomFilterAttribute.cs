@@ -6,7 +6,7 @@ using Services.Factory.Interface;
 
 namespace Custom.Filter
 {
-    public class CustomFilterAttribute: ActionFilterAttribute
+    public class CustomFilterAttribute : ActionFilterAttribute
     {
         private readonly IBusServiceFactory _iBusServiceFactory;
         private readonly IMemoryCache _memoryCache;
@@ -36,8 +36,10 @@ namespace Custom.Filter
             //        // Use the access token as needed
             //    }
             //}
-            var cacheblacklisttoken = _memoryCache.Get($"userid_Blacklist_{email}");
-            if(string.Format("{0}", cacheblacklisttoken) == authorizationHeader)
+            var cacheblacklisttoken = _memoryCache.Get<List<string>>($"UserEmail_BlacklistToken_{email}");
+
+            //if (string.Format("{0}", cacheblacklisttoken).Contains(authorizationHeader))
+            if (cacheblacklisttoken != null && cacheblacklisttoken.FirstOrDefault(x => x.Equals(authorizationHeader))!=null)
             {
                 actionContext.Result = new ContentResult
                 {
@@ -47,7 +49,7 @@ namespace Custom.Filter
                 };
             }
 
-            _iBusServiceFactory.ConfigurationService().AddApiLog(email, action, controller,ip, "", actionContext.HttpContext.Request.Method);
+            _iBusServiceFactory.ConfigurationService().AddApiLog(email, action, controller, ip, "", actionContext.HttpContext.Request.Method);
 
             //if (!_iBusServiceFactory.ConfigurationService().IsAllowed(email, action, controller))
             //{
@@ -61,7 +63,7 @@ namespace Custom.Filter
 
             base.OnActionExecuting(actionContext);
         }
-        
+
         private string GetClientIpAddress(HttpContext request)
         {
             var ipAddress = request.Connection.RemoteIpAddress;

@@ -70,7 +70,7 @@ namespace Common
 
         public async Task<OperationResult<OAuthTokenResponse>> GetUserRefreshToken(User user, string refreshToken)
         {
-            var cacherefreshtoken = _memoryCache.Get($"userid_{user.Email}");
+            var cacherefreshtoken = _memoryCache.Get($"UserEmail_RefreshToken_{user.Email}");
             if(cacherefreshtoken == null)
             {
                 return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "401", "Token has expired!");
@@ -116,11 +116,11 @@ namespace Common
         private void setInmemoryCache(string Email,string Refreshtoken)
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(50))
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(50))
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(Convert.ToInt32(Configuration["TokenTime:RefreshTokenExpiryTime"])))
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(Convert.ToInt32(Configuration["TokenTime:RefreshTokenExpiryTime"])))
                     .SetSize(1024);
 
-            _memoryCache.Set($"userid_{Email}", Refreshtoken, cacheEntryOptions);
+            _memoryCache.Set($"UserEmail_RefreshToken_{Email}", Refreshtoken, cacheEntryOptions);
 
         }
         private JwtSecurityToken GetToken(User user)
@@ -165,28 +165,29 @@ namespace Common
         {
 
             var cacheEntryOptions = new MemoryCacheEntryOptions()
-                   .SetSlidingExpiration(TimeSpan.FromMinutes(1))
-                   .SetAbsoluteExpiration(TimeSpan.FromMinutes(1))
+                   .SetSlidingExpiration(TimeSpan.FromSeconds(1))
+                   .SetAbsoluteExpiration(TimeSpan.FromSeconds(1))
                    .SetSize(1024);
 
-            _memoryCache.Set($"userid_{Email}", "", cacheEntryOptions);
+            _memoryCache.Set($"UserEmail_RefreshToken_{Email}", "", cacheEntryOptions);
 
             var cacheAT = new MemoryCacheEntryOptions()
-                   .SetSlidingExpiration(TimeSpan.FromMinutes(20))
-                   .SetAbsoluteExpiration(TimeSpan.FromMinutes(20))
+                   .SetSlidingExpiration(TimeSpan.FromMinutes(Convert.ToInt32(Configuration["TokenTime:BlacklistTokenExpiryTime"])))
+                   .SetAbsoluteExpiration(TimeSpan.FromMinutes(Convert.ToInt32(Configuration["TokenTime:BlacklistTokenExpiryTime"])))
                    .SetSize(1024);
 
-            _memoryCache.Set($"userid_Blacklist_{Email}", AuthorizationToken, cacheAT);
+            List<string> lststring= new List<string>();
 
-            var response = new OAuthTokenResponse
+            // _memoryCache.Set($"UserEmail_BlacklistToken_{Email}", AuthorizationToken, cacheAT);
+            if(_memoryCache.Get<List<string>>($"UserEmail_BlacklistToken_{Email}")!=null)
             {
-                AccessToken = "",
-                RefreshToken = "",
-                TokenType = "bearer",
-                ExpiresIn = 0,
-                Username = Email
-            };
-            return new OperationResult<OAuthTokenResponse>(response, true);
+                lststring = _memoryCache.Get<List<string>>($"UserEmail_BlacklistToken_{Email}");
+            }
+            lststring.Add(AuthorizationToken);
+
+            _memoryCache.Set<List<string>>($"UserEmail_BlacklistToken_{Email}", lststring, cacheAT);
+
+            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "200", "successfully logout!");
         }
 
     }

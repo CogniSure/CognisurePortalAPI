@@ -32,14 +32,14 @@ namespace Extention
             return null;
         }
 
-        public async Task<string> Add(string key, string value)
+        public async Task<string> Add(string key, string value,int Expireinminits)
         {
             if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
             {
-                cache.Set(key, value, new MemoryCacheEntryOptions
-                {
-                    Size = 1
-                });
+                cache.Set
+                    (
+                        key, value, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(Expireinminits))
+                    );
                 return value;
             }
             return null;
