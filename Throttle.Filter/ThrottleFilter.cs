@@ -21,19 +21,9 @@ namespace Throttle.Filter
             _throttler = new Throttler(ThrottleGroup);
             this._iBusServiceFactory = iBusServiceFactoryResolver("mssql");
         }
-        //public ThrottleFilter(IBusServiceFactoryResolver iBusServiceFactoryResolver)
-        //{
-        //    this._iBusServiceFactory = iBusServiceFactoryResolver("mssql");
-        //}
-        //public ThrottleFilter([CallerMemberName] string ThrottleGroup = null)
-        //{
-        //    IBusServiceFactoryResolver iBusServiceFactoryResolver;
-        //    _throttleGroup = ThrottleGroup;
-        //    _throttler = new Throttler(ThrottleGroup);
-        //}
+       
         public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
-            
             setIdentityAsThrottleGroup(actionContext.HttpContext);
             if (_throttler.ThrottleGroup != null && _throttler.RequestShouldBeThrottled)
             {
@@ -51,6 +41,7 @@ namespace Throttle.Filter
 
         public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
         {
+            
             setIdentityAsThrottleGroup(actionExecutedContext.HttpContext);
             if (_throttler.ThrottleGroup != null && actionExecutedContext.Exception == null)
             {

@@ -27,6 +27,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Throttle.Filter;
 using Microsoft.Extensions.Options;
 using Services.Factory.Interface;
+using Custom.Filter;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -100,6 +101,7 @@ void SetupApplicationDependencies(IServiceCollection services)
     });
     //services.AddSingleton<IMapperProvider<WebServiceMapperProfile>, MapperProvider<WebServiceMapperProfile>>();
     builder.Services.AddScoped<IDashboardRepository, DashboardService>();
+    builder.Services.AddScoped<CustomFilterAttribute>();
     builder.Services.AddScoped<ThrottleFilter>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ISubmissionService, SubmissionService>();
@@ -107,11 +109,14 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<IMsSqlDataHelper, MsSqlDataHelper>();
     builder.Services.AddScoped<IApiHelper, ApiHelper>();
     builder.Services.AddScoped<IMsSqlDatabase, MsSqlDatabase>();
+    builder.Services.AddScoped<IExceptionService, ExceptionService>();
     builder.Services.AddScoped<IMsSqlBaseDatabase, MsSqlBaseDatabase>();
     builder.Services.AddScoped<IMsSqlDatabaseException, MsSqlDatabaseException>();
-    builder.Services.AddScoped<IExceptionService, ExceptionService>();
+    builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
+    builder.Services.AddScoped<IMsSqlDatabaseConfiguration, MsSqlDatabaseConfiguration>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddSingleton<SimpleCache>();
+
 
 
     //builder.Services.AddTransient<IMemoryCache, MemoryCache>();

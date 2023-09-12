@@ -1,4 +1,5 @@
 using Common;
+using Custom.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -43,7 +44,9 @@ public class UserController : ControllerBase
     [Route("login")]
     [HttpPost]
     [AllowAnonymous]
+    [TypeFilter(typeof(CustomFilterAttribute))]
     [TypeFilter(typeof(ThrottleFilter), Arguments = new object[] { "identity" })]
+
     public async Task<OperationResult<OAuthTokenResponse>> GetToken(string username, string password)
     {
         try
