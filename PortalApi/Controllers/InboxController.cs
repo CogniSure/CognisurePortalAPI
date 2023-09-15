@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Custom.Filter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.DTO;
 using Services.Factory.Interface;
+using System.Security.Claims;
 
 namespace PortalApi.Controllers
 {
     [ApiController]
     [Authorize]
+    [TypeFilter(typeof(CustomFilterAttribute))]
     [Route("api")]
     public class InboxController : ControllerBase
     {
@@ -29,7 +32,7 @@ namespace PortalApi.Controllers
             try
             {
                 InboxFilter ObjFilter = new InboxFilter();
-                ObjFilter.UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(C=>C.Type=="UserId").Value);
+                ObjFilter.UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return await iBusServiceFactory.SubmissionInboxService().GetAllSubmission(ObjFilter);
             }
             catch (Exception ex)

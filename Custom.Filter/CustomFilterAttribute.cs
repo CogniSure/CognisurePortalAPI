@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
 using Services.Factory.Interface;
+using System.Security.Claims;
 
 namespace Custom.Filter
 {
@@ -23,6 +24,7 @@ namespace Custom.Filter
             var action = actionContext.ActionDescriptor.RouteValues["controller"];
             var controller = actionContext.ActionDescriptor.RouteValues["action"];
             string email = string.Format("{0}", actionContext.HttpContext.User.Claims.FirstOrDefault().Value);
+            string userid = string.Format("{0}", actionContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var authorizationHeader = string.Format("{0}", actionContext.HttpContext.Request.Headers["Authorization"]);
             //string accessToken = "";
             //if (!string.IsNullOrEmpty(authorizationHeader))
@@ -78,6 +80,7 @@ namespace Custom.Filter
             //{
             //    return IPAddress.Parse(((OwinContext)request.Properties["MS_OwinContext"]).Request.RemoteIpAddress).ToString();
             //}
+
         }
 
     }
