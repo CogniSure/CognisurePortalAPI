@@ -28,6 +28,7 @@ using Throttle.Filter;
 using Microsoft.Extensions.Options;
 using Services.Factory.Interface;
 using Custom.Filter;
+using PortalApi.HubConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -53,6 +54,14 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
     };
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder => builder
+        .WithOrigins("http://localhost:4200")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
+});
 SetupApplicationDependencies(builder.Services);
 // Add services to the container.
 
@@ -61,6 +70,7 @@ SetupApplicationDependencies(builder.Services);
 //    options.Filters.Add<ThrottleFilter>();
 //});
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
@@ -116,13 +126,13 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<IMsSqlDatabaseConfiguration, MsSqlDatabaseConfiguration>();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddSingleton<SimpleCache>();
-
+    builder.Services.AddSingleton<TimerManager>();
 
 
     //builder.Services.AddTransient<IMemoryCache, MemoryCache>();
     builder.Services.AddMemoryCache();
     string ChatbotSection = builder.Configuration.GetValue<string>("ChatbotAPI");
-    builder.Services.AddHttpClient("chatclient",client =>
+    builder.Services.AddHttpClient("chatclient", client =>
     {
         client.BaseAddress = new Uri(ChatbotSection);
     });
@@ -156,26 +166,22 @@ void SetupApplicationDependencies(IServiceCollection services)
             });
     });
 
-    services.AddCors(p => p.AddPolicy("corspolicy", build => {
+    services.AddCors(p => p.AddPolicy("corspolicy", build =>
+    {
         build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
     }));
 
 }
-
-//builder.Services.AddCors(p => p.AddPolicy("corspolicy", build => {
-//    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-//}));
-
 var app = builder.Build();
 app.UseHttpStatusCodeExceptionMiddleware();
 //app.UseThrottleMiddleware();
 app.UseSwagger();
-    app.UseSwaggerUI();
-app.UseCors("corspolicy");
+app.UseSwaggerUI();
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHub<NotificationHub>("/notify");
 app.Run();
