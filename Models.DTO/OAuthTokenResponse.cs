@@ -24,5 +24,7 @@ namespace Models.DTO
         [JsonProperty("userName")]
         public string Username { get; set; }
 
+        [JsonProperty("authenticationType")]
+        public string AuthenticationType { get; set; }
     }
 }

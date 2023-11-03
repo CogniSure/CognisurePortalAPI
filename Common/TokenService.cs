@@ -65,11 +65,11 @@ namespace Common
                             var response = new OAuthTokenResponse
                             {
                                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-                                RefreshToken=Refreshtoken,
+                                RefreshToken = Refreshtoken,
                                 TokenType = "bearer",
                                 ExpiresIn = token.ValidTo.Second,
-                                Username = dbuser.Email
-
+                                Username = dbuser.Email,
+                                AuthenticationType = dbuser.AuthenticationType.AuthTypeName
                             };
                             return new OperationResult<OAuthTokenResponse>(response, true);
                         }
@@ -88,7 +88,7 @@ namespace Common
                                 string technicalMessage = string.Empty;
                                 if (authobj.GenerateOTP(dbuser.Email, out generalMessage, out technicalMessage))
                                 {
-                                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), true, "", technicalMessage);
+                                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse { AuthenticationType=technicalMessage}, true, "", technicalMessage);
                                 }
                                 else
                                 {
