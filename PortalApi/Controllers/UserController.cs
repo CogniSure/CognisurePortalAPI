@@ -44,8 +44,6 @@ public class UserController : ControllerBase
     [Route("login")]
     [HttpPost]
     [AllowAnonymous]
-   
-
     public async Task<OperationResult<OAuthTokenResponse>> GetToken(string username, string password)
     {
         try
@@ -61,6 +59,13 @@ public class UserController : ControllerBase
             return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "500", "Internal Server Error");
         }
        
+    }
+    [Route("loginOTP")]
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<OperationResult<OAuthTokenResponse>> GetTokenByOTP(string username, string enteredOTP)
+    {
+        return await iBusServiceFactory.TokenService().GetUserTokenByOTP(username, enteredOTP);
     }
 
     [Route("refreshtoken")]

@@ -13,8 +13,11 @@ namespace MsSqlAdapter.Interface
         DataSet GetUser(string email);
         DataSet GetUsersAccountManager(string email);
         bool IsValidUser(string email, out string generalMessage, out string technicalMessage);
+        bool ValidateOrCreateOTP(string Email, string AuthOTP, string secretkey, out string generalMessage, out string technicalMessage);
         bool EmailPassword(string toEmail);
         DataSet GetAccountDetails(int userID);
+        bool InsertIpAddressLog(string ipAddress, bool isSuccess, int ipAddressTypeID);
+        bool Enable2fa(string username, string twoFactorAuthenticationSecretKey, string TwoFactorAuthenticationQRCodeFilePath, string QRcodebase64, string Type, out string generalMessage, out string technicalMessage);
         DataSet GetKeyValuesByKeyCategoryName(string keyCategoryName);
         bool ChangePassword(int userId, string currentPassword, string newPassword, out string generalMessage, out string technicalMessage);
         bool ResetPassword(string email, string newPassword, out string generalMessage, out string technicalMessage);

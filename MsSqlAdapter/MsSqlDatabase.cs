@@ -101,7 +101,51 @@ namespace MsSqlAdapter
             parameters.Add(BaseDatabase.Param("@userID", userID));
             return BaseDatabase.GetData("sp_GetAccountDetails", parameters);
         }
+        public bool InsertIpAddressLog(string ipAddress, bool isSuccess, int ipAddressTypeID)
+        {
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(BaseDatabase.Param("@IpAddress", ipAddress));
+            parameters.Add(BaseDatabase.Param("@IsSuccess", isSuccess));
+            parameters.Add(BaseDatabase.Param("@IpAddressTypeID", ipAddressTypeID));
+            bool result = BaseDatabase.Execute("sp_InsertIpAddressLog", parameters);
+            return result;
+        }
+        public bool ValidateOrCreateOTP(string Email, string OTP, string Type, out string generalMessage, out string technicalMessage)
+        {
 
+            generalMessage = string.Empty;
+            technicalMessage = string.Empty;
+            List<IDataParameter> parameters = new List<IDataParameter>
+            {
+               BaseDatabase.Param("@Email", Email),
+               BaseDatabase.Param("@Otp", OTP),
+               BaseDatabase.Param("@Type", Type),
+               BaseDatabase.ParamOut("@IsSuccess", SqlDbType.Bit),
+               BaseDatabase.ParamOut("@GeneralMessage", 8000),
+               BaseDatabase.ParamOut("@TechnicalMessage", 8000)
+            };
+
+            bool result = BaseDatabase.Execute("sp_GenerateandcheckEmailOrSMSOTP", parameters, out generalMessage, out technicalMessage);
+
+            return result;
+        }
+        public bool Enable2fa(string username, string twoFactorAuthenticationSecretKey, string TwoFactorAuthenticationQRCodeFilePath, string QRcodebase64, string Type, out string generalMessage, out string technicalMessage)
+        {
+            generalMessage = string.Empty;
+            technicalMessage = string.Empty;
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(BaseDatabase.Param("@Email", username));
+            parameters.Add(BaseDatabase.Param("@2FASecretKey", twoFactorAuthenticationSecretKey));
+            parameters.Add(BaseDatabase.Param("@2FAQRCodeFilePath", TwoFactorAuthenticationQRCodeFilePath));
+            parameters.Add(BaseDatabase.Param("@base64", QRcodebase64));
+            parameters.Add(BaseDatabase.Param("@Type", Type));
+            parameters.Add(BaseDatabase.ParamOut("@IsSuccess", SqlDbType.Bit));
+            parameters.Add(BaseDatabase.ParamOut("@GeneralMessage", 8000));
+            parameters.Add(BaseDatabase.ParamOut("@TechnicalMessage", 8000));
+
+            bool result = BaseDatabase.Execute("sp_Enable2FAPlatform", parameters, out generalMessage, out technicalMessage);
+            return result;
+        }
         public DataSet GetKeyValuesByKeyCategoryName(string keyCategoryName)
         {
             var parameters = new List<IDataParameter>();

@@ -29,6 +29,7 @@ using Microsoft.Extensions.Options;
 using Services.Factory.Interface;
 using Custom.Filter;
 using PortalApi.HubConfig;
+using AuthenticationHelper;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -87,7 +88,7 @@ void SetupApplicationDependencies(IServiceCollection services)
     new ApiDIConfiguration().Setup(services);
     //new CS.CoreAPI.Adapters.Mongo.Services.DIConfiguration().Setup(services);
 
-    services.AddTransient<IBusServiceFactoryResolver>(serviceProvider => key =>
+    builder.Services.AddTransient<IBusServiceFactoryResolver>(serviceProvider => key =>
     {
         switch (key)
         {
@@ -125,11 +126,10 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
     builder.Services.AddScoped<IMsSqlDatabaseConfiguration, MsSqlDatabaseConfiguration>();
     builder.Services.AddScoped<ITokenService, TokenService>();
-    builder.Services.AddSingleton<SimpleCache>();
     builder.Services.AddSingleton<TimerManager>();
-
-
-    //builder.Services.AddTransient<IMemoryCache, MemoryCache>();
+    builder.Services.AddScoped<IIpAddressServices, IpAddressServices>();
+    builder.Services.AddScoped<BaseAuthenticationFactory, BaseAuthenticationFactory>();
+    builder.Services.AddScoped<ICacheService, CacheService>();
     builder.Services.AddMemoryCache();
     string ChatbotSection = builder.Configuration.GetValue<string>("ChatbotAPI");
     builder.Services.AddHttpClient("chatclient", client =>

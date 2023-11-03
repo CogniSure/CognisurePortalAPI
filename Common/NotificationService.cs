@@ -15,17 +15,14 @@ namespace Common
     public class NotificationService : INotificationService
     {
         private readonly IMsSqlDataHelper msSqlDataHelper;
-        readonly SimpleCache cacheProvider;
         public IConfiguration Configuration { get; }
 
         public NotificationService(
                 IMsSqlDataHelper msSqlDataHelper,
-                SimpleCache cacheProvider,
                 IConfiguration configuration,
                  ILogger<NotificationService> logger
               )
         {
-            this.cacheProvider = cacheProvider;
             this.msSqlDataHelper = msSqlDataHelper;
             this.Configuration = configuration;
         }

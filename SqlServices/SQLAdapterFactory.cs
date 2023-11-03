@@ -17,6 +17,7 @@ using Models.DTO;
 using Microsoft.Extensions.Caching.Memory;
 using MsSqlAdapter;
 using MsSqlAdapter.Interface;
+using AuthenticationHelper;
 
 namespace MsSqlServices
 {
@@ -25,35 +26,37 @@ namespace MsSqlServices
     {
         private readonly ILoggerFactory loggerFactory;
         private readonly IMsSqlDataHelper msSqlDataHelper;
-        readonly SimpleCache cacheProvider;
-        private readonly IMemoryCache _memoryCache;
+        private readonly ICacheService _memoryCache;
+        private readonly IIpAddressServices _ipAddressServices;
+        readonly BaseAuthenticationFactory _baseAuthenticationFactory;
         public IConfiguration configuration { get; }
         public IMsSqlDatabaseException _iMsSqlDatabaseException { get; }
         public IMsSqlDatabaseConfiguration _iMsSqlDatabaseConfiguration { get; }
         public SQLAdapterFactory(IMsSqlDataHelper msSqlDataHelper,
-                SimpleCache cacheProvider,
                 IConfiguration configuration,
                 ILoggerFactory loggerFactory,
-                IMemoryCache memoryCache,
+                ICacheService memoryCache,
                 IMsSqlDatabaseException iMsSqlDatabaseException,
-                IMsSqlDatabaseConfiguration iMsSqlDatabaseConfiguration
+                IMsSqlDatabaseConfiguration iMsSqlDatabaseConfiguration,
+                IIpAddressServices ipAddressServices,
+                BaseAuthenticationFactory baseAuthenticationFactory
               )
         {
             this.loggerFactory = loggerFactory;
-            this.cacheProvider = cacheProvider;
             this.msSqlDataHelper = msSqlDataHelper;
             this.configuration = configuration;
             this.loggerFactory = loggerFactory;
             this._memoryCache = memoryCache;
             this._iMsSqlDatabaseException = iMsSqlDatabaseException;
             _iMsSqlDatabaseConfiguration = iMsSqlDatabaseConfiguration;
+            this._ipAddressServices = ipAddressServices;
+            this._baseAuthenticationFactory = baseAuthenticationFactory;
         }
         ITokenService IBusServiceFactory.TokenService()
         {
             return new TokenService(msSqlDataHelper,
-            //cacheProvider,
                  configuration,
-                 loggerFactory.CreateLogger<TokenService>(), _memoryCache);
+                 loggerFactory.CreateLogger<TokenService>(), _memoryCache, _ipAddressServices, _baseAuthenticationFactory);
         }
         IConfigurationService IBusServiceFactory.ConfigurationService()
         {
@@ -63,28 +66,24 @@ namespace MsSqlServices
         public INotificationService NotificationService()
         {
             return new NotificationService(msSqlDataHelper,
-                 cacheProvider,
                  configuration,
                    loggerFactory.CreateLogger<NotificationService>());
         }
         public IUserService UserService()
         {
             return new UserService(msSqlDataHelper,
-                 cacheProvider,
                  configuration,
                    loggerFactory.CreateLogger<UserService>());
         }
         public IContactUsService ContactUsService()
         {
             return new ContactUsService(msSqlDataHelper,
-                 cacheProvider,
                  configuration,
                    loggerFactory.CreateLogger<ContactUsService>());
         }
         //public IWidgetService WidgetService()
         //{
         //    return new WidgetService(msSqlDataHelper,
-        //         cacheProvider,
         //         configuration,
         //           loggerFactory.CreateLogger<WidgetService>());
         //}
@@ -93,7 +92,6 @@ namespace MsSqlServices
         public IDownloadService DownloadService()
         {
             return new DownloadService(msSqlDataHelper,
-                 cacheProvider,
                  configuration,
                    loggerFactory.CreateLogger<DownloadService>());
         }
@@ -101,7 +99,6 @@ namespace MsSqlServices
         public INewsFeedService NewsFeedService()
         {
             return new NewsFeedService(msSqlDataHelper,
-                   cacheProvider,
                    configuration,
                      loggerFactory.CreateLogger<NewsFeedService>());
         }
@@ -114,7 +111,6 @@ namespace MsSqlServices
         public ISubmissionInboxService SubmissionInboxService()
         {
             return new SubmissionInboxService(msSqlDataHelper,
-                 cacheProvider,
                  configuration,
                    loggerFactory.CreateLogger<SubmissionInboxService>());
         }

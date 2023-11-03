@@ -11,6 +11,7 @@ namespace Services.Common.Interface
     public interface ITokenService
     {
         Task<OperationResult<OAuthTokenResponse>> GetUserToken(string username, string password);
+        Task<OperationResult<OAuthTokenResponse>> GetUserTokenByOTP(string username, string enteredOTP);
         Task<OperationResult<OAuthTokenResponse>> GetUserRefreshToken(User user, string refreshToken);
         Task<OperationResult<OAuthTokenResponse>> RevokeToken(string Email, string AuthorizationToken);
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);

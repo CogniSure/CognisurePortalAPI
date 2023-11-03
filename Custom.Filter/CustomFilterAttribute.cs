@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
+using Services.Common.Interface;
 using Services.Factory.Interface;
+using System.Net;
 using System.Security.Claims;
 
 namespace Custom.Filter
@@ -10,11 +12,13 @@ namespace Custom.Filter
     public class CustomFilterAttribute : ActionFilterAttribute
     {
         private readonly IBusServiceFactory _iBusServiceFactory;
-        private readonly IMemoryCache _memoryCache;
-        public CustomFilterAttribute(IBusServiceFactoryResolver iBusServiceFactoryResolver, IMemoryCache memoryCache)
+        private readonly ICacheService _memoryCache;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        public CustomFilterAttribute(IBusServiceFactoryResolver iBusServiceFactoryResolver, ICacheService memoryCache, IHttpContextAccessor httpContextAccessor)
         {
             this._iBusServiceFactory = iBusServiceFactoryResolver("mssql");
             _memoryCache = memoryCache;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public override void OnActionExecuting(ActionExecutingContext actionContext)
@@ -38,7 +42,7 @@ namespace Custom.Filter
             //        // Use the access token as needed
             //    }
             //}
-            var cacheblacklisttoken = _memoryCache.Get<List<string>>($"UserEmail_BlacklistToken_{email}");
+            var cacheblacklisttoken = _memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{email}");
 
             //if (string.Format("{0}", cacheblacklisttoken).Contains(authorizationHeader))
             if (cacheblacklisttoken != null && cacheblacklisttoken.FirstOrDefault(x => x.Equals(authorizationHeader))!=null)
@@ -68,18 +72,16 @@ namespace Custom.Filter
 
         private string GetClientIpAddress(HttpContext request)
         {
-            var ipAddress = request.Connection.RemoteIpAddress;
-            return string.Format("{0}", ipAddress);
+            string Ip = "";
+            Ip = httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            if (Ip == "::1")
+            {
+                var lan = Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(r => r.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+                Ip = lan == null ? string.Empty : lan.ToString();
 
-            //if (request.Properties.ContainsKey("MS_HttpContext"))
-            //{
-            //    //return IPAddress.Parse((request.Properties["MS_HttpContext"]).Request.UserHostAddress).ToString();
-            //    return IPAddress.Parse(_httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString()).ToString();
-            //}
-            //if (request.Properties.ContainsKey("MS_OwinContext"))
-            //{
-            //    return IPAddress.Parse(((OwinContext)request.Properties["MS_OwinContext"]).Request.RemoteIpAddress).ToString();
-            //}
+                // Ip = Dns.GetHostEntry(Dns.GetHostName()).AddressList[2].ToString();
+            }
+            return Ip;
 
         }
 

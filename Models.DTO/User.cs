@@ -67,5 +67,13 @@
         public int PrimaryContactUserId { get; set; }
         public string TwoFactorAuthenticationSecretKey { get; set; }
         public string TwoFactorAuthenticationQRCodeFilePath { get; set; }
+        public AuthType AuthenticationType { get; set; }
+        public string SecretKey { get; set; }
+        public bool Is2faEnabled { get; set; }
+    }
+    public class AuthType
+    {
+        public int AuthTypeId { get; set; }
+        public string AuthTypeName { get; set; }
     }
 }

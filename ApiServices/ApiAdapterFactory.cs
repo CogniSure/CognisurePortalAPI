@@ -23,11 +23,11 @@ namespace ApiServices
         private readonly IApiHelper apiHelper;
         private readonly IHttpClientFactory clientFactory;
         private readonly IMsSqlDataHelper msSqlDataHelper;
-        readonly SimpleCache cacheProvider;
+        readonly ICacheService cacheProvider;
         public IConfiguration configuration { get; }
         public ApiAdapterFactory(IApiHelper apiHelper,
                 IMsSqlDataHelper msSqlDataHelper,
-                SimpleCache cacheProvider,
+                ICacheService cacheProvider,
                 IConfiguration configuration,
                 ILoggerFactory loggerFactory,
                 IHttpClientFactory clientFactory

@@ -12,6 +12,8 @@ namespace Services.MsSqlServices.Interface
         bool IsValidUser(string email, out string generalMessage, out string technicalMessage);
         bool EmailPassword(string toEmail);
         List<Account> GetAccountDetails(int userID);
+        bool InsertIpAddressLog(string ipAddress, bool isSuccess, int ipAddressTypeID);
+        
         bool ChangePassword(int userId, string currentPassword, string newPassword, out string generalMessage, out string technicalMessage);
         bool ResetPassword(string email, string newPassword, out string generalMessage, out string technicalMessage);
         DataSet GetKeyValuesByKeyCategoryName(string keyCategoryName);

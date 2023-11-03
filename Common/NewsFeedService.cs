@@ -15,17 +15,14 @@ namespace Common
     public class NewsFeedService: INewsFeedService
     {
         private readonly IMsSqlDataHelper msSqlDataHelper;
-        readonly SimpleCache cacheProvider;
         public IConfiguration Configuration { get; }
 
         public NewsFeedService(
                 IMsSqlDataHelper msSqlDataHelper,
-                SimpleCache cacheProvider,
                 IConfiguration configuration,
                  ILogger<NewsFeedService> logger
               )
         {
-            this.cacheProvider = cacheProvider;
             this.msSqlDataHelper = msSqlDataHelper;
             this.Configuration = configuration;
         }

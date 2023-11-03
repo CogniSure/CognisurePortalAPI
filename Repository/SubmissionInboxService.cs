@@ -16,17 +16,14 @@ namespace Portal.Repository.Inbox
     public class SubmissionInboxService:ISubmissionInboxService
     {
         private readonly IMsSqlDataHelper msSqlDataHelper;
-        readonly SimpleCache cacheProvider;
         public IConfiguration Configuration { get; }
 
         public SubmissionInboxService(
                 IMsSqlDataHelper msSqlDataHelper,
-                SimpleCache cacheProvider,
                 IConfiguration configuration,
                  ILogger<SubmissionInboxService> logger
               )
         {
-            this.cacheProvider = cacheProvider;
             this.msSqlDataHelper = msSqlDataHelper;
             this.Configuration = configuration;
         }

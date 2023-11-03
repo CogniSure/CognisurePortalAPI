@@ -1,76 +1,180 @@
-﻿using Extention;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Models.DTO;
+using Models.Enums;
 using Services.Common.Interface;
 using Services.MsSqlServices.Interface;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using System.Security.Cryptography;
-using Microsoft.Extensions.Caching.Memory;
-using System.Runtime.Caching;
-using System.Net.Http;
-using Newtonsoft.Json.Linq;
+using AuthenticationHelper;
 
 namespace Common
 {
     public class TokenService : ITokenService
     {
         private readonly IMsSqlDataHelper msSqlDataHelper;
-        //readonly SimpleCache cacheProvider;
+        private readonly IIpAddressServices _ipAddressServices;
+        readonly BaseAuthenticationFactory baseAuthenticationFactory;
         public IConfiguration Configuration { get; }
-        private readonly IMemoryCache _memoryCache;
+        private readonly ICacheService _memoryCache;
 
         public TokenService(
                 IMsSqlDataHelper msSqlDataHelper,
-                //SimpleCache cacheProvider,
                 IConfiguration configuration,
-                 ILogger<TokenService> logger, IMemoryCache memoryCache
+                 ILogger<TokenService> logger, 
+                 ICacheService memoryCache,
+                 IIpAddressServices ipAddressServices,
+                 BaseAuthenticationFactory _baseAuthenticationFactory
               )
         {
             //this.cacheProvider = cacheProvider;
             this.msSqlDataHelper = msSqlDataHelper;
             this.Configuration = configuration;
             _memoryCache = memoryCache;
+            _ipAddressServices= ipAddressServices;
+            baseAuthenticationFactory = _baseAuthenticationFactory;
         }
 
         public async Task<OperationResult<OAuthTokenResponse>> GetUserToken(string username, string password)
         {
-           
-            var user = msSqlDataHelper.GetUser(username);
-            if (user != null && user.Password == password)
+            try
             {
-                //var dbname = "mongo";
-                //await cacheProvider.Add($"dbname_{user.Email}", dbname);
 
-                //await cacheProvider.Add($"userid_{user.Email}", string.Format("{0}", user.UserID));
-               
-                var token = GetToken(user);
-                var Refreshtoken = new JwtSecurityTokenHandler().WriteToken(GetRefreshToken());
-
-                setInmemoryCache(user.Email, Refreshtoken);
-                var response = new OAuthTokenResponse
+                if (string.IsNullOrEmpty(username))
                 {
-                    AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-                    RefreshToken = Refreshtoken,
-                    TokenType = "bearer",
-                    ExpiresIn = token.ValidTo.Second,
-                    Username = user.Email
-                };
-                return new OperationResult<OAuthTokenResponse>(response, true);
-            }
-            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "UserName or Password didnot matched");
-        }
+                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Email not provided.");
+                }
+                else if (string.IsNullOrEmpty(password))
+                {
+                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Password not provided.");
+                }
+                else
+                {
+                    var dbuser = msSqlDataHelper.GetUser(username);
+                    if (dbuser != null && dbuser.IsActive && dbuser.Password == password)
+                    {
 
+                        if (dbuser.AuthenticationType.AuthTypeId == Convert.ToInt32(Models.Enums.AuthType.Default) || dbuser.AuthenticationType.AuthTypeId == Convert.ToInt32(Models.Enums.AuthType.none))
+                        {
+                             _memoryCache.SetData<string>($"userid_{dbuser.Email}", string.Format("{0}", dbuser.UserID),100);
+                            
+                            var token = GetToken(dbuser);
+                            var Refreshtoken = new JwtSecurityTokenHandler().WriteToken(GetRefreshToken());
+                            var response = new OAuthTokenResponse
+                            {
+                                AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+                                RefreshToken=Refreshtoken,
+                                TokenType = "bearer",
+                                ExpiresIn = token.ValidTo.Second,
+                                Username = dbuser.Email
+
+                            };
+                            return new OperationResult<OAuthTokenResponse>(response, true);
+                        }
+                        else
+                        {
+                            var authobj = baseAuthenticationFactory.GetAuthentication(dbuser.AuthenticationType.AuthTypeId);
+                            if (authobj != null)
+                            {
+                                if (dbuser.AuthenticationType.AuthTypeId == Convert.ToInt32(Models.Enums.AuthType.AppTOTP) && !dbuser.Is2faEnabled)
+                                {
+                                    var appName = Configuration["QRCodeAppName"];
+                                    string QRCodefilePath = System.IO.Path.Combine(Configuration["TwoFactorQRCodeFolder"], dbuser.Email + ".png");
+                                    authobj.GenerateqrCodeUri(dbuser.Email, appName, QRCodefilePath, dbuser.SecretKey);
+                                }
+                                string generalMessage = string.Empty;
+                                string technicalMessage = string.Empty;
+                                if (authobj.GenerateOTP(dbuser.Email, out generalMessage, out technicalMessage))
+                                {
+                                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), true, "", technicalMessage);
+                                }
+                                else
+                                {
+                                    msSqlDataHelper.InsertIpAddressLog(_ipAddressServices.GetIpAddress(), false, 1);
+                                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Error in login!!! please contact Admin.");
+                                }
+                            }
+                            else
+                            {
+                                msSqlDataHelper.InsertIpAddressLog(_ipAddressServices.GetIpAddress(), false, 1);
+                                return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Error in login!!! please contact Admin.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        msSqlDataHelper.InsertIpAddressLog(_ipAddressServices.GetIpAddress(), false, 1);
+                        return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Please enter correct username and/or password.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                msSqlDataHelper.InsertIpAddressLog(_ipAddressServices.GetIpAddress(), false, 1);
+                return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, ex.Message, "Some error occured, please try after some time.");
+            }
+        }
+        async Task<OperationResult<OAuthTokenResponse>> ITokenService.GetUserTokenByOTP(string username, string EnteredOTP)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(username))
+                {
+                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Email not provided.");
+                }
+                else if (string.IsNullOrEmpty(EnteredOTP))
+                {
+                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Password not provided.");
+                }
+                else
+                {
+                    var dbuser = msSqlDataHelper.GetUser(username);
+                    var Refreshtoken = new JwtSecurityTokenHandler().WriteToken(GetRefreshToken());
+                    if (dbuser != null && dbuser.IsActive)
+                    {
+                        var authobj = baseAuthenticationFactory.GetAuthentication(dbuser.AuthenticationType.AuthTypeId);
+                        string generalMessage = string.Empty;
+                        string technicalMessage = string.Empty;
+                        if (authobj.ValidateOTP(dbuser.Email, EnteredOTP, dbuser.SecretKey, out generalMessage, out technicalMessage))
+                        {
+                            
+                            var token = GetToken(dbuser);
+                            var response = new OAuthTokenResponse
+                            {
+                                AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+                                RefreshToken = Refreshtoken,
+                                TokenType = "bearer",
+                                ExpiresIn = token.ValidTo.Second,
+                                Username = dbuser.Email
+
+                            };
+                            setInmemoryCache(dbuser.Email, new JwtSecurityTokenHandler().WriteToken(token));
+                            return new OperationResult<OAuthTokenResponse>(response, true);
+                        }
+                        else
+                        {
+                            msSqlDataHelper.InsertIpAddressLog(_ipAddressServices.GetIpAddress(), false, 1);
+                            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", generalMessage);
+                        }
+                    }
+                    else
+                    {
+                        msSqlDataHelper.InsertIpAddressLog(_ipAddressServices.GetIpAddress(), false, 1);
+                        return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Error in login!!! please refresh the page.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                msSqlDataHelper.InsertIpAddressLog(_ipAddressServices.GetIpAddress(), false, 1);
+                return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Some error occured, please try after some time.");
+            }
+        }
         public async Task<OperationResult<OAuthTokenResponse>> GetUserRefreshToken(User user, string refreshToken)
         {
-            var cacherefreshtoken = _memoryCache.Get($"UserEmail_RefreshToken_{user.Email}");
+            var cacherefreshtoken = _memoryCache.GetData<string>($"UserEmail_RefreshToken_{user.Email}");
             if(cacherefreshtoken == null)
             {
                 return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "401", "Token has expired!");
@@ -115,12 +219,7 @@ namespace Common
         }
         private void setInmemoryCache(string Email,string Refreshtoken)
         {
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(Convert.ToInt32(Configuration["TokenTime:RefreshTokenExpiryTime"])))
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(Convert.ToInt32(Configuration["TokenTime:RefreshTokenExpiryTime"])))
-                    .SetSize(1024);
-
-            _memoryCache.Set($"UserEmail_RefreshToken_{Email}", Refreshtoken, cacheEntryOptions);
+            _memoryCache.SetData<string>($"UserEmail_RefreshToken_{Email}", Refreshtoken, Convert.ToInt32(Configuration["TokenTime:RefreshTokenExpiryTime"]));
 
         }
         private JwtSecurityToken GetToken(User user)
@@ -163,29 +262,18 @@ namespace Common
         }
         public async Task<OperationResult<OAuthTokenResponse>> RevokeToken(string Email,string AuthorizationToken)
         {
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                   .SetSlidingExpiration(TimeSpan.FromSeconds(1))
-                   .SetAbsoluteExpiration(TimeSpan.FromSeconds(1))
-                   .SetSize(1024);
-
-            _memoryCache.Set($"UserEmail_RefreshToken_{Email}", "", cacheEntryOptions);
-
-            var cacheAT = new MemoryCacheEntryOptions()
-                   .SetSlidingExpiration(TimeSpan.FromMinutes(Convert.ToInt32(Configuration["TokenTime:BlacklistTokenExpiryTime"])))
-                   .SetAbsoluteExpiration(TimeSpan.FromMinutes(Convert.ToInt32(Configuration["TokenTime:BlacklistTokenExpiryTime"])))
-                   .SetSize(1024);
+            _memoryCache.SetData<string>($"UserEmail_RefreshToken_{Email}", "", 1);
 
             List<string> lststring= new List<string>();
 
             // _memoryCache.Set($"UserEmail_BlacklistToken_{Email}", AuthorizationToken, cacheAT);
-            if(_memoryCache.Get<List<string>>($"UserEmail_BlacklistToken_{Email}")!=null)
+            if(_memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{Email}")!=null)
             {
-                lststring = _memoryCache.Get<List<string>>($"UserEmail_BlacklistToken_{Email}");
+                lststring = _memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{Email}");
             }
             lststring.Add(AuthorizationToken);
 
-            _memoryCache.Set<List<string>>($"UserEmail_BlacklistToken_{Email}", lststring, cacheAT);
+            _memoryCache.SetData<List<string>>($"UserEmail_BlacklistToken_{Email}", lststring, Convert.ToInt32(Configuration["TokenTime:BlacklistTokenExpiryTime"]));
 
             return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "200", "successfully logout!");
         }

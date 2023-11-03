@@ -51,6 +51,9 @@ namespace SqlServices
         {
             if (dst != null && dst.Tables != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
             {
+                AuthType objauthtype = new AuthType();
+                objauthtype.AuthTypeId = Convert.ToInt32(dst.Tables[0].Rows[0]["AuthTypeId"]);
+                objauthtype.AuthTypeName = string.Format("{0}", dst.Tables[0].Rows[0]["AuthTypeName"]);
                 var user = new User
                 {
                     UserID = Convert.ToInt32(dst.Tables[0].Rows[0]["UserID"]),
@@ -77,6 +80,9 @@ namespace SqlServices
                     UserImage = FiletoByteArray(string.Format("{0}", dst.Tables[0].Rows[0]["UserImageFilePath"])),
                     TwoFactorAuthenticationSecretKey = string.Format("{0}", dst.Tables[0].Rows[0]["2FASecretKey"]),
                     TwoFactorAuthenticationQRCodeFilePath = string.Format("{0}", dst.Tables[0].Rows[0]["2FAQRCodeFilePath"]),
+                    SecretKey = string.Format("{0}", dst.Tables[0].Rows[0]["2FASecretKey"]),
+                    Is2faEnabled = Convert.ToBoolean(dst.Tables[0].Rows[0]["Is2faEnabled"]),
+                    AuthenticationType = objauthtype
                 };
 
                 var _a = DateTime.Now;
@@ -140,7 +146,11 @@ namespace SqlServices
         {
             return ConvertDataTable<Account>(Database.GetAccountDetails(userID).Tables[0]);
         }
-
+        public bool InsertIpAddressLog(string ipAddress, bool isSuccess, int ipAddressTypeID)
+        {
+            bool result = Database.InsertIpAddressLog(ipAddress, isSuccess, ipAddressTypeID);
+            return result;
+        }
         private static List<T> ConvertDataTable<T>(DataTable dt)
         {
             List<T> data = new List<T>();

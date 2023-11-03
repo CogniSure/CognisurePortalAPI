@@ -18,17 +18,14 @@ namespace Portal.Repository.Login
     public class UserService : IUserService
     {
         private readonly IMsSqlDataHelper msSqlDataHelper;
-        readonly SimpleCache cacheProvider;
         public IConfiguration Configuration { get; }
 
         public UserService(
                 IMsSqlDataHelper msSqlDataHelper,
-                SimpleCache cacheProvider,
                 IConfiguration configuration,
                  ILogger<UserService> logger
               )
         {
-            this.cacheProvider = cacheProvider;
             this.msSqlDataHelper = msSqlDataHelper;
             this.Configuration = configuration;
         }

@@ -15,17 +15,14 @@ namespace Common
     public class ContactUsService : IContactUsService
     {
         private readonly IMsSqlDataHelper msSqlDataHelper;
-        readonly SimpleCache cacheProvider;
         public IConfiguration Configuration { get; }
 
         public ContactUsService(
                 IMsSqlDataHelper msSqlDataHelper,
-                SimpleCache cacheProvider,
                 IConfiguration configuration,
                  ILogger<ContactUsService> logger
               )
         {
-            this.cacheProvider = cacheProvider;
             this.msSqlDataHelper = msSqlDataHelper;
             this.Configuration = configuration;
         }

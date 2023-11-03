@@ -25,7 +25,6 @@ namespace Portal.Repository.Inbox
         private readonly IHttpClientFactory clientFactory;
         private readonly IMsSqlDataHelper msSqlDataHelper;
         private readonly IApiHelper apiDataHelper;
-        readonly SimpleCache cacheProvider;
         public IConfiguration Configuration { get; }
 
 
@@ -34,12 +33,10 @@ namespace Portal.Repository.Inbox
                 IApiHelper apiDataHelper,
                 IMsSqlDataHelper msSqlDataHelper,
                 IHttpClientFactory clientFactory,
-              //SimpleCache cacheProvider,
               IConfiguration configuration
               //ILogger<NotificationService> logger
               )
         {
-            //this.cacheProvider = cacheProvider;
             this.apiDataHelper = apiDataHelper;
             this.msSqlDataHelper = msSqlDataHelper;
             this.clientFactory = clientFactory;
