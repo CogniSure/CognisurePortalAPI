@@ -23,7 +23,7 @@ namespace Common
         public TokenService(
                 IMsSqlDataHelper msSqlDataHelper,
                 IConfiguration configuration,
-                 ILogger<TokenService> logger, 
+                 ILogger<TokenService> logger,
                  ICacheService memoryCache,
                  IIpAddressServices ipAddressServices,
                  BaseAuthenticationFactory _baseAuthenticationFactory
@@ -33,7 +33,7 @@ namespace Common
             this.msSqlDataHelper = msSqlDataHelper;
             this.Configuration = configuration;
             _memoryCache = memoryCache;
-            _ipAddressServices= ipAddressServices;
+            _ipAddressServices = ipAddressServices;
             baseAuthenticationFactory = _baseAuthenticationFactory;
         }
 
@@ -58,8 +58,8 @@ namespace Common
 
                         if (dbuser.AuthenticationType.AuthTypeId == Convert.ToInt32(Models.Enums.AuthType.Default) || dbuser.AuthenticationType.AuthTypeId == Convert.ToInt32(Models.Enums.AuthType.none))
                         {
-                             _memoryCache.SetData<string>($"userid_{dbuser.Email}", string.Format("{0}", dbuser.UserID),100);
-                            
+                            //_memoryCache.SetData<string>($"userid_{dbuser.Email}", string.Format("{0}", dbuser.UserID),100);
+
                             var token = GetToken(dbuser);
                             var Refreshtoken = new JwtSecurityTokenHandler().WriteToken(GetRefreshToken());
                             var response = new OAuthTokenResponse
@@ -67,10 +67,11 @@ namespace Common
                                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                                 RefreshToken = Refreshtoken,
                                 TokenType = "bearer",
-                                ExpiresIn = token.ValidTo.Second,
+                                ExpiresIn = token.ValidTo.Minute,
                                 Username = dbuser.Email,
                                 AuthenticationType = dbuser.AuthenticationType.AuthTypeName
                             };
+                            setRefreshInmemoryCache(dbuser.Email, Refreshtoken);
                             return new OperationResult<OAuthTokenResponse>(response, true);
                         }
                         else
@@ -88,7 +89,7 @@ namespace Common
                                 string technicalMessage = string.Empty;
                                 if (authobj.GenerateOTP(dbuser.Email, out generalMessage, out technicalMessage))
                                 {
-                                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse { AuthenticationType=technicalMessage}, true, "", technicalMessage);
+                                    return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse { AuthenticationType = technicalMessage }, true, "", technicalMessage);
                                 }
                                 else
                                 {
@@ -131,7 +132,7 @@ namespace Common
                 else
                 {
                     var dbuser = msSqlDataHelper.GetUser(username);
-                    var Refreshtoken = new JwtSecurityTokenHandler().WriteToken(GetRefreshToken());
+
                     if (dbuser != null && dbuser.IsActive)
                     {
                         var authobj = baseAuthenticationFactory.GetAuthentication(dbuser.AuthenticationType.AuthTypeId);
@@ -139,18 +140,19 @@ namespace Common
                         string technicalMessage = string.Empty;
                         if (authobj.ValidateOTP(dbuser.Email, EnteredOTP, dbuser.SecretKey, out generalMessage, out technicalMessage))
                         {
-                            
+
                             var token = GetToken(dbuser);
+                            var Refreshtoken = new JwtSecurityTokenHandler().WriteToken(GetRefreshToken());
                             var response = new OAuthTokenResponse
                             {
                                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                                 RefreshToken = Refreshtoken,
                                 TokenType = "bearer",
-                                ExpiresIn = token.ValidTo.Second,
+                                ExpiresIn = token.ValidTo.Minute,
                                 Username = dbuser.Email
 
                             };
-                            setInmemoryCache(dbuser.Email, new JwtSecurityTokenHandler().WriteToken(token));
+                            setRefreshInmemoryCache(dbuser.Email, Refreshtoken);
                             return new OperationResult<OAuthTokenResponse>(response, true);
                         }
                         else
@@ -175,7 +177,7 @@ namespace Common
         public async Task<OperationResult<OAuthTokenResponse>> GetUserRefreshToken(User user, string refreshToken)
         {
             var cacherefreshtoken = _memoryCache.GetData<string>($"UserEmail_RefreshToken_{user.Email}");
-            if(cacherefreshtoken == null)
+            if (cacherefreshtoken == null)
             {
                 return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "401", "Token has expired!");
             }
@@ -187,7 +189,7 @@ namespace Common
             {
                 var token = GetToken(user);
 
-                setInmemoryCache(user.Email, refreshToken);
+                setRefreshInmemoryCache(user.Email, refreshToken);
                 var response = new OAuthTokenResponse
                 {
                     AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
@@ -207,7 +209,9 @@ namespace Common
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"])),
+                ClockSkew= TimeSpan.Zero,
                 ValidateLifetime = false //here we are saying that we don't care about the token's expiration date
+                
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;
@@ -217,7 +221,7 @@ namespace Common
                 throw new SecurityTokenException("Invalid token");
             return principal;
         }
-        private void setInmemoryCache(string Email,string Refreshtoken)
+        private void setRefreshInmemoryCache(string Email, string Refreshtoken)
         {
             _memoryCache.SetData<string>($"UserEmail_RefreshToken_{Email}", Refreshtoken, Convert.ToInt32(Configuration["TokenTime:RefreshTokenExpiryTime"]));
 
@@ -236,7 +240,7 @@ namespace Common
             var token = new JwtSecurityToken(
                 issuer: Configuration["JWT:ValidIssuer"],
                 audience: Configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(20),
+                expires: DateTime.UtcNow.AddMinutes(20),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
@@ -254,20 +258,20 @@ namespace Common
             var token = new JwtSecurityToken(
                 issuer: Configuration["JWT:ValidIssuer"],
                 audience: Configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(24),
+                expires: DateTime.UtcNow.AddMinutes(20),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
             return token;
         }
-        public async Task<OperationResult<OAuthTokenResponse>> RevokeToken(string Email,string AuthorizationToken)
+        public async Task<OperationResult<OAuthTokenResponse>> RevokeToken(string Email, string AuthorizationToken)
         {
             _memoryCache.SetData<string>($"UserEmail_RefreshToken_{Email}", "", 1);
 
-            List<string> lststring= new List<string>();
+            List<string> lststring = new List<string>();
 
             // _memoryCache.Set($"UserEmail_BlacklistToken_{Email}", AuthorizationToken, cacheAT);
-            if(_memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{Email}")!=null)
+            if (_memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{Email}") != null)
             {
                 lststring = _memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{Email}");
             }

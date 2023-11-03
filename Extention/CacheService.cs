@@ -34,8 +34,8 @@ namespace Extention
                 if (!string.IsNullOrEmpty(key))
                 {
                     var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(expirationTimeinMinutes - 1))
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(expirationTimeinMinutes));
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(expirationTimeinMinutes))
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(expirationTimeinMinutes+1));
                     _memoryCache.Set(key, value, cacheEntryOptions);
                 }
                 return true;
