@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Custom.Filter;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using PortalApi.HubConfig;
@@ -7,6 +9,8 @@ namespace PortalApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    [TypeFilter(typeof(CustomFilterAttribute))]
     public class NotificationController : ControllerBase
     {
         private readonly IHubContext<NotificationHub> _hub;

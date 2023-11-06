@@ -9,6 +9,8 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using AuthenticationHelper;
+using Microsoft.AspNetCore.Http;
+using static QRCoder.PayloadGenerator;
 
 namespace Common
 {
@@ -174,7 +176,7 @@ namespace Common
                 return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "", "Some error occured, please try after some time.");
             }
         }
-        public async Task<OperationResult<OAuthTokenResponse>> GetUserRefreshToken(User user, string refreshToken)
+        public async Task<OperationResult<OAuthTokenResponse>> GetUserRefreshToken(User user, string AccessToken, string refreshToken)
         {
             var cacherefreshtoken = _memoryCache.GetData<string>($"UserEmail_RefreshToken_{user.Email}");
             if (cacherefreshtoken == null)
@@ -188,7 +190,7 @@ namespace Common
             else
             {
                 var token = GetToken(user);
-                var tokenExpiresAt = Convert.ToInt32(token.ValidTo - new DateTime(1970, 1, 1));
+                //var tokenExpiresAt = Convert.ToInt32(token.ValidTo - new DateTime(1970, 1, 1));
                 setRefreshInmemoryCache(user.Email, refreshToken);
                 var response = new OAuthTokenResponse
                 {
@@ -198,6 +200,14 @@ namespace Common
                     ExpiresIn = token.ValidTo.Minute,
                     Username = user.Email
                 };
+                List<string> lststring = new List<string>();
+                if (_memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{user.Email}") != null)
+                {
+                    lststring = _memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{user.Email}");
+                }
+                lststring.Add(AccessToken);
+                _memoryCache.SetData<List<string>>($"UserEmail_BlacklistToken_{user.Email}", lststring, Convert.ToInt32(Configuration["TokenTime:BlacklistTokenExpiryTimemin"]));
+
                 return new OperationResult<OAuthTokenResponse>(response, true);
             }
         }

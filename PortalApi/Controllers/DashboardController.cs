@@ -1,3 +1,5 @@
+using Custom.Filter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -9,6 +11,8 @@ namespace PortalApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
+[TypeFilter(typeof(CustomFilterAttribute))]
 public class DashboardController : ControllerBase
 {
     

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Custom.Filter;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Models.DTO;
 using Newtonsoft.Json.Linq;
 using Services.Factory.Interface;
@@ -8,11 +10,13 @@ namespace PortalApi.Controllers
 {
     [Route("api")]
     [ApiController]
+    [TypeFilter(typeof(CustomFilterAttribute))]
     public class ChatController : ControllerBase
     {
         private readonly ILogger<ChatController> _logger;
         private readonly IBusServiceFactory iBusServiceFactory;
         private readonly IConfiguration _configuration;
+        private readonly IMemoryCache _iMemoryCache;
 
 
         public ChatController(ILogger<ChatController> logger,
@@ -25,6 +29,7 @@ namespace PortalApi.Controllers
 
         [Route("UploadCopilotFIles")]
         [HttpPost]
+        
         public async Task<OperationResult<string>> UploadCopilotFIles(UploadData files)
         {
             try

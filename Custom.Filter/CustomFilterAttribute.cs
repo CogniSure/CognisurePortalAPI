@@ -30,22 +30,22 @@ namespace Custom.Filter
             string email = string.Format("{0}", actionContext.HttpContext.User.Claims.FirstOrDefault().Value);
             string userid = string.Format("{0}", actionContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var authorizationHeader = string.Format("{0}", actionContext.HttpContext.Request.Headers["Authorization"]);
-            //string accessToken = "";
-            //if (!string.IsNullOrEmpty(authorizationHeader))
-            //{
-            //    var parts = authorizationHeader.ToString().Split(' ');
+            string accessToken = "";
+            if (!string.IsNullOrEmpty(authorizationHeader))
+            {
+                var parts = authorizationHeader.ToString().Split(' ');
 
-            //    if (parts.Length == 2 && parts[0].Equals("Bearer", StringComparison.OrdinalIgnoreCase))
-            //    {
-            //        accessToken = parts[1];
+                if (parts.Length == 2 && parts[0].Equals("Bearer", StringComparison.OrdinalIgnoreCase))
+                {
+                    accessToken = parts[1];
 
-            //        // Use the access token as needed
-            //    }
-            //}
+                    // Use the access token as needed
+                }
+            }
             var cacheblacklisttoken = _memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{email}");
 
             //if (string.Format("{0}", cacheblacklisttoken).Contains(authorizationHeader))
-            if (cacheblacklisttoken != null && cacheblacklisttoken.FirstOrDefault(x => x.Equals(authorizationHeader))!=null)
+            if (cacheblacklisttoken != null && cacheblacklisttoken.FirstOrDefault(x => x.Equals(accessToken))!=null)
             {
                 actionContext.Result = new ContentResult
                 {

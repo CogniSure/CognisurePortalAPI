@@ -82,7 +82,7 @@ public class UserController : ControllerBase
             user.Email = principal.Identity.Name; //this is mapped to the Name claim by default
             user.UserID = Convert.ToInt32(principal.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var response = await iBusServiceFactory.TokenService().GetUserRefreshToken(user, objOAuthTokenResponse.RefreshToken);
+            var response = await iBusServiceFactory.TokenService().GetUserRefreshToken(user, objOAuthTokenResponse.AccessToken, objOAuthTokenResponse.RefreshToken);
             //setTokenCookie(response);
             return response;
         }

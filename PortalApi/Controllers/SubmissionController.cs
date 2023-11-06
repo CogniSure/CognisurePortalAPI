@@ -1,3 +1,4 @@
+using Custom.Filter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,8 +14,8 @@ namespace PortalApi.Controllers.Inbox;
 
 [ApiController]
 [Route("api")]
-
 [Authorize]
+[TypeFilter(typeof(CustomFilterAttribute))]
 public class SubmissionController : ControllerBase
 {
     
