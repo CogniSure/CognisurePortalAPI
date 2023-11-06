@@ -67,7 +67,7 @@ namespace Common
                                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                                 RefreshToken = Refreshtoken,
                                 TokenType = "bearer",
-                                ExpiresIn = token.ValidTo.Minute,
+                                ExpiresIn = Convert.ToInt32(token.ValidTo - new DateTime(1970, 1, 1)),
                                 Username = dbuser.Email,
                                 AuthenticationType = dbuser.AuthenticationType.AuthTypeName
                             };
@@ -148,7 +148,7 @@ namespace Common
                                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                                 RefreshToken = Refreshtoken,
                                 TokenType = "bearer",
-                                ExpiresIn = token.ValidTo.Minute,
+                                ExpiresIn = Convert.ToInt32(token.ValidTo - new DateTime(1970, 1, 1)),
                                 Username = dbuser.Email
 
                             };
@@ -188,14 +188,14 @@ namespace Common
             else
             {
                 var token = GetToken(user);
-
+                var tokenExpiresAt = Convert.ToInt32(token.ValidTo - new DateTime(1970, 1, 1));
                 setRefreshInmemoryCache(user.Email, refreshToken);
                 var response = new OAuthTokenResponse
                 {
                     AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                     RefreshToken = refreshToken,
                     TokenType = "bearer",
-                    ExpiresIn = token.ValidTo.Minute,
+                    ExpiresIn = Convert.ToInt32(token.ValidTo - new DateTime(1970, 1, 1)),
                     Username = user.Email
                 };
                 return new OperationResult<OAuthTokenResponse>(response, true);
@@ -223,7 +223,7 @@ namespace Common
         }
         private void setRefreshInmemoryCache(string Email, string Refreshtoken)
         {
-            _memoryCache.SetData<string>($"UserEmail_RefreshToken_{Email}", Refreshtoken, Convert.ToInt32(Configuration["TokenTime:RefreshTokenExpiryTime"]));
+            _memoryCache.SetData<string>($"UserEmail_RefreshToken_{Email}", Refreshtoken, Convert.ToInt32(Configuration["TokenTime:RefreshTokenExpiryTimemin"]));
 
         }
         private JwtSecurityToken GetToken(User user)
@@ -240,7 +240,7 @@ namespace Common
             var token = new JwtSecurityToken(
                 issuer: Configuration["JWT:ValidIssuer"],
                 audience: Configuration["JWT:ValidAudience"],
-                expires: DateTime.UtcNow.AddMinutes(20),
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToInt32(Configuration["TokenTime:AccessTokenExpiryTimemin"])),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
@@ -258,7 +258,7 @@ namespace Common
             var token = new JwtSecurityToken(
                 issuer: Configuration["JWT:ValidIssuer"],
                 audience: Configuration["JWT:ValidAudience"],
-                expires: DateTime.UtcNow.AddMinutes(20),
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToInt32(Configuration["TokenTime:AccessTokenExpiryTimemin"])),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
@@ -277,7 +277,7 @@ namespace Common
             }
             lststring.Add(AuthorizationToken);
 
-            _memoryCache.SetData<List<string>>($"UserEmail_BlacklistToken_{Email}", lststring, Convert.ToInt32(Configuration["TokenTime:BlacklistTokenExpiryTime"]));
+            _memoryCache.SetData<List<string>>($"UserEmail_BlacklistToken_{Email}", lststring, Convert.ToInt32(Configuration["TokenTime:BlacklistTokenExpiryTimemin"]));
 
             return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "200", "successfully logout!");
         }
