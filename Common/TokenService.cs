@@ -67,7 +67,7 @@ namespace Common
                                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                                 RefreshToken = Refreshtoken,
                                 TokenType = "bearer",
-                                ExpiresIn = Convert.ToInt32(token.ValidTo - new DateTime(1970, 1, 1)),
+                                ExpiresIn = token.ValidTo.Minute,
                                 Username = dbuser.Email,
                                 AuthenticationType = dbuser.AuthenticationType.AuthTypeName
                             };
@@ -148,7 +148,7 @@ namespace Common
                                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                                 RefreshToken = Refreshtoken,
                                 TokenType = "bearer",
-                                ExpiresIn = Convert.ToInt32(token.ValidTo - new DateTime(1970, 1, 1)),
+                                ExpiresIn = token.ValidTo.Minute,
                                 Username = dbuser.Email
 
                             };
@@ -195,7 +195,7 @@ namespace Common
                     AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                     RefreshToken = refreshToken,
                     TokenType = "bearer",
-                    ExpiresIn = Convert.ToInt32(token.ValidTo - new DateTime(1970, 1, 1)),
+                    ExpiresIn = token.ValidTo.Minute,
                     Username = user.Email
                 };
                 return new OperationResult<OAuthTokenResponse>(response, true);
