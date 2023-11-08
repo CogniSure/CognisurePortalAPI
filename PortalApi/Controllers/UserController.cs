@@ -44,6 +44,7 @@ public class UserController : ControllerBase
     [Route("login")]
     [HttpPost]
     [AllowAnonymous]
+    [TypeFilter(typeof(ControlActionIsUserAllowedFilterAttribute))]
     public async Task<OperationResult<OAuthTokenResponse>> GetToken(string username, string password)
     {
         try

@@ -89,5 +89,9 @@ namespace ApiServices
         {
             throw new NotImplementedException();
         }
+        public bool IsIpAddressLocked(string IpAddress, int IpAddressTypeID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

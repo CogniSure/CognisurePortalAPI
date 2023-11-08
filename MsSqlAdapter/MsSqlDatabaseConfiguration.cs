@@ -52,5 +52,12 @@ namespace MsSqlAdapter
 
             return result;
         }
+        public DataSet IsIpAddressLocked(string ipAddress, int ipAddressTypeID)
+        {
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(BaseDatabase.Param("@IpAddress", ipAddress));
+            parameters.Add(BaseDatabase.Param("@IpAddressTypeID", ipAddressTypeID));
+            return BaseDatabase.GetData("sp_IsIpAddressLocked", parameters);
+        }
     }
 }

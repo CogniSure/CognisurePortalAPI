@@ -12,5 +12,7 @@ namespace MsSqlAdapter.Interface
         DataSet GetUserThrottle(string email);
         public Task<bool> AddApiLog(string email, string actionName, string controllerName, string ipAddress, string sessionID, string requestType);
         public bool IsAllowed(string email, string actionName, string controllerName);
+
+        public DataSet IsIpAddressLocked(string IpAddress, int IpAddressTypeID);
     }
 }
