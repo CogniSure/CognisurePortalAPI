@@ -44,7 +44,6 @@ namespace Custom.Filter
             }
             var cacheblacklisttoken = _memoryCache.GetData<List<string>>($"UserEmail_BlacklistToken_{email}");
 
-            //if (string.Format("{0}", cacheblacklisttoken).Contains(authorizationHeader))
             if (cacheblacklisttoken != null && cacheblacklisttoken.FirstOrDefault(x => x.Equals(accessToken))!=null)
             {
                 actionContext.Result = new ContentResult
@@ -57,16 +56,6 @@ namespace Custom.Filter
 
             _iBusServiceFactory.ConfigurationService().AddApiLog(email, action, controller, ip, "", actionContext.HttpContext.Request.Method);
 
-            //if (!_iBusServiceFactory.ConfigurationService().IsAllowed(email, action, controller))
-            //{
-            //    actionContext.Result = new ContentResult
-            //    {
-            //        Content = "UnAuthorized access ",
-            //        StatusCode = 302, // Too Many Requests
-            //        ContentType = "text/plain"
-            //    };
-            //}
-
             base.OnActionExecuting(actionContext);
         }
 
@@ -78,8 +67,6 @@ namespace Custom.Filter
             {
                 var lan = Dns.GetHostEntry(Dns.GetHostName()).AddressList.FirstOrDefault(r => r.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
                 Ip = lan == null ? string.Empty : lan.ToString();
-
-                // Ip = Dns.GetHostEntry(Dns.GetHostName()).AddressList[2].ToString();
             }
             return Ip;
 
