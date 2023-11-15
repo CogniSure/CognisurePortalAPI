@@ -19,6 +19,7 @@ namespace PortalApi.Controllers.Login;
 [ApiController]
 [Authorize]
 [Route("api")]
+[TypeFilter(typeof(IpLockedFilterAttribute))]
 public class UserController : ControllerBase
 {
     
@@ -44,7 +45,7 @@ public class UserController : ControllerBase
     [Route("login")]
     [HttpPost]
     [AllowAnonymous]
-    [TypeFilter(typeof(ControlActionIsUserAllowedFilterAttribute))]
+    
     public async Task<OperationResult<OAuthTokenResponse>> GetToken(string username, string password)
     {
         try
@@ -66,7 +67,17 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<OperationResult<OAuthTokenResponse>> GetTokenByOTP(string username, string enteredOTP)
     {
-        return await iBusServiceFactory.TokenService().GetUserTokenByOTP(username, enteredOTP);
+        try
+        {
+            return await iBusServiceFactory.TokenService().GetUserTokenByOTP(username, enteredOTP);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            await ExceptionDB.AddError("", string.Format("{0}", ex.InnerException), ex.Message, string.Format("{0}", ex.Source), string.Format("{0}", ex.StackTrace), string.Format("{0}", ex.TargetSite),
+                "0", "UserController", "GetToken");
+            return new OperationResult<OAuthTokenResponse>(new OAuthTokenResponse(), false, "500", "Internal Server Error");
+        }
     }
 
     [Route("refreshtoken")]
