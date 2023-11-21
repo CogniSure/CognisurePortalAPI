@@ -23,6 +23,8 @@
     <ProjectReference Include="..\MsSqlDatabase.Interface\MsSqlAdapter.Interface.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
     <ProjectReference Include="..\Services.Repository\Services.Repository.Interface.csproj" />
+    <ProjectReference Include="..\SnowFlakeAdapter.Interface\SnowFlakeAdapter.Interface.csproj" />
+    <ProjectReference Include="..\SnowFlakeAdapters\SnowFlakeAdapter.csproj" />
     <ProjectReference Include="..\SqlServices\MsSqlServices.csproj" />
     <ProjectReference Include="..\Throttle.Filter\Throttle.Filter.csproj" />
   </ItemGroup>

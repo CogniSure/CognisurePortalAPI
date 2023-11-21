@@ -53,9 +53,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Throttle.Filter", "Throttle
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Custom.Filter", "Custom.Filter\Custom.Filter.csproj", "{FE2373EF-A583-46E2-800F-5B2957C29166}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationHelper", "AuthenticationHelper\AuthenticationHelper.csproj", "{381F4A72-32D9-4CC3-A35B-942E22766182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationHelper", "AuthenticationHelper\AuthenticationHelper.csproj", "{381F4A72-32D9-4CC3-A35B-942E22766182}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models.Enums", "Enums\Models.Enums.csproj", "{43BDFF92-F0F2-4E01-BD1B-EDA2A126F283}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models.Enums", "Enums\Models.Enums.csproj", "{43BDFF92-F0F2-4E01-BD1B-EDA2A126F283}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowFlakeAdapter", "SnowFlakeAdapters\SnowFlakeAdapter.csproj", "{9E23130A-9732-48A8-8162-CEB8E45F5922}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnowFlakeAdapter.Interface", "SnowFlakeAdapter.Interface\SnowFlakeAdapter.Interface.csproj", "{328764E6-4557-4CA4-9F3E-F096067A3848}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +151,14 @@ Global
 		{43BDFF92-F0F2-4E01-BD1B-EDA2A126F283}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43BDFF92-F0F2-4E01-BD1B-EDA2A126F283}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43BDFF92-F0F2-4E01-BD1B-EDA2A126F283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E23130A-9732-48A8-8162-CEB8E45F5922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E23130A-9732-48A8-8162-CEB8E45F5922}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E23130A-9732-48A8-8162-CEB8E45F5922}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E23130A-9732-48A8-8162-CEB8E45F5922}.Release|Any CPU.Build.0 = Release|Any CPU
+		{328764E6-4557-4CA4-9F3E-F096067A3848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{328764E6-4557-4CA4-9F3E-F096067A3848}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{328764E6-4557-4CA4-9F3E-F096067A3848}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{328764E6-4557-4CA4-9F3E-F096067A3848}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -172,6 +184,8 @@ Global
 		{FE2373EF-A583-46E2-800F-5B2957C29166} = {31C0E631-A1A7-4AD5-81B2-A8CAD502097A}
 		{381F4A72-32D9-4CC3-A35B-942E22766182} = {EA2E5E63-6CEC-473F-9B2B-8F4D31C05634}
 		{43BDFF92-F0F2-4E01-BD1B-EDA2A126F283} = {688B7224-F439-4BE2-8E3D-1C413BF8DE40}
+		{9E23130A-9732-48A8-8162-CEB8E45F5922} = {7768775D-9780-4A49-A121-7FE816D950BB}
+		{328764E6-4557-4CA4-9F3E-F096067A3848} = {7768775D-9780-4A49-A121-7FE816D950BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {99241E23-C373-4638-A6F3-4D71B0283AF9}

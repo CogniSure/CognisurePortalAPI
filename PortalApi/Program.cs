@@ -30,6 +30,8 @@ using Services.Factory.Interface;
 using Custom.Filter;
 using PortalApi.HubConfig;
 using AuthenticationHelper;
+using SnowFlakeAdapter.Interface;
+using SnowFlakeAdapter;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -120,6 +122,8 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<IMsSqlDataHelper, MsSqlDataHelper>();
     builder.Services.AddScoped<IApiHelper, ApiHelper>();
     builder.Services.AddScoped<IMsSqlDatabase, MsSqlDatabase>();
+    builder.Services.AddScoped<ISnowFlakeBaseDatabase, SnowFlakeBaseDatabase>();
+    builder.Services.AddScoped<ISnowFlakeDatabase, SnowFlakeDatabase>();
     builder.Services.AddScoped<IExceptionService, ExceptionService>();
     builder.Services.AddScoped<IMsSqlBaseDatabase, MsSqlBaseDatabase>();
     builder.Services.AddScoped<IMsSqlDatabaseException, MsSqlDatabaseException>();
