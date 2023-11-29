@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Models.DTO;
 using Services.SnowFlakeServices.Interface;
 using SnowFlakeAdapter.Interface;
@@ -23,8 +24,43 @@ namespace SnowFlakeServices
         }
         public List<DashboardGraph> GetDashboardGraphData(DashboardFilter dashboardFilter, string Type)
         {
-            var list = Database.DashboardGraph(dashboardFilter, Type);
-            return GetAllDashboardGraphData(list);
+            DataSet DS=new DataSet();
+            switch (Type.ToLower())
+            {
+                case "countbylob":
+                    {
+                        DS = Database.DashboardGraph_CountByLOB(dashboardFilter.TopNumber,dashboardFilter.CLIENTID,dashboardFilter.UserEmailId,
+                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                    }
+                    break;
+                case "countbybroker":
+                    {
+                        DS = Database.DashboardGraph_CountByByBroker(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
+                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                    }
+                    break;
+                case "countbycity":
+                    {
+                        DS = Database.DashboardGraph_CountByCity(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
+                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                    }
+                    break;
+                case "countbystate":
+                    {
+                        DS = Database.DashboardGraph_CountByState(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
+                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                    }
+                    break;
+                case "countbyindustries":
+                    {
+                        DS = Database.DashboardGraph_CountByIndustries(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
+                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                    }
+                    break;
+
+            }
+            //var list = Database.DashboardGraph(dashboardFilter, Type);
+            return GetAllDashboardGraphData(DS);
         }
         private static List<DashboardGraph> GetAllDashboardGraphData(DataSet dst)
         {
