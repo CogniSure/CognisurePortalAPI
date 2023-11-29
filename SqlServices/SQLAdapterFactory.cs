@@ -119,5 +119,10 @@ namespace MsSqlServices
         {
             throw new NotImplementedException();
         }
+
+        IDashboardService IBusServiceFactory.DashboardService()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

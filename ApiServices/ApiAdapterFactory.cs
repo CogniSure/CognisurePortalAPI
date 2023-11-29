@@ -1,19 +1,12 @@
 ﻿using ApiServices.Interface;
-using Extention;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Models.DTO;
 using Portal.Repository.Inbox;
 using Repository;
 using Services.Common.Interface;
 using Services.Factory.Interface;
 using Services.MsSqlServices.Interface;
 using Services.Repository.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApiServices
 {
@@ -90,6 +83,11 @@ namespace ApiServices
             throw new NotImplementedException();
         }
         public bool IsIpAddressLocked(string IpAddress, int IpAddressTypeID)
+        {
+            throw new NotImplementedException();
+        }
+
+        IDashboardService IBusServiceFactory.DashboardService()
         {
             throw new NotImplementedException();
         }

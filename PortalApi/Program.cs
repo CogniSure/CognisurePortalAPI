@@ -32,6 +32,8 @@ using PortalApi.HubConfig;
 using AuthenticationHelper;
 using SnowFlakeAdapter.Interface;
 using SnowFlakeAdapter;
+using Services.SnowFlakeServices.Interface;
+using SnowFlakeServices;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -87,6 +89,7 @@ void SetupApplicationDependencies(IServiceCollection services)
 
 
     new SqlDIConfiguration().Setup(services);
+    new SnowFlakeDIConfiguration().Setup(services);
     new ApiDIConfiguration().Setup(services);
     //new CS.CoreAPI.Adapters.Mongo.Services.DIConfiguration().Setup(services);
 
@@ -97,6 +100,11 @@ void SetupApplicationDependencies(IServiceCollection services)
             case "mssql":
                 {
                     var configure = new SqlDIConfiguration();
+                    return configure.CreateIBusServiceFactory(serviceProvider);
+                }
+            case "sfdb":
+                {
+                    var configure = new SnowFlakeDIConfiguration();
                     return configure.CreateIBusServiceFactory(serviceProvider);
                 }
             case "api":
@@ -113,13 +121,14 @@ void SetupApplicationDependencies(IServiceCollection services)
         }
     });
     //services.AddSingleton<IMapperProvider<WebServiceMapperProfile>, MapperProvider<WebServiceMapperProfile>>();
-    builder.Services.AddScoped<IDashboardRepository, DashboardService>();
+    builder.Services.AddScoped<IDashboardService, DashboardService>();
     builder.Services.AddScoped<CustomFilterAttribute>();
     builder.Services.AddScoped<ThrottleFilter>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ISubmissionService, SubmissionService>();
     builder.Services.AddScoped<IURLService, URLService>();
     builder.Services.AddScoped<IMsSqlDataHelper, MsSqlDataHelper>();
+    builder.Services.AddScoped<ISnowFlakeDataHelper, SnowFlakeDataHelper>();
     builder.Services.AddScoped<IApiHelper, ApiHelper>();
     builder.Services.AddScoped<IMsSqlDatabase, MsSqlDatabase>();
     builder.Services.AddScoped<ISnowFlakeBaseDatabase, SnowFlakeBaseDatabase>();

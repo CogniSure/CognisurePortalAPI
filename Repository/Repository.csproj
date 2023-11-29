@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Extention\Extention.csproj" />
     <ProjectReference Include="..\Services.Repository\Services.Repository.Interface.csproj" />
+    <ProjectReference Include="..\Services.SnowFlakeServices.Interface\Services.SnowFlakeServices.Interface.csproj" />
   </ItemGroup>
 
 </Project>

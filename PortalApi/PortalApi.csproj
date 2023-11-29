@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\SFController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
@@ -25,6 +29,7 @@
     <ProjectReference Include="..\Services.Repository\Services.Repository.Interface.csproj" />
     <ProjectReference Include="..\SnowFlakeAdapter.Interface\SnowFlakeAdapter.Interface.csproj" />
     <ProjectReference Include="..\SnowFlakeAdapters\SnowFlakeAdapter.csproj" />
+    <ProjectReference Include="..\SnowFlakeServices\SnowFlakeServices.csproj" />
     <ProjectReference Include="..\SqlServices\MsSqlServices.csproj" />
     <ProjectReference Include="..\Throttle.Filter\Throttle.Filter.csproj" />
   </ItemGroup>

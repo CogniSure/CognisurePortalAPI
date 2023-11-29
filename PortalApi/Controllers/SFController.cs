@@ -6,6 +6,7 @@ using Services.Factory.Interface;
 using SnowFlakeAdapter.Interface;
 using System.Data;
 using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PortalApi.Controllers
 {
@@ -14,20 +15,25 @@ namespace PortalApi.Controllers
     public class SFController : ControllerBase
     {
         private readonly ILogger<InboxController> _logger;
+        private readonly IBusServiceFactory iBusServiceFactorySFDB;
+        private readonly IBusServiceFactory iBusServiceFactoryMSSQL;
         private readonly ISnowFlakeDatabase _SnowFlakeDatabase;
-        public SFController(ILogger<InboxController> logger, ISnowFlakeDatabase SnowFlakeDatabase)
+        public SFController(ILogger<InboxController> logger, ISnowFlakeDatabase SnowFlakeDatabase, IBusServiceFactoryResolver iBusServiceFactoryResolver)
         {
             _logger = logger;
             _SnowFlakeDatabase = SnowFlakeDatabase;
+            this.iBusServiceFactorySFDB = iBusServiceFactoryResolver("sfdb");
+            this.iBusServiceFactoryMSSQL = iBusServiceFactoryResolver("mssql");
         }
-        [Route("Test")]
+        [Route("DashboardGraph")]
         [HttpGet]
-        public async Task<OperationResult<List<DataSet>>> Test()
+        public async Task<OperationResult<List<DashboardGraph>>> DashboardGraph(DashboardFilter objDashboard, string Type)
         {
             try
             {
-                DataSet Ds = new DataSet();
-                Ds = _SnowFlakeDatabase.SampleTest();
+                return await iBusServiceFactorySFDB.DashboardService().GetDashboardGraph(objDashboard, Type);
+                var Ds= _SnowFlakeDatabase.DashboardGraph(Type);
+                //return new OperationResult<List<DashboardGraph>>(Ds, true);
                 return null;
             }
             catch (Exception ex)
