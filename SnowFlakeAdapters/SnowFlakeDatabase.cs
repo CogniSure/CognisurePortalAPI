@@ -14,6 +14,7 @@ namespace SnowFlakeAdapter
         }
         public DataSet SampleTest()
         {
+
             //return BaseDatabase.GetData("call sp_gettestdata();");
             //return BaseDatabase.GetData("call SP_SubCountByLOB('1075', 'Jhon@gmail.com', '01/01/2023', '11/28/2023');");
             //return BaseDatabase.GetData("call SP_SubCountByBroker('2', '1075', 'Jhon@gmail.com', '01/01/2023', '11/27/2023');");
