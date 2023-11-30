@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
+using Models.DTO;
 using Services.Common.Interface;
 using Services.Factory.Interface;
 using System;
 using System.Net;
 using System.Security.Claims;
+using System.Web.Http.Results;
 
 namespace Custom.Filter
 {
@@ -29,12 +31,13 @@ namespace Custom.Filter
        
             if (DateTime.Compare(DateTime.Now, _iBusServiceFactory.ConfigurationService().IsIpAddressLocked(ip, 1)[0].ReleaseTime) < 1)
             {
-                actionContext.Result = new ContentResult
-                {
-                    Content = "401 Unauthorized HTTP ",
-                    StatusCode = 401, // Too Many Requests
-                    ContentType = "text/plain"
-                };
+                actionContext.Result = new JsonResult(new OperationResult<string>("", false, "401", "Blocked! Please login after 5 minutes."));
+                //actionContext.Result = new ContentResult
+                //{
+                //    Content = "401 Unauthorized HTTP ",
+                //    StatusCode = 401, // Too Many Requests
+                //    ContentType = "text/plain"
+                //};
             }
 
             base.OnActionExecuting(actionContext);

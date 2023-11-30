@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
+using Models.DTO;
 using Services.Common.Interface;
 using Services.Factory.Interface;
 using System.Net;
@@ -35,12 +36,13 @@ namespace Custom.Filter
 
             if (cacheblacklisttoken != null && cacheblacklisttoken.FirstOrDefault(x => x.Equals(accessToken))!=null)
             {
-                actionContext.Result = new ContentResult
-                {
-                    Content = "401 Unauthorized HTTP ",
-                    StatusCode = 401, // Too Many Requests
-                    ContentType = "text/plain"
-                };
+                actionContext.Result = new JsonResult(new OperationResult<string>("", false, "401", "Un Authorized"));
+                //actionContext.Result = new ContentResult
+                //{
+                //    Content = "401 Unauthorized HTTP ",
+                //    StatusCode = 401, // Too Many Requests
+                //    ContentType = "text/plain"
+                //};
             }
 
             base.OnActionExecuting(actionContext);

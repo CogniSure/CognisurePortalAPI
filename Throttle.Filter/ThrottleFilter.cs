@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Models.DTO;
 using Services.Factory.Interface;
 
 using System.Runtime.CompilerServices;
-
+using System.Web.Http.Results;
 
 namespace Throttle.Filter
 {
@@ -27,12 +28,13 @@ namespace Throttle.Filter
             setIdentityAsThrottleGroup(actionContext.HttpContext);
             if (_throttler.ThrottleGroup != null && _throttler.RequestShouldBeThrottled)
             {
-                actionContext.Result = new ContentResult
-                {
-                    Content = "Too many calls! We can only allow " + _throttler.RequestLimit + "  per " + _throttler._timeoutInSeconds,
-                    StatusCode = 429, // Too Many Requests
-                    ContentType = "text/plain"
-                };
+                actionContext.Result = new JsonResult(new OperationResult<string>("", false, "429", "Too many calls! We can only allow " + _throttler.RequestLimit + "  per " + _throttler._timeoutInSeconds));
+                //actionContext.Result = new ContentResult
+                //{
+                //    Content = "Too many calls! We can only allow " + _throttler.RequestLimit + "  per " + _throttler._timeoutInSeconds,
+                //    StatusCode = 429, // Too Many Requests
+                //    ContentType = "text/plain"
+                //};
                 addThrottleHeaders(actionContext.HttpContext.Response);
             }
 

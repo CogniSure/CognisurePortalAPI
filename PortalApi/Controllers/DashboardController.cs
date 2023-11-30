@@ -11,10 +11,11 @@ using System;
 
 namespace PortalApi.Controllers;
 
+
 [ApiController]
-[Route("[controller]")]
 //[Authorize]
 //[TypeFilter(typeof(CustomFilterAttribute))]
+[Route("api")]
 public class DashboardController : ControllerBase
 {
     private readonly IBusServiceFactory iBusServiceFactorySFDB;
@@ -33,8 +34,8 @@ public class DashboardController : ControllerBase
         this.iBusServiceFactorySFDB = iBusServiceFactoryResolver("sfdb");
         this.iBusServiceFactoryMSSQL = iBusServiceFactoryResolver("mssql");
     }
-
-    [HttpGet(Name = "Dashboard")]
+    [Route("Dashboard")]
+    [HttpGet]
     public string Dashboard()
     {
         try

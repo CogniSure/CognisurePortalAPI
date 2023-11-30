@@ -24,6 +24,7 @@ namespace SnowFlakeServices
         }
         public List<DashboardGraph> GetDashboardGraphData(DashboardFilter dashboardFilter, string Type)
         {
+            List<DashboardGraph> lstDasboardgraph = new List<DashboardGraph>();
             DataSet DS=new DataSet();
             switch (Type.ToLower())
             {
@@ -31,60 +32,65 @@ namespace SnowFlakeServices
                     {
                         DS = Database.DashboardGraph_CountByLOB(dashboardFilter.TopNumber,dashboardFilter.CLIENTID,dashboardFilter.UserEmailId,
                             Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new DashboardGraph
+                                    {
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("LOB")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                    }).ToList();
                     }
                     break;
                 case "countbybroker":
                     {
                         DS = Database.DashboardGraph_CountByByBroker(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
                             Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                   .Select(dataRow => new DashboardGraph
+                                   {
+                                       Dimension = string.Format("{0}", dataRow.Field<string>("BROKERNAME")),
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                   }).ToList();
                     }
                     break;
                 case "countbycity":
                     {
                         DS = Database.DashboardGraph_CountByCity(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
                             Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                   .Select(dataRow => new DashboardGraph
+                                   {
+                                       Dimension = string.Format("{0}", dataRow.Field<string>("CITYNAME")),
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                   }).ToList();
                     }
                     break;
                 case "countbystate":
                     {
                         DS = Database.DashboardGraph_CountByState(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
                             Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                   .Select(dataRow => new DashboardGraph
+                                   {
+                                       Dimension = string.Format("{0}", dataRow.Field<string>("STATENAME")),
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                   }).ToList();
                     }
                     break;
                 case "countbyindustries":
                     {
                         DS = Database.DashboardGraph_CountByIndustries(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
                             Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                   .Select(dataRow => new DashboardGraph
+                                   {
+                                       Dimension = string.Format("{0}", dataRow.Field<string>("NAICCODE")),
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                   }).ToList();
                     }
                     break;
 
             }
-            //var list = Database.DashboardGraph(dashboardFilter, Type);
-            return GetAllDashboardGraphData(DS);
-        }
-        private static List<DashboardGraph> GetAllDashboardGraphData(DataSet dst)
-        {
-            DashboardGraph DP;
-            CultureInfo culture = new CultureInfo("en-US");
-            var SubmissionList = new List<DashboardGraph>();
-            if (dst.Tables[0].Rows.Count > 0)
-            {
-                foreach (DataRow dr in dst.Tables[0].Rows)
-                {
-                    DP = new DashboardGraph();
-                    var ObjSubmission = new DashboardGraph
-                    {
-
-                        Dimension = string.Format("{0}", dr["NAICCODE"]),
-                        Measure = string.Format("{0}", dr["COUNTOFSUBMISSIONID"]),
-                       
-                    };
-                   
-
-                    SubmissionList.Add(ObjSubmission);
-                }
-            }
-            return SubmissionList;
+            return lstDasboardgraph;
         }
     }
 }

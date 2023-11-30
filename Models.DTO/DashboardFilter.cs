@@ -9,9 +9,9 @@ namespace Models.DTO
     public class DashboardFilter
     {
         public int TopNumber { get; set; }
-        public string CLIENTID { get; set; }
-        public string UserEmailId { get; set; }
-        public Nullable<DateTime> StartDate { get; set; }
-        public Nullable<DateTime> EndDate { get; set; }
+        public string? CLIENTID { get; set; }
+        public string? UserEmailId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 }

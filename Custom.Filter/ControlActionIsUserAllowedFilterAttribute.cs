@@ -10,6 +10,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Models.DTO;
 
 namespace Custom.Filter
 {
@@ -33,12 +34,13 @@ namespace Custom.Filter
 
             if (!_iBusServiceFactory.ConfigurationService().IsAllowed(email, action, controller))
             {
-                actionContext.Result = new ContentResult
-                {
-                    Content = "UnAuthorized access ",
-                    StatusCode = 302, // Too Many Requests
-                    ContentType = "text/plain"
-                };
+                actionContext.Result = new JsonResult(new OperationResult<string>("", false, "401", "Un Authorized"));
+                //actionContext.Result = new ContentResult
+                //{
+                //    Content = "UnAuthorized access ",
+                //    StatusCode = 302, // Too Many Requests
+                //    ContentType = "text/plain"
+                //};
             }
 
             base.OnActionExecuting(actionContext);
