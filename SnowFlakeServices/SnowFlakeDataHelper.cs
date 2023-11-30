@@ -36,7 +36,7 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DashboardGraph
                                     {
                                         Dimension = string.Format("{0}", dataRow.Field<string>("LOB")),
-                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                        Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
                                     }).ToList();
                     }
                     break;
@@ -48,7 +48,7 @@ namespace SnowFlakeServices
                                    .Select(dataRow => new DashboardGraph
                                    {
                                        Dimension = string.Format("{0}", dataRow.Field<string>("BROKERNAME")),
-                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                       Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
                     }
                     break;
@@ -60,7 +60,7 @@ namespace SnowFlakeServices
                                    .Select(dataRow => new DashboardGraph
                                    {
                                        Dimension = string.Format("{0}", dataRow.Field<string>("CITYNAME")),
-                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                       Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
                     }
                     break;
@@ -72,7 +72,7 @@ namespace SnowFlakeServices
                                    .Select(dataRow => new DashboardGraph
                                    {
                                        Dimension = string.Format("{0}", dataRow.Field<string>("STATENAME")),
-                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                       Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
                     }
                     break;
@@ -84,7 +84,7 @@ namespace SnowFlakeServices
                                    .Select(dataRow => new DashboardGraph
                                    {
                                        Dimension = string.Format("{0}", dataRow.Field<string>("NAICCODE")),
-                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                       Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
                     }
                     break;
