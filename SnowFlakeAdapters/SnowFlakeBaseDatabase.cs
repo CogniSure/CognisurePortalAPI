@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Snowflake.Data.Client;
+using Snowflake.Data.Core;
 using SnowFlakeAdapter.Interface;
 using System.Data;
+using System.Drawing;
 
 namespace SnowFlakeAdapter
 {
@@ -55,7 +58,10 @@ namespace SnowFlakeAdapter
         {
             return new SnowflakeDbDataAdapter((SnowflakeDbCommand)command);
         }
-        
+        public IDataAdapter CreateDataAdapter(string commandText, IDbConnection connection)
+        {
+            return new SnowflakeDbDataAdapter(commandText, (SnowflakeDbConnection)connection);
+        }
         /// <summary>
         /// Method to Execute the Stored Procedure with list of parameters and get an output message.
         /// </summary>
@@ -63,7 +69,55 @@ namespace SnowFlakeAdapter
         /// <param name="parameters"></param>
         /// <param name="message"></param>
         /// <returns></returns>
+        public IDataParameter ParamOut(string parameterName, int size)
+        {
+            return new SnowflakeDbParameter(parameterName, SFDataType.TEXT) { Direction = ParameterDirection.Output, Size = size };
+        }
+        public IDataParameter ParamInOut(string parameterName, int size, object parameterValue)
+        {
+            return new SnowflakeDbParameter(parameterName, SFDataType.TEXT) { Direction = ParameterDirection.InputOutput, Size = size, Value = parameterValue };
+        }
 
+        public IDataParameter ParamOut(string parameterName, SFDataType type)
+        {
+            return new SnowflakeDbParameter(parameterName, type) { Direction = ParameterDirection.Output };
+        }
+
+        public IDbDataParameter Param(string parameterName, object parameterValue)
+        {
+            return new SnowflakeDbParameter
+            {
+                DbType = DbType.String,
+                Size = 1,
+                ParameterName = parameterName,
+                Value= parameterValue
+            };
+        }
+
+        public IDataParameter ParamInt(string parameterName, object parameterValue)
+        {
+            return new SnowflakeDbParameter(parameterName, (SFDataType)parameterValue) { SFDataType = SFDataType.TEXT };
+        }
+
+        public IDataParameter ParamString(string parameterName, object parameterValue)
+        {
+            return new SnowflakeDbParameter(parameterName, (SFDataType)parameterValue);
+        }
+
+        public IDataParameter ParamTable(string parameterName, object parameterValue)
+        {
+            return new SnowflakeDbParameter(parameterName, (SFDataType)parameterValue) { SFDataType = SFDataType.OBJECT };
+        }
+
+        public IDataParameter ParamDecimal(string parameterName, object parameterValue)
+        {
+            return new SnowflakeDbParameter(parameterName, (SFDataType)parameterValue) { SFDataType = SFDataType.TEXT };
+        }
+
+        public IDataParameter ParamOut(string parameterName, object parameterValue)
+        {
+            throw new NotImplementedException();
+        }
         public bool Execute(string storedProcedure)
         {
             bool executionStatus = false;
@@ -113,6 +167,46 @@ namespace SnowFlakeAdapter
             }
 
             return executionStatus;
+        }
+        public DataSet GetData(string storedProcedure, List<IDbDataParameter> parameters)
+        {
+            DataSet ObtainedData = new DataSet();
+            try
+            {
+                using (IDbConnection connection = CreateOpenConnection())
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        string jsonParams = "";
+                        // Add parameters to the command
+                        foreach (var parameter in parameters)
+                        {
+                            if (parameter.Value != null)
+                            {
+                                if (jsonParams == "")
+                                {
+                                    jsonParams = "'"+ parameter.Value+"'";
+                                }
+                                else
+                                {
+                                    jsonParams = jsonParams + ",'" + parameter.Value + "'";
+                                }
+                            }
+                        }
+                        // Specify stored procedure name
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = storedProcedure+"("+ jsonParams+")";
+                        // Execute the stored procedure
+                        IDataAdapter dataAdapter = CreateDataAdapter(command);
+                        dataAdapter.Fill(ObtainedData);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            return ObtainedData;
         }
 
         public DataSet GetData(string storedProcedure)
