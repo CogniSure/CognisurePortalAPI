@@ -28,6 +28,18 @@ namespace SnowFlakeServices
             DataSet DS=new DataSet();
             switch (Type.ToLower())
             {
+                case "countbyturnaroundtime":
+                    {
+                        DS = Database.DashboardGraph_CountByTurnaroundTime(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
+                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new DashboardGraph
+                                    {
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("TurnaroundTime")),
+                                        Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
+                                    }).ToList();
+                    }
+                    break;
                 case "countbylob":
                     {
                         DS = Database.DashboardGraph_CountByLOB(dashboardFilter.TopNumber,dashboardFilter.CLIENTID,dashboardFilter.UserEmailId,

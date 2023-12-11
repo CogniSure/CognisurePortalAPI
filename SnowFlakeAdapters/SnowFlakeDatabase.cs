@@ -23,6 +23,17 @@ namespace SnowFlakeAdapter
             //return BaseDatabase.GetData("call SP_SubCountByIndustries('2', '1075', 'Jhon@gmail.com', '01/01/2023', '11/27/2023');");
             //return BaseDatabase.GetData("select 1", parameters);
         }
+        public DataSet DashboardGraph_CountByTurnaroundTime(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID ", UserEmailId));
+            if (startDate != DateTime.MinValue)
+                parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
+            if (EndDate != DateTime.MinValue)
+                parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
+            return BaseDatabase.GetData("call SP_SubCountByLOB", parameters);
+        }
         public DataSet DashboardGraph_CountByLOB(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
         {
             List<IDbDataParameter> parameters = new List<IDbDataParameter>();
