@@ -96,6 +96,8 @@ public class UserController : ControllerBase
 
             var response = await iBusServiceFactory.TokenService().GetUserRefreshToken(user, objOAuthTokenResponse.AccessToken, objOAuthTokenResponse.RefreshToken);
             //setTokenCookie(response);
+            if (response != null)
+                response.Value.AuthenticationType = objOAuthTokenResponse.AuthenticationType;
             return response;
         }
         catch (Exception ex)

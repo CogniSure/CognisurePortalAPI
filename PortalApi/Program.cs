@@ -190,7 +190,7 @@ app.UseHttpStatusCodeExceptionMiddleware();
 //app.UseThrottleMiddleware();
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseCors("CorsPolicy");
+app.UseCors("corspolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

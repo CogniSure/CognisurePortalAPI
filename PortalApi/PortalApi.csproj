@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="FactoryResolver\**" />
+    <Content Remove="FactoryResolver\**" />
+    <EmbeddedResource Remove="FactoryResolver\**" />
+    <None Remove="FactoryResolver\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Controllers\SFController.cs" />
   </ItemGroup>
 
@@ -32,10 +39,6 @@
     <ProjectReference Include="..\SnowFlakeServices\SnowFlakeServices.csproj" />
     <ProjectReference Include="..\SqlServices\MsSqlServices.csproj" />
     <ProjectReference Include="..\Throttle.Filter\Throttle.Filter.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="FactoryResolver\" />
   </ItemGroup>
 
 </Project>

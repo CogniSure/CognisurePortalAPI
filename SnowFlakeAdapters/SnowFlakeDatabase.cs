@@ -32,7 +32,7 @@ namespace SnowFlakeAdapter
                 parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
             if (EndDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
-            return BaseDatabase.GetData("call SP_SubCountByLOB", parameters);
+            return BaseDatabase.GetData("call SP_SubTAT", parameters);
         }
         public DataSet DashboardGraph_CountByLOB(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
         {

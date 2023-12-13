@@ -35,9 +35,23 @@ namespace SnowFlakeServices
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DashboardGraph
                                     {
-                                        Dimension = string.Format("{0}", dataRow.Field<string>("TurnaroundTime")),
-                                        Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("TAT")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("SUBMISSIONID"))
                                     }).ToList();
+                        List<DashboardGraph> dashboard = new List<DashboardGraph>();
+                        foreach (var row in lstDasboardgraph)
+                        {
+                            DashboardGraph graph = new DashboardGraph
+                            {
+                                Dimension = row.Dimension,
+                                Measure = lstDasboardgraph.Where(msr => msr.Dimension == row.Dimension).ToList().Count().ToString()
+                            };
+                           
+                            dashboard.Add(graph);
+
+                        }
+                        int a = 1;
+                        lstDasboardgraph = dashboard;
                     }
                     break;
                 case "countbylob":
