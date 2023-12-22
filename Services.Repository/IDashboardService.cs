@@ -9,6 +9,6 @@ namespace Services.Repository.Interface
 {
     public interface IDashboardService
     {
-        Task<OperationResult<List<DashboardGraph>>> GetDashboardGraph(DashboardFilter dashboardFilter, string Type);
+        Task<OperationResult<List<SFResult>>> GetDashboardGraph(DashboardFilter dashboardFilter, string Type);
     }
 }

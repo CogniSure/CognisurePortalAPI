@@ -57,7 +57,7 @@ public class DashboardController : ControllerBase
 
     [Route("DashboardGraph")]
     [HttpGet]
-    public async Task<OperationResult<List<DashboardGraph>>> DashboardGraph([FromQuery]DashboardFilter dashboardFilter, string Type)
+    public async Task<OperationResult<List<SFResult>>> DashboardGraph([FromQuery]DashboardFilter dashboardFilter, string Type)
     {
         try
         {

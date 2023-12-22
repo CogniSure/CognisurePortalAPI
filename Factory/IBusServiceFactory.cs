@@ -1,6 +1,7 @@
 ﻿using ApiServices.Interface;
 using Services.Common.Interface;
 using Services.Repository.Interface;
+using Services.SnowFlakeServices.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace Services.Factory.Interface
         IUserService UserService();
         IContactUsService ContactUsService();
         ISubmissionService SubmissionService();
+
+        ISubmissionSFService SubmissionSFService();
         IDownloadService DownloadService();
         INewsFeedService NewsFeedService();
 

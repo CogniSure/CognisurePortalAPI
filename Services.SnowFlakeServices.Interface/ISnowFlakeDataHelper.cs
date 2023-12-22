@@ -9,6 +9,7 @@ namespace Services.SnowFlakeServices.Interface
 {
     public interface ISnowFlakeDataHelper
     {
-        List<DashboardGraph> GetDashboardGraphData(DashboardFilter dashboardFilter, string Type);
+        List<SFResult> GetDashboardGraphData(DashboardFilter dashboardFilter, string Type);
+        List<SFResult> GetExposerSummary(string Type, string email, string clientId, string submissionId);
     }
 }

@@ -93,5 +93,75 @@ namespace SnowFlakeAdapter
                 parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
             return BaseDatabase.GetData("call SP_SubCountByIndustries", parameters);
         }
+
+        public DataSet Sub_Exposure_TIV(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID ", userEmailId));
+
+            return BaseDatabase.GetData("call SP_SubTiv", parameters);
+        }
+
+        public DataSet Sub_Exposure_LocationsCount(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_SubCountOfLocations", parameters);
+        }
+
+        public DataSet Sub_Exposure_BuildingsCount(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+            
+            return BaseDatabase.GetData("call SP_SubCountOfBuildings", parameters);
+        }
+
+        public DataSet Sub_Exposure_ConstructionType(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_SubCountOfConstructionType", parameters);
+        }
+
+        public DataSet Sub_Exposure_OccupancyType(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_SubCountOfOccupanyType", parameters);
+        }
+
+        public DataSet Sub_Exposure_YearBuild(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+            
+            return BaseDatabase.GetData("call SP_SubBuildingAge", parameters);
+        }
+
+        public DataSet Sub_Exposure_ProtectionClass(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+            
+            return BaseDatabase.GetData("call SP_SubCountOfProtectionClassCode", parameters);
+        }
     }
 }

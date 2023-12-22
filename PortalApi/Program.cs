@@ -62,7 +62,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder => builder
-        .WithOrigins("http://localhost:4200")
+        .WithOrigins("http://localhost:4200", "https://spqa.cognisure.ai")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials());
@@ -126,6 +126,7 @@ void SetupApplicationDependencies(IServiceCollection services)
     builder.Services.AddScoped<ThrottleFilter>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+    builder.Services.AddScoped<ISubmissionSFService, SubmissionSFService>();
     builder.Services.AddScoped<IURLService, URLService>();
     builder.Services.AddScoped<IMsSqlDataHelper, MsSqlDataHelper>();
     builder.Services.AddScoped<ISnowFlakeDataHelper, SnowFlakeDataHelper>();
@@ -179,7 +180,7 @@ void SetupApplicationDependencies(IServiceCollection services)
             });
     });
 
-    services.AddCors(p => p.AddPolicy("corspolicy", build =>
+    services.AddCors(p => p.AddPolicy("CorsPolicy", build =>
     {
         build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
     }));
@@ -190,7 +191,7 @@ app.UseHttpStatusCodeExceptionMiddleware();
 //app.UseThrottleMiddleware();
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseCors("corspolicy");
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -97,5 +97,10 @@ namespace SnowFlakeServices
         {
             throw new NotImplementedException();
         }
+
+        public ISubmissionSFService SubmissionSFService()
+        {
+            return new SubmissionSFService(SnowFlakeDataHelper, configuration);
+        }
     }
 }

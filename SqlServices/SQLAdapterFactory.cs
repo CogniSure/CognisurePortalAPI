@@ -18,6 +18,7 @@ using Microsoft.Extensions.Caching.Memory;
 using MsSqlAdapter;
 using MsSqlAdapter.Interface;
 using AuthenticationHelper;
+using Services.SnowFlakeServices.Interface;
 
 namespace MsSqlServices
 {
@@ -121,6 +122,11 @@ namespace MsSqlServices
         }
 
         IDashboardService IBusServiceFactory.DashboardService()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISubmissionSFService SubmissionSFService()
         {
             throw new NotImplementedException();
         }

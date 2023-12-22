@@ -7,6 +7,7 @@ using Services.Common.Interface;
 using Services.Factory.Interface;
 using Services.MsSqlServices.Interface;
 using Services.Repository.Interface;
+using Services.SnowFlakeServices.Interface;
 
 namespace ApiServices
 {
@@ -88,6 +89,11 @@ namespace ApiServices
         }
 
         IDashboardService IBusServiceFactory.DashboardService()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISubmissionSFService SubmissionSFService()
         {
             throw new NotImplementedException();
         }

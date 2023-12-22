@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.DTO
 {
-    public class DashboardGraph
+    public class SFResult
     {
         public string Dimension { get; set; }
         public string Measure { get; set; }
