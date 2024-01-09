@@ -27,10 +27,10 @@ namespace Portal.Repository.Inbox
             this.msSqlDataHelper = msSqlDataHelper;
             this.Configuration = configuration;
         }
-        public async Task<OperationResult<List<Submission>>> GetAllSubmission(InboxFilter ObjinboxFilter)
+        public async Task<OperationResult<IEnumerable<Submission>>> GetAllSubmission(InboxFilter ObjinboxFilter)
         {
             var Data = msSqlDataHelper.GetAllSubmission(ObjinboxFilter);
-            return new OperationResult<List<Submission>>(Data, true);
+            return new OperationResult<IEnumerable<Submission>>(Data, true);
         }
     }
 }

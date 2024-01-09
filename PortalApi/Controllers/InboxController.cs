@@ -27,7 +27,7 @@ namespace PortalApi.Controllers
         }
         [Route("AllSubmission")]
         [HttpPost]
-        public async Task<OperationResult<List<Submission>>> GetAllSubmission()
+        public async Task<OperationResult<IEnumerable<Submission>>> GetAllSubmission()
         {
             try
             {

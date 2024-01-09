@@ -33,7 +33,7 @@ namespace Services.MsSqlServices.Interface
         bool Is2faEnabled(string username, out string generalMessage, out string technicalMessage);
         //DownloadFileData Download(string type, string guid);
 
-        List<Submission> GetAllSubmission(InboxFilter ObjInboxFilter);
+        IEnumerable<Submission> GetAllSubmission(InboxFilter ObjInboxFilter);
 
     }
 }

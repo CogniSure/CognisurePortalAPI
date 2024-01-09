@@ -16,6 +16,7 @@ namespace SqlServices
     {
         private readonly IMsSqlDatabase Database;
         public IConfiguration Configuration { get; }
+        private static DateParse DP = new DateParse();
         public MsSqlDataHelper(IMsSqlDatabase Database, IConfiguration Configuration) : base()
         {
             this.Database = Database;
@@ -23,7 +24,7 @@ namespace SqlServices
         }
         public WidgetConfiguration GetURL(long userId, string pageName, string widgetCode, string action)
         {
-            var dst = Database.GetURL(userId,pageName,widgetCode,action);
+            var dst = Database.GetURL(userId, pageName, widgetCode, action);
             return WidgetList(dst);
         }
         public User GetUser(string email)
@@ -508,55 +509,97 @@ namespace SqlServices
 
 
 
-        public List<Submission> GetAllSubmission(InboxFilter ObjinboxFilter)
+        public IEnumerable<Submission> GetAllSubmission(InboxFilter ObjinboxFilter)
         {
             var list = Database.GetAllSubmission(ObjinboxFilter.UserId, ObjinboxFilter.UploadedUserID, ObjinboxFilter.FileReceivedChanelId, ObjinboxFilter.keyword, ObjinboxFilter.SubmissionFromDate, ObjinboxFilter.SubmissionToDate);
             return GetAllSubmissionList(list);
         }
-        private static List<Submission> GetAllSubmissionList(DataSet dst)
+        private static string GetMinDate(string date)
         {
-            DateParse DP;
+            string minDate = "";
+            var listdates = DP.GetDates(string.Format("{0}", date));
+            if (listdates.Count > 0)
+            {
+                minDate =  Convert.ToString(listdates.Min());
+            }
+            return minDate;
+        }
+        private static IEnumerable<Submission> GetAllSubmissionList(DataSet dst)
+        {
+            //DateParse DP;
             CultureInfo culture = new CultureInfo("en-US");
             var SubmissionList = new List<Submission>();
             if (dst.Tables[0].Rows.Count > 0)
             {
-                foreach (DataRow dr in dst.Tables[0].Rows)
+
+                //DP = new DateParse();
+                IEnumerable<Submission> result = dst.Tables[0].AsEnumerable().AsParallel().Select(dr => new Submission
                 {
-                    DP = new DateParse();
-                    var ObjSubmission = new Submission
-                    {
-                        
-                        SubmissionId = Convert.ToInt32(dr["SubmissionId"]),
-                        MessageId = string.Format("{0}", dr["MessageId"]),
-                        //SubmissionDate = dr["SubmissionDate"] == DBNull.Value ? null :Convert.ToDateTime(dr["SubmissionDate"]),
-                        SubmissionDate = string.Format("{0}", dr["SubmissionDate"]),
-                        FileReceivedChanelId = Convert.ToInt32(dr["FileReceivedChanelId"]),
-                        FileReceivedChanelName = string.Format("{0}", dr["FileReceivedChanelName"]),
-                        AddedByName = string.Format("{0}", dr["AddedByName"]),
-                        AddedByDate = dr["AddedByDate"] == DBNull.Value ? null : Convert.ToDateTime(dr["AddedByDate"]),
-                        AccountId = Convert.ToInt32(dr["AccountId"]),
-                        AccountName = string.Format("{0}", dr["AccountName"]),
-                        InsureName = string.Format("{0}", dr["InsureName"]),
-                        SubmissionStatusId = Convert.ToInt32(dr["SubmissionStatusId"]),
-                        SubmissionStatusName = string.Format("{0}", dr["SubmissionStatusName"]),
-                        //EffectiveDate = null,
-                       // EffectiveDate = Convert.ToString(DP.GetDates(string.Format("{0}", dr["EffectiveDate"])).Min()),
-                        //EffectiveDate = dr["EffectiveDate"] == DBNull.Value ? null : Convert.ToDateTime(string.Format("{0:MM/dd/yyyy}", dr["EffectiveDate"]), culture),
+                    SubmissionId = Convert.ToInt32(dr["SubmissionId"]),
+                    MessageId = string.Format("{0}", dr["MessageId"]),
+                    SubmissionDate = string.Format("{0}", dr["SubmissionDate"]),
+                    FileReceivedChanelId = Convert.ToInt32(dr["FileReceivedChanelId"]),
+                    FileReceivedChanelName = string.Format("{0}", dr["FileReceivedChanelName"]),
+                    AddedByName = string.Format("{0}", dr["AddedByName"]),
+                    AddedByDate = dr["AddedByDate"] == DBNull.Value ? null : Convert.ToDateTime(dr["AddedByDate"]),
+                    AccountId = Convert.ToInt32(dr["AccountId"]),
+                    AccountName = string.Format("{0}", dr["AccountName"]),
+                    InsureName = string.Format("{0}", dr["InsureName"]),
+                    SubmissionStatusId = Convert.ToInt32(dr["SubmissionStatusId"]),
+                    SubmissionStatusName = string.Format("{0}", dr["SubmissionStatusName"]),
 
-                        TypeOfBusiness = string.Format("{0}", dr["TypeOfBusiness"]),
-                        AgencyName = string.Format("{0}", dr["AgencyName"]),
-                        LineOfBusiness = string.Format("{0}", dr["LineOfBusiness"]),
-                        Priority = string.Format("{0}", dr["Priority"]),
-                        RiskScore = string.Format("{0}", dr["RiskScore"]),
-                    };
-                    var listdates = DP.GetDates(string.Format("{0}", dr["EffectiveDate"]));
-                    if(listdates.Count > 0)
-                    {
-                        ObjSubmission.EffectiveDate = Convert.ToString(listdates.Min());
-                    }
+                    TypeOfBusiness = string.Format("{0}", dr["TypeOfBusiness"]),
+                    AgencyName = string.Format("{0}", dr["AgencyName"]),
+                    LineOfBusiness = string.Format("{0}", dr["LineOfBusiness"]),
+                    Priority = string.Format("{0}", dr["Priority"]),
+                    RiskScore = string.Format("{0}", dr["RiskScore"]),
+                    EffectiveDate = GetMinDate(dr["EffectiveDate"].ToString())
+                    //var listdates = DP.GetDates(string.Format("{0}", dr["EffectiveDate"]));
+                    //if (listdates.Count > 0)
+                    //{
+                    //    ObjSubmission.EffectiveDate = Convert.ToString(listdates.Min());
+                    //}
+                });
+                
+                return result;
+                //foreach (DataRow dr in dst.Tables[0].Rows)
+                //{
 
-                    SubmissionList.Add(ObjSubmission);
-                }
+                //DP = new DateParse();
+                //var ObjSubmission = new Submission
+                //{
+
+                //    SubmissionId = Convert.ToInt32(dr["SubmissionId"]),
+                //    MessageId = string.Format("{0}", dr["MessageId"]),
+                //    //SubmissionDate = dr["SubmissionDate"] == DBNull.Value ? null :Convert.ToDateTime(dr["SubmissionDate"]),
+                //    SubmissionDate = string.Format("{0}", dr["SubmissionDate"]),
+                //    FileReceivedChanelId = Convert.ToInt32(dr["FileReceivedChanelId"]),
+                //    FileReceivedChanelName = string.Format("{0}", dr["FileReceivedChanelName"]),
+                //    AddedByName = string.Format("{0}", dr["AddedByName"]),
+                //    AddedByDate = dr["AddedByDate"] == DBNull.Value ? null : Convert.ToDateTime(dr["AddedByDate"]),
+                //    AccountId = Convert.ToInt32(dr["AccountId"]),
+                //    AccountName = string.Format("{0}", dr["AccountName"]),
+                //    InsureName = string.Format("{0}", dr["InsureName"]),
+                //    SubmissionStatusId = Convert.ToInt32(dr["SubmissionStatusId"]),
+                //    SubmissionStatusName = string.Format("{0}", dr["SubmissionStatusName"]),
+                //    //EffectiveDate = null,
+                //   // EffectiveDate = Convert.ToString(DP.GetDates(string.Format("{0}", dr["EffectiveDate"])).Min()),
+                //    //EffectiveDate = dr["EffectiveDate"] == DBNull.Value ? null : Convert.ToDateTime(string.Format("{0:MM/dd/yyyy}", dr["EffectiveDate"]), culture),
+
+                //    TypeOfBusiness = string.Format("{0}", dr["TypeOfBusiness"]),
+                //    AgencyName = string.Format("{0}", dr["AgencyName"]),
+                //    LineOfBusiness = string.Format("{0}", dr["LineOfBusiness"]),
+                //    Priority = string.Format("{0}", dr["Priority"]),
+                //    RiskScore = string.Format("{0}", dr["RiskScore"]),
+                //};
+                //var listdates = DP.GetDates(string.Format("{0}", dr["EffectiveDate"]));
+                //if(listdates.Count > 0)
+                //{
+                //    ObjSubmission.EffectiveDate = Convert.ToString(listdates.Min());
+                //}
+
+                //SubmissionList.Add(ObjSubmission);
+                //}
             }
             return SubmissionList;
         }
