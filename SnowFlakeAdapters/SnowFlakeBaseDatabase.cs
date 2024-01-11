@@ -198,6 +198,7 @@ namespace SnowFlakeAdapter
                         command.CommandText = storedProcedure+"("+ jsonParams+")";
                         // Execute the stored procedure
                         IDataAdapter dataAdapter = CreateDataAdapter(command);
+                        
                         dataAdapter.Fill(ObtainedData);
                     }
                 }

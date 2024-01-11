@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Models.DTO
 {
-    public class SFResult
+    public class DataResult
     {
+        public string Category { get; set; }
         public string Dimension { get; set; }
         public string Measure { get; set; }
     }

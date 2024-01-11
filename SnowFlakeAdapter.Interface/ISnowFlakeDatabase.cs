@@ -20,5 +20,16 @@ namespace SnowFlakeAdapter.Interface
         DataSet Sub_Exposure_OccupancyType(string clientId, string userEmailId, string submissionId);
         DataSet Sub_Exposure_YearBuild(string clientId, string userEmailId, string submissionId);
         DataSet Sub_Exposure_ProtectionClass(string clientId, string userEmailId, string submissionId);
+
+        DataSet Sub_Loss_ClaimByLobByYear(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Loss_IncurredByLobByYear(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Loss_IncurredRangeCount(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Loss_ClaimByClaimTypeByYear(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Loss_IncurredByClaimTypeByYear(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Loss_ClaimByClaimType(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Loss_ClaimStatus(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Loss_TotalIncurred(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Loss_TopLocations(string clientId, string userEmailId, string submissionId);
+        DataSet GetSubmissionHeader(string clientId, string userEmailId, string submissionId);
     }
 }

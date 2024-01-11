@@ -163,5 +163,105 @@ namespace SnowFlakeAdapter
             
             return BaseDatabase.GetData("call SP_SubCountOfProtectionClassCode", parameters);
         }
+
+        public DataSet Sub_Loss_ClaimByLobByYear(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_ClaimsByLOBByYear", parameters);
+        }
+
+        public DataSet Sub_Loss_IncurredByLobByYear(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_IncurredByLOBByYear", parameters);
+        }
+
+        public DataSet Sub_Loss_IncurredRangeCount(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_IncurredRange", parameters);
+        }
+
+        public DataSet Sub_Loss_ClaimByClaimTypeByYear(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_ClaimsByClaimTypeByYear", parameters);
+        }
+
+        public DataSet Sub_Loss_IncurredByClaimTypeByYear(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_IncurredByClaimTypeByYear", parameters);
+        }
+
+        public DataSet Sub_Loss_ClaimByClaimType(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_ClaimsByClaimType", parameters);
+        }
+
+        public DataSet Sub_Loss_ClaimStatus(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_PercentageOfClaimStatus", parameters);
+        }
+
+        public DataSet Sub_Loss_TotalIncurred(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_TotalIncurred", parameters);
+        }
+
+        public DataSet Sub_Loss_TopLocations(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_SubCountOfProtectionClassCode", parameters);
+        }
+
+        public DataSet GetSubmissionHeader(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_SummaryHeader", parameters);
+        }
     }
 }

@@ -9,6 +9,8 @@ namespace Services.SnowFlakeServices.Interface
 {
     public interface ISubmissionSFService
     {
-        Task<OperationResult<List<SFResult>>> GetSubmissionData(string type, string clientId, string submissionId, string userEmail);
+        Task<OperationResult<List<DataResult>>> GetExposureSummary(string type, string clientId, string submissionId, string userEmail);
+        Task<OperationResult<List<DataResult>>> GetLossSummary(string type, string clientId, string submissionId, string userEmail);
+        Task<OperationResult<List<DataResult>>> GetSubmissionHeader(string type, string clientId, string submissionId, string userEmail);
     }
 }

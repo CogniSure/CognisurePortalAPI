@@ -31,10 +31,10 @@ namespace Portal.Repository.Dashboard
             _memoryCache = memoryCache;
             _ipAddressServices = ipAddressServices;
         }
-        public async Task<OperationResult<List<SFResult>>> GetDashboardGraph(DashboardFilter dashboardFilter, string Type)
+        public async Task<OperationResult<List<DataResult>>> GetDashboardGraph(DashboardFilter dashboardFilter, string Type)
         {
             var Data = SnowFlakeDataHelper.GetDashboardGraphData(dashboardFilter,Type);
-            return new OperationResult<List<SFResult>>(Data, true);
+            return new OperationResult<List<DataResult>>(Data, true);
         }
     }
 }

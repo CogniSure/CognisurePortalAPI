@@ -40,12 +40,24 @@ namespace SnowFlakeServices
             this.msSqlDataHelper = msSqlDataHelper;
             this.Configuration = configuration;
         }
-        public async Task<OperationResult<List<SFResult>>> GetSubmissionData(string type, string clientId, string submissionId, string userEmail)
+        public async Task<OperationResult<List<DataResult>>> GetExposureSummary(string type, string clientId, string submissionId, string userEmail)
         {
-            List<SFResult> submissionData = sfDataHelper.GetExposerSummary(type, userEmail, clientId, submissionId);
+            List<DataResult> submissionData = sfDataHelper.GetExposerSummary(type, userEmail, clientId, submissionId);
 
-            return new OperationResult<List<SFResult>>(submissionData, true); ;
+            return new OperationResult<List<DataResult>>(submissionData, true); ;
+        }
+        public async Task<OperationResult<List<DataResult>>> GetLossSummary(string type, string clientId, string submissionId, string userEmail)
+        {
+            List<DataResult> submissionData = sfDataHelper.GetLossSummary(type, userEmail, clientId, submissionId);
+
+            return new OperationResult<List<DataResult>>(submissionData, true); ;
         }
 
+        public async Task<OperationResult<List<DataResult>>> GetSubmissionHeader(string type, string clientId, string submissionId, string userEmail)
+        {
+            List<DataResult> submissionData = sfDataHelper.GetSubmissionHeader(type, userEmail, clientId, submissionId);
+
+            return new OperationResult<List<DataResult>>(submissionData, true);
+        }
     }
 }

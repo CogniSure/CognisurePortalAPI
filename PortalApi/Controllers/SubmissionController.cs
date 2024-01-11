@@ -56,25 +56,58 @@ public class SubmissionController : ControllerBase
     [Route("submissionbyid")]
     [HttpGet]
     [AllowAnonymous]
-    public async Task<OperationResult<List<SFResult>>> GetSubmissionById(string type, string clientid,string submissionid, string email)
-    //public async Task<OperationResult<List<SFResult>>> GetSubmissionById()
+    public async Task<OperationResult<List<DataResult>>> GetSubmissionById(string type, string clientid,string submissionid, string email)
     {
         try
         {
             var Source = _configuration.GetSection("SubSource")?.Value;
             var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
-            //string type= "exposure_constructiontype";
-            //string clientid = "1074";
-            //string submissionid = "a55523ff-1c8e-446a-843f-e51b6a2c4d61";
-            //string email = "QBEsub@gmail.com";
-            return await iBusServiceFactorySFDB.SubmissionSFService().GetSubmissionData(type, clientid, submissionid, email);
+            return await iBusServiceFactorySFDB.SubmissionSFService().GetExposureSummary(type, clientid, submissionid, email);
         }
         catch (Exception ex)
         {
             _logger.LogError("Error: {0}", ex.Message);
             return null;
-            //return await iBusServiceFactorySQL.ExceptionService<SubmissionData>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
-            //   "0", "SubmissionController", "GetSubmissionById");
+        }
+    }
+    [Route("losssummarybyid")]
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<OperationResult<List<DataResult>>> GetLossSummaryById(string type, string clientid, string submissionid, string email)
+    {
+        try
+        {
+            //type = "loss_incurredbylobbyyear";
+            //clientid = "1074";
+            //submissionid = "a44413ee-1c8e-446a-843f-e51b6a2c4c51";
+            //email = "QBEsub@gmail.com";
+            var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
+            return await iBusServiceFactorySFDB.SubmissionSFService().GetLossSummary(type, clientid, submissionid, email);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return null;
+        }
+    }
+    [Route("submissionheadersbyid")]
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<OperationResult<List<DataResult>>> GetSubmissionHeaderId(string type, string clientid, string submissionid, string email)
+    {
+        try
+        {
+            //type = "loss_incurredbylobbyyear";
+            //clientid = "1074";
+            //submissionid = "a44413ee-1c8e-446a-843f-e51b6a2c4c51";
+            //email = "QBEsub@gmail.com";
+            var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
+            return await iBusServiceFactorySFDB.SubmissionSFService().GetSubmissionHeader(type, clientid, submissionid, email);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return null;
         }
     }
     [Route("submission360")]
