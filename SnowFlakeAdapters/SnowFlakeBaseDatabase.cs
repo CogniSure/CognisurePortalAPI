@@ -196,10 +196,27 @@ namespace SnowFlakeAdapter
                         // Specify stored procedure name
                         command.CommandType = CommandType.Text;
                         command.CommandText = storedProcedure+"("+ jsonParams+")";
-                        // Execute the stored procedure
-                        IDataAdapter dataAdapter = CreateDataAdapter(command);
-                        
-                        dataAdapter.Fill(ObtainedData);
+                        IDataReader reader = command.ExecuteReader();
+                        DataTable dt = new DataTable();
+                        var resultTable = reader.GetSchemaTable();
+                        var columnCount = resultTable.Rows.Count;
+
+                        for (int i = 0; i < columnCount; i++)
+                        {
+                            dt.Columns.Add(resultTable.Rows[i]["ColumnName"].ToString());
+                        }
+
+                        while (reader.Read())
+                        {
+                            DataRow dr = dt.NewRow();
+                            for (int i = 0; i < columnCount; i++)
+                            {
+                                dr[i] = reader.GetString(i);
+                            }
+                            var val = reader.GetString(0);
+                            dt.Rows.Add(dr);
+                        }
+                        ObtainedData.Tables.Add(dt);
                     }
                 }
             }

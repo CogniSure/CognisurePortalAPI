@@ -46,7 +46,7 @@ namespace SnowFlakeServices
                             DataResult graph = new DataResult
                             {
                                 Category = "Days",
-                                Dimension = row.Dimension,
+                                Dimension = row.Dimension + " min",
                                 Measure = lstDasboardgraph.Where(msr => msr.Dimension == row.Dimension).ToList().Count().ToString()
                             };
 
@@ -65,7 +65,7 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Dimension = string.Format("{0}", dataRow.Field<string>("LOB")),
-                                        Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                     }).ToList();
                     }
                     break;
@@ -77,7 +77,7 @@ namespace SnowFlakeServices
                                    .Select(dataRow => new DataResult
                                    {
                                        Dimension = string.Format("{0}", dataRow.Field<string>("BROKERNAME")),
-                                       Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
                     }
                     break;
@@ -89,7 +89,7 @@ namespace SnowFlakeServices
                                    .Select(dataRow => new DataResult
                                    {
                                        Dimension = string.Format("{0}", dataRow.Field<string>("CITYNAME")),
-                                       Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
                     }
                     break;
@@ -101,7 +101,7 @@ namespace SnowFlakeServices
                                    .Select(dataRow => new DataResult
                                    {
                                        Dimension = string.Format("{0}", dataRow.Field<string>("STATENAME")),
-                                       Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
                     }
                     break;
@@ -113,7 +113,7 @@ namespace SnowFlakeServices
                                    .Select(dataRow => new DataResult
                                    {
                                        Dimension = string.Format("{0}", dataRow.Field<string>("NAICCODE")),
-                                       Measure = string.Format("{0}", dataRow.Field<Int64>("COUNTOFSUBMISSIONID"))
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
                     }
                     break;
@@ -148,7 +148,7 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Dimension = string.Format("{0}", dataRow.Field<string>("SUBMISSIONID")),
-                                        Measure = string.Format("{0}", dataRow.Field<decimal>("SUMOFTIV"))
+                                        Measure = string.Format("{0}", dataRow.Field<string>("SUMOFTIV"))
                                     }).ToList();
                     }
                     break;
@@ -159,7 +159,7 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Dimension = string.Format("{0}", dataRow.Field<string>("SUBMISSIONID")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFLOCATIONS"))
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFLOCATIONS"))
                                     }).ToList();
                     }
                     break;
@@ -170,7 +170,7 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Dimension = string.Format("{0}", dataRow.Field<string>("SUBMISSIONID")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFBUILDINGS"))
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFBUILDINGS"))
                                     }).ToList();
                     }
                     break;
@@ -181,7 +181,7 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Dimension = string.Format("{0}", dataRow.Field<string>("CONSTRUCTIONTYPE")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFCONSTRUCTIONTYPE"))
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFCONSTRUCTIONTYPE"))
                                     }).ToList();
                     }
                     break;
@@ -192,7 +192,7 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Dimension = string.Format("{0}", dataRow.Field<string>("OCCUPANYTYPE")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFOCCUPANYTYPE"))
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFOCCUPANYTYPE"))
                                     }).ToList();
                     }
                     break;
@@ -202,18 +202,19 @@ namespace SnowFlakeServices
                         var rawData = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DataResult
                                     {
-                                        Dimension = string.Format("{0}", dataRow.Field<string>("SUBMISSIONID")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("BUILDINGAGE"))
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("RANGES")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFBUIDLINGAGE"))
                                     }).ToList();
-                        lstDasboardgraph = new List<DataResult>()
-                        {
-                            new DataResult { Dimension = "0-5", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 0 && Convert.ToInt64(x.Measure) <= 5).Count().ToString() },
-                            new DataResult { Dimension = "6-10", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 6 && Convert.ToInt64(x.Measure) <= 10).Count().ToString() },
-                            new DataResult { Dimension = "11-15", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 11 && Convert.ToInt64(x.Measure) <= 15).Count().ToString() },
-                            new DataResult { Dimension = "16-25", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 16 && Convert.ToInt64(x.Measure) <= 25).Count().ToString() },
-                            new DataResult { Dimension = "26-75", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 26 && Convert.ToInt64(x.Measure) <= 75).Count().ToString() },
-                            new DataResult { Dimension = "Greater than 75", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) > 75).Count().ToString() },
-                        };
+                        lstDasboardgraph = rawData;
+                        //    new List<DataResult>()
+                        //{
+                        //    new DataResult { Dimension = "0-5", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 0 && Convert.ToInt64(x.Measure) <= 5).Count().ToString() },
+                        //    new DataResult { Dimension = "6-10", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 6 && Convert.ToInt64(x.Measure) <= 10).Count().ToString() },
+                        //    new DataResult { Dimension = "11-15", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 11 && Convert.ToInt64(x.Measure) <= 15).Count().ToString() },
+                        //    new DataResult { Dimension = "16-25", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 16 && Convert.ToInt64(x.Measure) <= 25).Count().ToString() },
+                        //    new DataResult { Dimension = "26-75", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) >= 26 && Convert.ToInt64(x.Measure) <= 75).Count().ToString() },
+                        //    new DataResult { Dimension = "Greater than 75", Measure = rawData.Where(x=> Convert.ToInt64(x.Measure) > 75).Count().ToString() },
+                        //};
 
                     }
                     break;
@@ -224,7 +225,7 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Dimension = string.Format("{0}", dataRow.Field<string>("PROTECTIONCLASSCODE")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFPROTECTIONCLASSCODE"))
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFPROTECTIONCLASSCODE"))
                                     }).ToList();
                     }
                     break;
@@ -245,8 +246,8 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Category = string.Format("{0}", dataRow.Field<string>("LOB")),
-                                        Dimension = string.Format("{0}", dataRow.Field<long>("YEAR")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFCLAIMS"))
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFCLAIMS"))
                                     }).ToList();
                     }
                     break;
@@ -256,8 +257,9 @@ namespace SnowFlakeServices
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DataResult
                                     {
-                                        Dimension = string.Format("{0}", dataRow.Field<string>("SUBMISSIONID")),
-                                        Measure = string.Format("{0}", dataRow.Field<decimal>("SUMOFTIV"))
+                                        Category = string.Format("{0}", dataRow.Field<string>("LOB")),
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("INCURRED"))
                                     }).ToList();
                     }
                     break;
@@ -269,7 +271,7 @@ namespace SnowFlakeServices
                                     {
                                         Category = string.Format("{0}", dataRow.Field<string>("RANGES")),
                                         Dimension = string.Format("{0}", dataRow.Field<string>("RANGES")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("INCURREDCOUNT"))
+                                        Measure = string.Format("{0}", dataRow.Field<string>("INCURREDCOUNT"))
                                     }).ToList();
                     }
                     break;
@@ -280,8 +282,8 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Category = string.Format("{0}", dataRow.Field<string>("CLAIMTYPE")),
-                                        Dimension = string.Format("{0}", dataRow.Field<long>("YEAR")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFCLAIMS"))
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFCLAIMS"))
                                     }).ToList();
                     }
                     break;
@@ -292,8 +294,8 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Category = string.Format("{0}", dataRow.Field<string>("CLAIMTYPE")),
-                                        Dimension = string.Format("{0}", dataRow.Field<long>("YEAR")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFCLAIMS"))
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("INCURRED"))
                                     }).ToList();
                     }
                     break;
@@ -305,7 +307,7 @@ namespace SnowFlakeServices
                                     {
                                         Category = string.Format("{0}", dataRow.Field<string>("CLAIMTYPE")),
                                         Dimension = string.Format("{0}", dataRow.Field<string>("CLAIMTYPE")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFCLAIMS"))
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFCLAIMS"))
                                     }).ToList();
                     }
                     break;
@@ -315,9 +317,9 @@ namespace SnowFlakeServices
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DataResult
                                     {
-                                        Category = string.Format("{0}", dataRow.Field<string>("CLAIMTYPE")),
-                                        Dimension = string.Format("{0}", dataRow.Field<long>("YEAR")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFCLAIMS"))
+                                        Category = "",
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("CLAIMSTATUS")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("PERCENTAGEOFCLAIMSTATUS"))
                                     }).ToList();
                     }
                     break;
@@ -327,9 +329,9 @@ namespace SnowFlakeServices
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DataResult
                                     {
-                                        Category = string.Format("{0}", dataRow.Field<string>("CLAIMTYPE")),
-                                        Dimension = string.Format("{0}", dataRow.Field<long>("YEAR")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFCLAIMS"))
+                                        Category = "",
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("FIELDNAMES")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("AMOUNTS"))
                                     }).ToList();
                     }
                     break;
@@ -340,8 +342,8 @@ namespace SnowFlakeServices
                                     .Select(dataRow => new DataResult
                                     {
                                         Category = string.Format("{0}", dataRow.Field<string>("CLAIMTYPE")),
-                                        Dimension = string.Format("{0}", dataRow.Field<long>("YEAR")),
-                                        Measure = string.Format("{0}", dataRow.Field<long>("COUNTOFCLAIMS"))
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFCLAIMS"))
                                     }).ToList();
                     }
                     break;
