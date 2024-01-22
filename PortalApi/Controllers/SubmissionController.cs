@@ -110,6 +110,26 @@ public class SubmissionController : ControllerBase
             return null;
         }
     }
+    [Route("submissionsummarybylobbyid")]
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<OperationResult<List<DataResult>>> GetSubmissionSummaryForLOB(string type, string clientid, string submissionid, string email)
+    {
+        try
+        {
+            //type = "loss_incurredbylobbyyear";
+            //clientid = "1074";
+            //submissionid = "a44413ee-1c8e-446a-843f-e51b6a2c4c51";
+            //email = "QBEsub@gmail.com";
+            var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
+            return await iBusServiceFactorySFDB.SubmissionSFService().GetSubmissionSummary(type, clientid, submissionid, email);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return null;
+        }
+    }
     [Route("submission360")]
     [HttpGet]
     public async Task<OperationResult<Submission360>> DownloadSubmission360(string submissionid)

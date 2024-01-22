@@ -350,5 +350,53 @@ namespace SnowFlakeServices
             }
             return lstDasboardgraph;
         }
+
+        public List<DataResult> GetSubmissionSummaryByLOB(string type, string email, string clientId, string subGuid)
+        {
+            List<DataResult> lstDasboardgraph = new List<DataResult>();
+            DataSet DS = new DataSet();
+            switch (type.ToLower())
+            {
+                case "sub_agencies_all":
+                    {
+                        DS = Database.Sub_Summary_Agency(clientId, email, subGuid);
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new DataResult
+                                    {
+                                        
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("HEADERS")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("RESULT"))
+                                    }).ToList();
+                    }
+                    break;
+                case "sub_businessoperations_all":
+                    {
+                        DS = Database.Sub_Summary_BusinessOperations(clientId, email, subGuid);
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new DataResult
+                                    {
+                                        
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("HEADERS")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("RESULT"))
+                                    }).ToList();
+                    }
+                    break;
+                case "sub_totallosses_all":
+                    {
+                        DS = Database.Sub_Summary_TotalLosses(clientId, email, subGuid);
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new DataResult
+                                    {
+                                        Category = string.Format("{0}", dataRow.Field<string>("RANGES")),
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("RANGES")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("INCURREDCOUNT"))
+                                    }).ToList();
+                    }
+                    break;
+                
+                
+            }
+            return lstDasboardgraph;
+        }
     }
 }

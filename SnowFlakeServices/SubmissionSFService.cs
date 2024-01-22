@@ -59,5 +59,12 @@ namespace SnowFlakeServices
 
             return new OperationResult<List<DataResult>>(submissionData, true);
         }
+
+        public async Task<OperationResult<List<DataResult>>> GetSubmissionSummary(string type, string clientId, string submissionId, string userEmail)
+        {
+            List<DataResult> submissionData = sfDataHelper.GetSubmissionSummaryByLOB(type, userEmail, clientId, submissionId);
+
+            return new OperationResult<List<DataResult>>(submissionData, true);
+        }
     }
 }
