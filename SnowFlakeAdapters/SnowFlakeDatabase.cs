@@ -293,5 +293,35 @@ namespace SnowFlakeAdapter
 
             return BaseDatabase.GetData("call SP_SummaryTotalLossess", parameters);
         }
+
+        public DataSet Sub_Summary_Property_Exposure(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_PropertyExposure", parameters);
+        }
+
+        public DataSet Sub_Summary_Property_Coverages(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_PropertyCoverage", parameters);
+        }
+
+        public DataSet Sub_Summary_Property_Losses(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_PropertyTotalLossess", parameters);
+        }
     }
 }

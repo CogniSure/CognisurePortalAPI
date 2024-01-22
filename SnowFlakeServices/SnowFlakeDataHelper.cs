@@ -351,52 +351,200 @@ namespace SnowFlakeServices
             return lstDasboardgraph;
         }
 
-        public List<DataResult> GetSubmissionSummaryByLOB(string type, string email, string clientId, string subGuid)
+        public Submission GetSubmissionSummaryByLOB(string type, string email, string clientId, string subGuid)
         {
-            List<DataResult> lstDasboardgraph = new List<DataResult>();
+            Submission submissionData = new Submission();
             DataSet DS = new DataSet();
             switch (type.ToLower())
             {
                 case "sub_agencies_all":
                     {
                         DS = Database.Sub_Summary_Agency(clientId, email, subGuid);
-                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
-                                    .Select(dataRow => new DataResult
-                                    {
-                                        
-                                        Dimension = string.Format("{0}", dataRow.Field<string>("HEADERS")),
-                                        Measure = string.Format("{0}", dataRow.Field<string>("RESULT"))
-                                    }).ToList();
+                        Agency agency = new Agency();
+
+                        DS.Tables[0].AsEnumerable().ToList().ForEach(data =>
+                        {
+                            var key = data.Field<string>("HEADERS").ToLower();
+                            switch (key)
+                            {
+                                case "producerfullname":
+                                    agency.AgencyName = data.Field<string>("RESULT");
+                                    break;
+                                case "insurerproduceridentifier": 
+                                    agency.Producer = data.Field<string>("RESULT");
+                                    break;
+                            }
+                            var v = data;
+                        });
+                        submissionData.Agency = agency;
                     }
                     break;
                 case "sub_businessoperations_all":
                     {
                         DS = Database.Sub_Summary_BusinessOperations(clientId, email, subGuid);
-                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
-                                    .Select(dataRow => new DataResult
-                                    {
-                                        
-                                        Dimension = string.Format("{0}", dataRow.Field<string>("HEADERS")),
-                                        Measure = string.Format("{0}", dataRow.Field<string>("RESULT"))
-                                    }).ToList();
+                        BusinessOperation bussOperation = new BusinessOperation();
+
+                        DS.Tables[0].AsEnumerable().ToList().ForEach(data =>
+                        {
+                            var key = data.Field<string>("HEADERS").ToLower();
+                            switch (key)
+                            {
+                                case "namedinsurednaiccode":
+                                    bussOperation.Naics = data.Field<string>("RESULT");
+                                    break;
+                                //case "insurerproduceridentifier":
+                                //    agency.Producer = data.Field<string>("RESULT");
+                                //    break;
+                            }
+                            var v = data;
+                        });
+                        submissionData.BusinessOperation = bussOperation;
                     }
                     break;
                 case "sub_totallosses_all":
                     {
                         DS = Database.Sub_Summary_TotalLosses(clientId, email, subGuid);
-                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
-                                    .Select(dataRow => new DataResult
+                        submissionData.TotalLosses = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new SubmissionLosses
                                     {
-                                        Category = string.Format("{0}", dataRow.Field<string>("RANGES")),
-                                        Dimension = string.Format("{0}", dataRow.Field<string>("RANGES")),
-                                        Measure = string.Format("{0}", dataRow.Field<string>("INCURREDCOUNT"))
+                                        Year = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        GrossAmount = string.Format("{0}", dataRow.Field<string>("GROSSINCURRED")),
+                                        TotalNoOfClaims = string.Format("{0}", dataRow.Field<string>("CLAIMNUMBER")),
+                                        NoOfOpenClaims = string.Format("{0}", dataRow.Field<string>("COUNTOFOPENCLAIMS"))
                                     }).ToList();
                     }
                     break;
-                
-                
+                case "sub_exposure_property":
+                    {
+                        DS = Database.Sub_Summary_Property_Exposure(clientId, email, subGuid);
+                        
+                        var data = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new PropertyExposure
+                                    {
+                                        TIV = string.Format("{0}", dataRow.Field<string>("TIV")),
+                                        BuildingsCount = string.Format("{0}", dataRow.Field<string>("COUNTOFBUILDINGS")),
+                                        LocationsCount = string.Format("{0}", dataRow.Field<string>("COUNTOFLOCATIONS")),
+                                        StatesCount = string.Format("{0}", dataRow.Field<string>("COUNTOFSTATES"))
+                                    });
+                        if (data != null)
+                        {
+                            submissionData.PropertyExposure = data.FirstOrDefault();
+                        }
+                    }
+                    break;
+                case "sub_coverage_property":
+                    {
+                        DS = Database.Sub_Summary_Property_Coverages(clientId, email, subGuid);
+                        List<PropertyCoverages> propertyCoverages = new List<PropertyCoverages>();
+
+                        DS.Tables[0].AsEnumerable().ToList().ForEach(data =>
+                        {
+                            //var key = data.Field<string>("HEADERS").ToLower();
+                            if (data.Field<string>("BUILDINGLIMIT") != null)
+                            {
+                                propertyCoverages.Add(new PropertyCoverages
+                                {
+                                    CoverageName = "Building",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("BUILDINGLIMIT")),
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("CONTENTLIMIT") != null)
+                            {
+                                propertyCoverages.Add(new PropertyCoverages
+                                {
+                                    CoverageName = "Content",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("CONTENTLIMIT")),
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("BUSINESSINCOMELIMIT") != null)
+                            {
+                                propertyCoverages.Add(new PropertyCoverages
+                                {
+                                    CoverageName = "Business Income",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("BUSINESSINCOMELIMIT")),
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("OTHERLIMIT") != null)
+                            {
+                                propertyCoverages.Add(new PropertyCoverages
+                                {
+                                    CoverageName = "Others",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("OTHERLIMIT")),
+                                    CoverageType = ""
+                                });
+                            }
+                           
+                            //switch (key)
+                            //{
+                            //    case "buildinglimit":
+                            //        propertyCoverages.Add(new PropertyCoverages
+                            //        {
+                            //            CoverageName = "Building",
+                            //            CoverageValue = string.Format("{0}", data.Field<string>("BUILDINGLIMIT")),
+                            //            CoverageType = ""
+                            //        });
+                            //        break;
+                            //    case "contentlimit":
+                            //        propertyCoverages.Add(new PropertyCoverages
+                            //        {
+                            //            CoverageName = "Content",
+                            //            CoverageValue = string.Format("{0}", data.Field<string>("CONTENTLIMIT")),
+                            //            CoverageType = ""
+                            //        });
+                            //        break;
+                            //    case "businessincomelimit":
+                            //        propertyCoverages.Add(new PropertyCoverages
+                            //        {
+                            //            CoverageName = "Business Income",
+                            //            CoverageValue = string.Format("{0}", data.Field<string>("BUSINESSINCOMELIMIT")),
+                            //            CoverageType = ""
+                            //        });
+                            //        break;
+                            //    case "otherlimit":
+                            //        propertyCoverages.Add(new PropertyCoverages
+                            //        {
+                            //            CoverageName = "Others",
+                            //            CoverageValue = string.Format("{0}", data.Field<string>("OTHERLIMIT")),
+                            //            CoverageType = ""
+                            //        });
+                            //        break;
+                            //}
+                            
+                        });
+                        //var data = DS.Tables[0].AsEnumerable()
+                        //            .Select(dataRow => new PropertyCoverages
+                        //            {
+                        //                BuildingLimit = string.Format("{0}", dataRow.Field<string>("BUILDINGLIMIT")),
+                        //                ContentLimit = string.Format("{0}", dataRow.Field<string>("CONTENTLIMIT")),
+                        //                BusinessLimit = string.Format("{0}", dataRow.Field<string>("BUSINESSINCOMELIMIT")),
+                        //                OtherLimit = string.Format("{0}", dataRow.Field<string>("OTHERLIMIT"))
+                        //            });
+                        if (propertyCoverages != null)
+                        {
+                            submissionData.PropertyCoverages = propertyCoverages;
+                        }
+                    }
+                    break;
+                case "sub_losses_property":
+                    {
+                        DS = Database.Sub_Summary_Property_Losses(clientId, email, subGuid);
+                        submissionData.PropertyLosses = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new SubmissionLosses
+                                    {
+                                        Year = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        GrossAmount = string.Format("{0}", dataRow.Field<string>("GROSSINCURRED")),
+                                        TotalNoOfClaims = string.Format("{0}", dataRow.Field<string>("CLAIMNUMBER")),
+                                        NoOfOpenClaims = string.Format("{0}", dataRow.Field<string>("COUNTOFOPENCLAIMS"))
+                                    }).ToList();
+                    }
+                    break;
+
+
             }
-            return lstDasboardgraph;
+            return submissionData;
         }
     }
 }

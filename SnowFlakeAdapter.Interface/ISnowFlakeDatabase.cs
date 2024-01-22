@@ -65,5 +65,9 @@ namespace SnowFlakeAdapter.Interface
         DataSet Sub_Summary_Agency(string clientId, string userEmailId, string submissionId);
         DataSet Sub_Summary_BusinessOperations(string clientId, string userEmailId, string submissionId);
         DataSet Sub_Summary_TotalLosses(string clientId, string userEmailId, string submissionId);
+
+        DataSet Sub_Summary_Property_Exposure(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_Property_Coverages(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_Property_Losses(string clientId, string userEmailId, string submissionId);
     }
 }

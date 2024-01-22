@@ -113,7 +113,7 @@ public class SubmissionController : ControllerBase
     [Route("submissionsummarybylobbyid")]
     [HttpGet]
     [AllowAnonymous]
-    public async Task<OperationResult<List<DataResult>>> GetSubmissionSummaryForLOB(string type, string clientid, string submissionid, string email)
+    public async Task<OperationResult<Submission>> GetSubmissionSummaryForLOB(string type, string clientid, string submissionid, string email)
     {
         try
         {

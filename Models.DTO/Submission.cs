@@ -41,8 +41,12 @@ namespace Models.DTO
         public bool? ExtractionComplete { get; set; }
         public bool? Completeness { get; set; }
         public bool? RiskClearance { get; set; }
-
-        public SubmissionData[]? SubmissionData { get; set; }
+        public Agency Agency { get; set; }
+        public BusinessOperation BusinessOperation { get; set; }
+        public List<SubmissionLosses> TotalLosses { get; set; }
+        public PropertyExposure PropertyExposure { get; set; }
+        public List<PropertyCoverages> PropertyCoverages { get; set; }
+        public List<SubmissionLosses> PropertyLosses { get; set; }
     }
 
     public class SubmissionData
