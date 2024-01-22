@@ -38,6 +38,10 @@ namespace Models.DTO
         public string? LineOfBusiness { get; set; }
         public string? Priority { get; set; }
         public string? RiskScore { get; set; }
+        public bool? ExtractionComplete { get; set; }
+        public bool? Completeness { get; set; }
+        public bool? RiskClearance { get; set; }
+
         public SubmissionData[]? SubmissionData { get; set; }
     }
 

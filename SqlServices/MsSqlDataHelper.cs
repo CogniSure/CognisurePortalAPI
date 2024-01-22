@@ -553,7 +553,10 @@ namespace SqlServices
                     LineOfBusiness = string.Format("{0}", dr["LineOfBusiness"]),
                     Priority = string.Format("{0}", dr["Priority"]),
                     RiskScore = string.Format("{0}", dr["RiskScore"]),
-                    EffectiveDate = GetMinDate(dr["EffectiveDate"].ToString())
+                    EffectiveDate = GetMinDate(dr["EffectiveDate"].ToString()),
+                    ExtractionComplete = Convert.ToBoolean(dr["ExtractionComplete"]),
+                    Completeness = Convert.ToBoolean(dr["Completeness"]),
+                    RiskClearance = Convert.ToBoolean(dr["RiskClearance"]),
                     //var listdates = DP.GetDates(string.Format("{0}", dr["EffectiveDate"]));
                     //if (listdates.Count > 0)
                     //{
