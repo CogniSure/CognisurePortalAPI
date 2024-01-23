@@ -47,6 +47,9 @@ namespace Models.DTO
         public PropertyExposure PropertyExposure { get; set; }
         public List<PropertyCoverages> PropertyCoverages { get; set; }
         public List<SubmissionLosses> PropertyLosses { get; set; }
+        public List<AutoExposure> AutoExposure { get; set; }
+        public List<PropertyCoverages> AutoCoverages { get; set; }
+        public List<SubmissionLosses> AutoLosses { get; set; }
     }
 
     public class SubmissionData

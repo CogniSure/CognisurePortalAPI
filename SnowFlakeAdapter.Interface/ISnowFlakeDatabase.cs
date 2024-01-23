@@ -69,5 +69,9 @@ namespace SnowFlakeAdapter.Interface
         DataSet Sub_Summary_Property_Exposure(string clientId, string userEmailId, string submissionId);
         DataSet Sub_Summary_Property_Coverages(string clientId, string userEmailId, string submissionId);
         DataSet Sub_Summary_Property_Losses(string clientId, string userEmailId, string submissionId);
+
+        DataSet Sub_Summary_Auto_Exposure(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_Auto_Coverages(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_Auto_Losses(string clientId, string userEmailId, string submissionId);
     }
 }

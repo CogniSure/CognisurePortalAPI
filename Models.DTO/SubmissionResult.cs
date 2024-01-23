@@ -41,6 +41,13 @@ namespace Models.DTO
         public string? LocationsCount { get; set; }
         public string? StatesCount { get; set; }
     }
+    public class AutoExposure
+    {
+        public string? BodyType { get; set; }
+        public string? VehicleCount { get; set; }
+        public string? DriverCount { get; set; }
+        public string? BodyTypeCount { get; set; }
+    }
     public class PropertyCoverages
     {
         public string CoverageName { get; set; }

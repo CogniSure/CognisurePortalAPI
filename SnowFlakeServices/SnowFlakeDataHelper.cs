@@ -477,51 +477,8 @@ namespace SnowFlakeServices
                                 });
                             }
                            
-                            //switch (key)
-                            //{
-                            //    case "buildinglimit":
-                            //        propertyCoverages.Add(new PropertyCoverages
-                            //        {
-                            //            CoverageName = "Building",
-                            //            CoverageValue = string.Format("{0}", data.Field<string>("BUILDINGLIMIT")),
-                            //            CoverageType = ""
-                            //        });
-                            //        break;
-                            //    case "contentlimit":
-                            //        propertyCoverages.Add(new PropertyCoverages
-                            //        {
-                            //            CoverageName = "Content",
-                            //            CoverageValue = string.Format("{0}", data.Field<string>("CONTENTLIMIT")),
-                            //            CoverageType = ""
-                            //        });
-                            //        break;
-                            //    case "businessincomelimit":
-                            //        propertyCoverages.Add(new PropertyCoverages
-                            //        {
-                            //            CoverageName = "Business Income",
-                            //            CoverageValue = string.Format("{0}", data.Field<string>("BUSINESSINCOMELIMIT")),
-                            //            CoverageType = ""
-                            //        });
-                            //        break;
-                            //    case "otherlimit":
-                            //        propertyCoverages.Add(new PropertyCoverages
-                            //        {
-                            //            CoverageName = "Others",
-                            //            CoverageValue = string.Format("{0}", data.Field<string>("OTHERLIMIT")),
-                            //            CoverageType = ""
-                            //        });
-                            //        break;
-                            //}
                             
                         });
-                        //var data = DS.Tables[0].AsEnumerable()
-                        //            .Select(dataRow => new PropertyCoverages
-                        //            {
-                        //                BuildingLimit = string.Format("{0}", dataRow.Field<string>("BUILDINGLIMIT")),
-                        //                ContentLimit = string.Format("{0}", dataRow.Field<string>("CONTENTLIMIT")),
-                        //                BusinessLimit = string.Format("{0}", dataRow.Field<string>("BUSINESSINCOMELIMIT")),
-                        //                OtherLimit = string.Format("{0}", dataRow.Field<string>("OTHERLIMIT"))
-                        //            });
                         if (propertyCoverages != null)
                         {
                             submissionData.PropertyCoverages = propertyCoverages;
@@ -541,7 +498,90 @@ namespace SnowFlakeServices
                                     }).ToList();
                     }
                     break;
+                case "sub_exposure_auto":
+                    {
+                        DS = Database.Sub_Summary_Auto_Exposure(clientId, email, subGuid);
 
+                        var data = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new AutoExposure
+                                    {
+                                        BodyType = "",//string.Format("{0}", dataRow.Field<string>("TIV")),
+                                        VehicleCount = string.Format("{0}", dataRow.Field<string>("TOTALCOUNTOFVEHICLES")),
+                                        DriverCount = string.Format("{0}", dataRow.Field<string>("TOTALCOUNTOFDRIVERS")),
+                                        BodyTypeCount = string.Format("{0}", dataRow.Field<string>("TOTALCOUNTOFBODYTYPE"))
+                                    });
+                        if (data != null)
+                        {
+                            submissionData.AutoExposure = data.ToList();
+                        }
+                    }
+                    break;
+                case "sub_vehicle_auto":
+                    {
+                        DS = Database.Sub_Summary_Auto_Coverages(clientId, email, subGuid);
+                        List<PropertyCoverages> propertyCoverages = new List<PropertyCoverages>();
+
+                        DS.Tables[0].AsEnumerable().ToList().ForEach(data =>
+                        {
+                            //var key = data.Field<string>("HEADERS").ToLower();
+                            if (data.Field<string>("BUILDINGLIMIT") != null)
+                            {
+                                propertyCoverages.Add(new PropertyCoverages
+                                {
+                                    CoverageName = "Building",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("BUILDINGLIMIT")),
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("CONTENTLIMIT") != null)
+                            {
+                                propertyCoverages.Add(new PropertyCoverages
+                                {
+                                    CoverageName = "Content",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("CONTENTLIMIT")),
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("BUSINESSINCOMELIMIT") != null)
+                            {
+                                propertyCoverages.Add(new PropertyCoverages
+                                {
+                                    CoverageName = "Business Income",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("BUSINESSINCOMELIMIT")),
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("OTHERLIMIT") != null)
+                            {
+                                propertyCoverages.Add(new PropertyCoverages
+                                {
+                                    CoverageName = "Others",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("OTHERLIMIT")),
+                                    CoverageType = ""
+                                });
+                            }
+
+
+                        });
+                        if (propertyCoverages != null)
+                        {
+                            submissionData.AutoCoverages = propertyCoverages;
+                        }
+                    }
+                    break;
+                case "sub_losses_auto":
+                    {
+                        DS = Database.Sub_Summary_Auto_Losses(clientId, email, subGuid);
+                        submissionData.AutoLosses = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new SubmissionLosses
+                                    {
+                                        Year = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        GrossAmount = string.Format("{0}", dataRow.Field<string>("GROSSINCURRED")),
+                                        TotalNoOfClaims = string.Format("{0}", dataRow.Field<string>("CLAIMNUMBER")),
+                                        NoOfOpenClaims = string.Format("{0}", dataRow.Field<string>("COUNTOFOPENCLAIMS"))
+                                    }).ToList();
+                    }
+                    break;
 
             }
             return submissionData;

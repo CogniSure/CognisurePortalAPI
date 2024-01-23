@@ -323,5 +323,35 @@ namespace SnowFlakeAdapter
 
             return BaseDatabase.GetData("call SP_PropertyTotalLossess", parameters);
         }
+
+        public DataSet Sub_Summary_Auto_Exposure(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_AutomobileExposure", parameters);
+        }
+
+        public DataSet Sub_Summary_Auto_Coverages(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_AutoVehicles", parameters);
+        }
+
+        public DataSet Sub_Summary_Auto_Losses(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_AutoTotalLossess", parameters);
+        }
     }
 }
