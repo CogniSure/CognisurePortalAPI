@@ -117,6 +117,32 @@ namespace SnowFlakeServices
                                    }).ToList();
                     }
                     break;
+                case "countofsubmissionprofileandvolume":
+                    {
+                        DS = Database.DashboardGraph_CountOfSubmissionId(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
+                            dashboardFilter.StartDate, dashboardFilter.EndDate);
+                        //DS = Database.DashboardGraph_CountOfSubmissionId(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
+                        //    Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                        DataSet DSDocType = new DataSet();
+                        DSDocType = Database.DashboardGraph_CountOfDocType(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
+                            dashboardFilter.StartDate, dashboardFilter.EndDate);
+                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                                   .Select(dataRow => new DataResult
+                                   {
+                                       Dimension = "SubmissionIdCount",
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                   }).ToList();
+                        lstDasboardgraph.AddRange(
+                            DSDocType.Tables[0].AsEnumerable()
+                                   .Select(dataRow => new DataResult
+                                   {
+                                       Dimension = string.Format("{0}", dataRow.Field<string>("DOCUMENTTYPE")) == ""?"Others": string.Format("{0}", dataRow.Field<string>("DOCUMENTTYPE")),
+                                       Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
+                                   }).ToList()
+                            );
+                       
+                    }
+                    break;
 
             }
             return lstDasboardgraph;

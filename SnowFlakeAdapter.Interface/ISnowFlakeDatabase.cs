@@ -5,7 +5,6 @@ namespace SnowFlakeAdapter.Interface
 {
     public interface ISnowFlakeDatabase
     {
-        DataSet SampleTest();
         /// <summary>
         /// Dashboard page
         /// </summary>
@@ -21,6 +20,8 @@ namespace SnowFlakeAdapter.Interface
         DataSet DashboardGraph_CountByCity(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate);
         DataSet DashboardGraph_CountByState(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate);
         DataSet DashboardGraph_CountByIndustries(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate);
+        DataSet DashboardGraph_CountOfSubmissionId(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
+        DataSet DashboardGraph_CountOfDocType(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
 
         /// <summary>
         /// Exposure Summary page

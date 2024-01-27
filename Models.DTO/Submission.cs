@@ -22,6 +22,7 @@ namespace Models.DTO
     {
         public int SubmissionId { get; set; }
         public string? MessageId { get; set; }
+        public string? EmailMessage { get; set; }
         public string SubmissionDate { get; set; }
         public int FileReceivedChanelId { get; set; }
         public string? FileReceivedChanelName { get; set; }

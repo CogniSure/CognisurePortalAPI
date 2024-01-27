@@ -557,6 +557,7 @@ namespace SqlServices
                     ExtractionComplete = Convert.ToBoolean(dr["ExtractionComplete"]),
                     Completeness = Convert.ToBoolean(dr["Completeness"]),
                     RiskClearance = Convert.ToBoolean(dr["RiskClearance"]),
+                    //EmailMessage = string.Format("{0}", dr["EmailMessage"]),
                     //var listdates = DP.GetDates(string.Format("{0}", dr["EffectiveDate"]));
                     //if (listdates.Count > 0)
                     //{

@@ -12,17 +12,7 @@ namespace SnowFlakeAdapter
         {
             BaseDatabase = baseDatabase;
         }
-        public DataSet SampleTest()
-        {
-
-            //return BaseDatabase.GetData("call sp_gettestdata();");
-            return BaseDatabase.GetData("call SP_SubCountByLOB('1075', 'Jhon@gmail.com', '01/01/2023', '11/28/2023');");
-            //return BaseDatabase.GetData("call SP_SubCountByBroker('2', '1075', 'Jhon@gmail.com', '01/01/2023', '11/27/2023');");
-            //return BaseDatabase.GetData("call SP_SubCountByCity('2', '1075', 'Jhon@gmail.com', '01/01/2023', '11/27/2023');");
-            //return BaseDatabase.GetData("call SP_SubCountByState('2', '1075', 'Jhon@gmail.com', '01/01/2023', '11/27/2023');");
-            //return BaseDatabase.GetData("call SP_SubCountByIndustries('2', '1075', 'Jhon@gmail.com', '01/01/2023', '11/27/2023');");
-            //return BaseDatabase.GetData("select 1", parameters);
-        }
+        
         public DataSet DashboardGraph_CountByTurnaroundTime(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
         {
             List<IDbDataParameter> parameters = new List<IDbDataParameter>();
@@ -92,6 +82,28 @@ namespace SnowFlakeAdapter
             if (EndDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
             return BaseDatabase.GetData("call SP_SubCountByIndustries", parameters);
+        }
+        public DataSet DashboardGraph_CountOfSubmissionId(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID ", UserEmailId));
+            //if (startDate != DateTime.MinValue)
+                parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
+            //if (EndDate != DateTime.MinValue)
+                parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
+            return BaseDatabase.GetData("call SP_CountOfSubID", parameters);
+        }
+        public DataSet DashboardGraph_CountOfDocType(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID ", UserEmailId));
+            //if (startDate != DateTime.MinValue)
+                parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
+            //if (EndDate != DateTime.MinValue)
+                parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
+            return BaseDatabase.GetData("call SP_CountOfDocType", parameters);
         }
 
         public DataSet Sub_Exposure_TIV(string clientId, string userEmailId, string submissionId)
