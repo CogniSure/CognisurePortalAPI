@@ -12,74 +12,83 @@ namespace SnowFlakeAdapter
         {
             BaseDatabase = baseDatabase;
         }
-        
-        public DataSet DashboardGraph_CountByTurnaroundTime(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
+
+        public DataSet Sub_Submission_Files(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_DocumentVault", parameters);
+        }
+        public DataSet DashboardGraph_CountByTurnaroundTime(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate)
         {
             List<IDbDataParameter> parameters = new List<IDbDataParameter>();
             parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
             parameters.Add(BaseDatabase.Param("USERID ", UserEmailId));
-            if (startDate != DateTime.MinValue)
+            //if (startDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
-            if (EndDate != DateTime.MinValue)
+            //if (EndDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
             return BaseDatabase.GetData("call SP_SubTAT", parameters);
         }
-        public DataSet DashboardGraph_CountByLOB(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
+        public DataSet DashboardGraph_CountByLOB(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate)
         {
             List<IDbDataParameter> parameters = new List<IDbDataParameter>();
             parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
             parameters.Add(BaseDatabase.Param("USERID ", UserEmailId));
-            if(startDate!= DateTime.MinValue)
+            //if(startDate!= DateTime.MinValue)
             parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
-            if (EndDate != DateTime.MinValue)
+            //if (EndDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
             return BaseDatabase.GetData("call SP_SubCountByLOB", parameters);
         }
-        public DataSet DashboardGraph_CountByByBroker(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
+        public DataSet DashboardGraph_CountByByBroker(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate)
         {
             List<IDbDataParameter> parameters = new List<IDbDataParameter>();
             parameters.Add(BaseDatabase.Param("TopN", TopNumber));
             parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
             parameters.Add(BaseDatabase.Param("USERID ", UserEmailId));
-            if (startDate != DateTime.MinValue)
+            //if (startDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
-            if (EndDate != DateTime.MinValue)
+            //if (EndDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
             return BaseDatabase.GetData("call SP_SubCountByBroker", parameters);
         }
-        public DataSet DashboardGraph_CountByCity(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
+        public DataSet DashboardGraph_CountByCity(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate)
         {
             List<IDbDataParameter> parameters = new List<IDbDataParameter>();
             parameters.Add(BaseDatabase.Param("TopN", TopNumber));
             parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
             parameters.Add(BaseDatabase.Param("USERID ", UserEmailId));
-            if (startDate != DateTime.MinValue)
+            //if (startDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
-            if (EndDate != DateTime.MinValue)
+            //if (EndDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
             return BaseDatabase.GetData("call SP_SubCountByCity", parameters);
         }
-        public DataSet DashboardGraph_CountByState(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
+        public DataSet DashboardGraph_CountByState(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate)
         {
             List<IDbDataParameter> parameters = new List<IDbDataParameter>();
             parameters.Add(BaseDatabase.Param("TopN", TopNumber));
             parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
             parameters.Add(BaseDatabase.Param("USERID ", UserEmailId));
-            if (startDate != DateTime.MinValue)
+            //if (startDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
-            if (EndDate != DateTime.MinValue)
+            //if (EndDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
             return BaseDatabase.GetData("call SP_SubCountByState", parameters);
         }
-        public DataSet DashboardGraph_CountByIndustries(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate)
+        public DataSet DashboardGraph_CountByIndustries(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate)
         {
             List<IDbDataParameter> parameters = new List<IDbDataParameter>();
             parameters.Add(BaseDatabase.Param("TopN", TopNumber));
             parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
             parameters.Add(BaseDatabase.Param("USERID ", UserEmailId));
-            if (startDate != DateTime.MinValue)
+            //if (startDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_STARTDATE ", startDate));
-            if (EndDate != DateTime.MinValue)
+            //if (EndDate != DateTime.MinValue)
                 parameters.Add(BaseDatabase.Param("ADDEDON_ENDDATE ", EndDate));
             return BaseDatabase.GetData("call SP_SubCountByIndustries", parameters);
         }

@@ -554,7 +554,7 @@ namespace SqlServices
                     Priority = string.Format("{0}", dr["Priority"]),
                     RiskScore = string.Format("{0}", dr["RiskScore"]),
                     EffectiveDate = GetMinDate(dr["EffectiveDate"].ToString()),
-                    ExtractionComplete = Convert.ToBoolean(dr["ExtractionComplete"]),
+                    ExtractionComplete = string.Format("{0}", dr["ExtractionComplete"]),
                     Completeness = Convert.ToBoolean(dr["Completeness"]),
                     RiskClearance = Convert.ToBoolean(dr["RiskClearance"]),
                     //EmailMessage = string.Format("{0}", dr["EmailMessage"]),

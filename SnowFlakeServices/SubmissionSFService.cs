@@ -66,5 +66,12 @@ namespace SnowFlakeServices
 
             return new OperationResult<Submission>(submissionData, true);
         }
+
+        public async Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(string clientId, string submissionId, string userEmail)
+        {
+            List<SubmissionFile> submissionData = sfDataHelper.GetSubmissionFiles(userEmail, clientId, submissionId);
+
+            return new OperationResult<List<SubmissionFile>>(submissionData, true);
+        }
     }
 }

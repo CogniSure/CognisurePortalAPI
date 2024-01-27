@@ -5,6 +5,8 @@ namespace SnowFlakeAdapter.Interface
 {
     public interface ISnowFlakeDatabase
     {
+        DataSet Sub_Submission_Files(string clientId, string userEmailId, string submissionId);
+
         /// <summary>
         /// Dashboard page
         /// </summary>
@@ -14,12 +16,12 @@ namespace SnowFlakeAdapter.Interface
         /// <param name="startDate"></param>
         /// <param name="EndDate"></param>
         /// <returns></returns>
-        DataSet DashboardGraph_CountByTurnaroundTime(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate);
-        DataSet DashboardGraph_CountByLOB(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate);
-        DataSet DashboardGraph_CountByByBroker(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate);
-        DataSet DashboardGraph_CountByCity(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate);
-        DataSet DashboardGraph_CountByState(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate);
-        DataSet DashboardGraph_CountByIndustries(int TopNumber, string clientId, string UserEmailId, DateTime startDate, DateTime EndDate);
+        DataSet DashboardGraph_CountByTurnaroundTime(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
+        DataSet DashboardGraph_CountByLOB(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
+        DataSet DashboardGraph_CountByByBroker(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
+        DataSet DashboardGraph_CountByCity(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
+        DataSet DashboardGraph_CountByState(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
+        DataSet DashboardGraph_CountByIndustries(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
         DataSet DashboardGraph_CountOfSubmissionId(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
         DataSet DashboardGraph_CountOfDocType(int TopNumber, string clientId, string UserEmailId, string startDate, string EndDate);
 

@@ -39,7 +39,7 @@ namespace Models.DTO
         public string? LineOfBusiness { get; set; }
         public string? Priority { get; set; }
         public string? RiskScore { get; set; }
-        public bool? ExtractionComplete { get; set; }
+        public string? ExtractionComplete { get; set; }
         public bool? Completeness { get; set; }
         public bool? RiskClearance { get; set; }
         public Agency Agency { get; set; }
@@ -57,7 +57,7 @@ namespace Models.DTO
     {
         public _Id _id { get; set; }
         public Metadata metaData { get; set; }
-        public SubmissionFile[] Files { get; set; }
+        public SubmissionFileData[] Files { get; set; }
         public GL_Policy_Info_Schedule_Of_Hazards[] GL_Policy_Info_Schedule_Of_Hazards { get; set; }
         public GL_Policy_Info[] GL_Policy_Info { get; set; }
         public Property_Policy_Info_Blanket_Summary[] Property_Policy_Info_Blanket_Summary { get; set; }
@@ -98,7 +98,7 @@ namespace Models.DTO
         public int seqNbr { get; set; }
     }
 
-    public class SubmissionFile
+    public class SubmissionFileData
     {
         public string FileOriginalName { get; set; }
         public string FileStatusName { get; set; }

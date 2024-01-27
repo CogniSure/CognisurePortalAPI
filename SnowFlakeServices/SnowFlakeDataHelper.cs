@@ -22,6 +22,23 @@ namespace SnowFlakeServices
             this.Database = Database;
             this.Configuration = Configuration;
         }
+
+        public List<SubmissionFile> GetSubmissionFiles(string email, string clientId, string subGuid)
+        {
+            List<SubmissionFile> lstDasboardgraph = new List<SubmissionFile>();
+            DataSet DS = new DataSet();
+            DS = Database.GetSubmissionHeader(clientId, email, subGuid);
+            lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                        .Select(dataRow => new SubmissionFile
+                        {
+                            SlNo = string.Format("{0}", dataRow.Field<string>("SLNO")),
+                            FileName = string.Format("{0}", dataRow.Field<string>("FILENAME")),
+                            Type = string.Format("{0}", dataRow.Field<string>("TYPE")),
+                            LineOfBusiness = string.Format("{0}", dataRow.Field<string>("LOB")),
+                            Status = string.Format("{0}", dataRow.Field<string>("STATUS"))
+                        }).ToList();
+            return lstDasboardgraph;
+        }
         public List<DataResult> GetDashboardGraphData(DashboardFilter dashboardFilter, string Type)
         {
             List<DataResult> lstDasboardgraph = new List<DataResult>();
@@ -31,7 +48,7 @@ namespace SnowFlakeServices
                 case "countbyturnaroundtime":
                     {
                         DS = Database.DashboardGraph_CountByTurnaroundTime(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
-                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                            dashboardFilter.StartDate, dashboardFilter.EndDate);
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DataResult
                                     {
@@ -60,7 +77,7 @@ namespace SnowFlakeServices
                 case "countbylob":
                     {
                         DS = Database.DashboardGraph_CountByLOB(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
-                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                            dashboardFilter.StartDate, dashboardFilter.EndDate);
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DataResult
                                     {
@@ -72,7 +89,7 @@ namespace SnowFlakeServices
                 case "countbybroker":
                     {
                         DS = Database.DashboardGraph_CountByByBroker(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
-                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                            dashboardFilter.StartDate, dashboardFilter.EndDate);
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                    .Select(dataRow => new DataResult
                                    {
@@ -84,7 +101,7 @@ namespace SnowFlakeServices
                 case "countbycity":
                     {
                         DS = Database.DashboardGraph_CountByCity(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
-                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                            dashboardFilter.StartDate, dashboardFilter.EndDate);
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                    .Select(dataRow => new DataResult
                                    {
@@ -96,7 +113,7 @@ namespace SnowFlakeServices
                 case "countbystate":
                     {
                         DS = Database.DashboardGraph_CountByState(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
-                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                            dashboardFilter.StartDate, dashboardFilter.EndDate);
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                    .Select(dataRow => new DataResult
                                    {
@@ -108,7 +125,7 @@ namespace SnowFlakeServices
                 case "countbyindustries":
                     {
                         DS = Database.DashboardGraph_CountByIndustries(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
-                            Convert.ToDateTime(dashboardFilter.StartDate), Convert.ToDateTime(dashboardFilter.EndDate));
+                            dashboardFilter.StartDate, dashboardFilter.EndDate);
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                    .Select(dataRow => new DataResult
                                    {

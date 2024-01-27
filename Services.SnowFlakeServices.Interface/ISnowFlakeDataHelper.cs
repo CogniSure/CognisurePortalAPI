@@ -14,6 +14,7 @@ namespace Services.SnowFlakeServices.Interface
         List<DataResult> GetExposerSummary(string Type, string email, string clientId, string submissionId);
         List<DataResult> GetLossSummary(string type, string email, string clientId, string subGuid);
         Submission GetSubmissionSummaryByLOB(string type, string email, string clientId, string subGuid);
-        
+        List<SubmissionFile> GetSubmissionFiles(string email, string clientId, string subGuid);
+
     }
 }

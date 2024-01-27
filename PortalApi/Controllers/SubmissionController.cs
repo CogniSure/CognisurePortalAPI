@@ -90,9 +90,27 @@ public class SubmissionController : ControllerBase
             return null;
         }
     }
+    [Route("submissionfiles")]
+    [HttpGet]
+    public async Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(string clientid, string submissionid, string email)
+    {
+        try
+        {
+            //type = "loss_incurredbylobbyyear";
+            //clientid = "1074";
+            //submissionid = "a44413ee-1c8e-446a-843f-e51b6a2c4c51";
+            //email = "QBEsub@gmail.com";
+            var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
+            return await iBusServiceFactorySFDB.SubmissionSFService().GetSubmissionFiles(clientid, submissionid, email);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return null;
+        }
+    }
     [Route("submissionheadersbyid")]
     [HttpGet]
-    [AllowAnonymous]
     public async Task<OperationResult<List<DataResult>>> GetSubmissionHeaderId(string type, string clientid, string submissionid, string email)
     {
         try
