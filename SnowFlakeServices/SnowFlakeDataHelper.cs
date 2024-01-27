@@ -27,7 +27,7 @@ namespace SnowFlakeServices
         {
             List<SubmissionFile> lstDasboardgraph = new List<SubmissionFile>();
             DataSet DS = new DataSet();
-            DS = Database.GetSubmissionHeader(clientId, email, subGuid);
+            DS = Database.Sub_Submission_Files(clientId, email, subGuid);
             lstDasboardgraph = DS.Tables[0].AsEnumerable()
                         .Select(dataRow => new SubmissionFile
                         {
