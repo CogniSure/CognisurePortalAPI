@@ -27,7 +27,7 @@ namespace Models.DTO
         public int FileReceivedChanelId { get; set; }
         public string? FileReceivedChanelName { get; set; }
         public string? AddedByName { get; set; }
-        public Nullable<DateTime> AddedByDate { get; set; }
+        public Nullable<DateTime> AddedOnDate { get; set; }
         public int AccountId { get; set; }
         public string? AccountName { get; set; }
         public string? InsureName { get; set; }
@@ -42,6 +42,9 @@ namespace Models.DTO
         public string? ExtractionComplete { get; set; }
         public bool? Completeness { get; set; }
         public bool? RiskClearance { get; set; }
+        public string? AddedOn { get; set; }
+        public int TotalNoOfAttachment { get; set; }
+        public int TotalNoOfValidAttachment { get; set; }
         public Agency Agency { get; set; }
         public BusinessOperation BusinessOperation { get; set; }
         public List<SubmissionLosses> TotalLosses { get; set; }

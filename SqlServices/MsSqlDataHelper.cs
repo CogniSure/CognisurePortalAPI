@@ -541,7 +541,6 @@ namespace SqlServices
                     FileReceivedChanelId = Convert.ToInt32(dr["FileReceivedChanelId"]),
                     FileReceivedChanelName = string.Format("{0}", dr["FileReceivedChanelName"]),
                     AddedByName = string.Format("{0}", dr["AddedByName"]),
-                    AddedByDate = dr["AddedByDate"] == DBNull.Value ? null : Convert.ToDateTime(dr["AddedByDate"]),
                     AccountId = Convert.ToInt32(dr["AccountId"]),
                     AccountName = string.Format("{0}", dr["AccountName"]),
                     InsureName = string.Format("{0}", dr["InsureName"]),
@@ -557,53 +556,12 @@ namespace SqlServices
                     ExtractionComplete = string.Format("{0}", dr["ExtractionComplete"]),
                     Completeness = Convert.ToBoolean(dr["Completeness"]),
                     RiskClearance = Convert.ToBoolean(dr["RiskClearance"]),
-                    //EmailMessage = string.Format("{0}", dr["EmailMessage"]),
-                    //var listdates = DP.GetDates(string.Format("{0}", dr["EffectiveDate"]));
-                    //if (listdates.Count > 0)
-                    //{
-                    //    ObjSubmission.EffectiveDate = Convert.ToString(listdates.Min());
-                    //}
+                    AddedOn = string.Format("{0}", dr["AddedOnDate"]),
+                    TotalNoOfAttachment = Convert.ToInt32(dr["TotalNumberOfAttachments"]),
+                    TotalNoOfValidAttachment = Convert.ToInt32(dr["TotalNumberOfValidAttachments"])
                 });
                 
                 return result;
-                //foreach (DataRow dr in dst.Tables[0].Rows)
-                //{
-
-                //DP = new DateParse();
-                //var ObjSubmission = new Submission
-                //{
-
-                //    SubmissionId = Convert.ToInt32(dr["SubmissionId"]),
-                //    MessageId = string.Format("{0}", dr["MessageId"]),
-                //    //SubmissionDate = dr["SubmissionDate"] == DBNull.Value ? null :Convert.ToDateTime(dr["SubmissionDate"]),
-                //    SubmissionDate = string.Format("{0}", dr["SubmissionDate"]),
-                //    FileReceivedChanelId = Convert.ToInt32(dr["FileReceivedChanelId"]),
-                //    FileReceivedChanelName = string.Format("{0}", dr["FileReceivedChanelName"]),
-                //    AddedByName = string.Format("{0}", dr["AddedByName"]),
-                //    AddedByDate = dr["AddedByDate"] == DBNull.Value ? null : Convert.ToDateTime(dr["AddedByDate"]),
-                //    AccountId = Convert.ToInt32(dr["AccountId"]),
-                //    AccountName = string.Format("{0}", dr["AccountName"]),
-                //    InsureName = string.Format("{0}", dr["InsureName"]),
-                //    SubmissionStatusId = Convert.ToInt32(dr["SubmissionStatusId"]),
-                //    SubmissionStatusName = string.Format("{0}", dr["SubmissionStatusName"]),
-                //    //EffectiveDate = null,
-                //   // EffectiveDate = Convert.ToString(DP.GetDates(string.Format("{0}", dr["EffectiveDate"])).Min()),
-                //    //EffectiveDate = dr["EffectiveDate"] == DBNull.Value ? null : Convert.ToDateTime(string.Format("{0:MM/dd/yyyy}", dr["EffectiveDate"]), culture),
-
-                //    TypeOfBusiness = string.Format("{0}", dr["TypeOfBusiness"]),
-                //    AgencyName = string.Format("{0}", dr["AgencyName"]),
-                //    LineOfBusiness = string.Format("{0}", dr["LineOfBusiness"]),
-                //    Priority = string.Format("{0}", dr["Priority"]),
-                //    RiskScore = string.Format("{0}", dr["RiskScore"]),
-                //};
-                //var listdates = DP.GetDates(string.Format("{0}", dr["EffectiveDate"]));
-                //if(listdates.Count > 0)
-                //{
-                //    ObjSubmission.EffectiveDate = Convert.ToString(listdates.Min());
-                //}
-
-                //SubmissionList.Add(ObjSubmission);
-                //}
             }
             return SubmissionList;
         }

@@ -55,7 +55,6 @@ public class SubmissionController : ControllerBase
     }
     [Route("submissionbyid")]
     [HttpGet]
-    [AllowAnonymous]
     public async Task<OperationResult<List<DataResult>>> GetSubmissionById(string type, string clientid,string submissionid, string email)
     {
         try
@@ -72,7 +71,6 @@ public class SubmissionController : ControllerBase
     }
     [Route("losssummarybyid")]
     [HttpGet]
-    [AllowAnonymous]
     public async Task<OperationResult<List<DataResult>>> GetLossSummaryById(string type, string clientid, string submissionid, string email)
     {
         try
@@ -130,7 +128,6 @@ public class SubmissionController : ControllerBase
     }
     [Route("submissionsummarybylobbyid")]
     [HttpGet]
-    [AllowAnonymous]
     public async Task<OperationResult<Submission>> GetSubmissionSummaryForLOB(string type, string clientid, string submissionid, string email)
     {
         try
