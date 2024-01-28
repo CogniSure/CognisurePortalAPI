@@ -537,6 +537,7 @@ namespace SqlServices
                 {
                     SubmissionId = Convert.ToInt32(dr["SubmissionId"]),
                     MessageId = string.Format("{0}", dr["MessageId"]),
+                    SubmissionGUID = string.Format("{0}", dr["SubmissionGUID"]),
                     SubmissionDate = string.Format("{0}", dr["SubmissionDate"]),
                     FileReceivedChanelId = Convert.ToInt32(dr["FileReceivedChanelId"]),
                     FileReceivedChanelName = string.Format("{0}", dr["FileReceivedChanelName"]),
@@ -546,10 +547,9 @@ namespace SqlServices
                     InsureName = string.Format("{0}", dr["InsureName"]),
                     SubmissionStatusId = Convert.ToInt32(dr["SubmissionStatusId"]),
                     SubmissionStatusName = string.Format("{0}", dr["SubmissionStatusName"]),
-
                     TypeOfBusiness = string.Format("{0}", dr["TypeOfBusiness"]),
                     AgencyName = string.Format("{0}", dr["AgencyName"]),
-                    LineOfBusiness = string.Format("{0}", dr["LineOfBusiness"]),
+                    LineOfBusiness = GetDistinctLOBs(string.Format("{0}", dr["LineOfBusiness"])),
                     Priority = string.Format("{0}", dr["Priority"]),
                     RiskScore = string.Format("{0}", dr["RiskScore"]),
                     EffectiveDate = GetMinDate(dr["EffectiveDate"].ToString()),
@@ -564,6 +564,25 @@ namespace SqlServices
                 return result;
             }
             return SubmissionList;
+        }
+        private static string GetDistinctLOBs(string lobs)
+        {
+            string distinctLob = "";
+            List<string> lobArr = new List<string>();
+            lobArr = lobs.Split(",").ToList();
+            List<string> distinctLOBArr = new List<string>();
+
+            foreach (var str in lobArr)
+            {
+                var lobTemp = str;
+                lobTemp = lobTemp.TrimStart(' ');
+                lobTemp = lobTemp.TrimEnd(' ');
+
+                distinctLOBArr.Add(lobTemp);
+            }
+            distinctLOBArr = distinctLOBArr.Distinct().ToList();
+            distinctLob = string.Join(',', distinctLOBArr);
+            return distinctLob;
         }
         public string GetSubmissionEmail(long submissionID)
         {
