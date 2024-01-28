@@ -43,5 +43,24 @@ namespace PortalApi.Controllers
                //"0", "InboxController", "GetAllSubmission");
             }
         }
+
+        [Route("submissionmessagebyid")]
+        [HttpGet]
+        public async Task<OperationResult<string>> GetSubmissionMessageBodyById(long submissionid)
+        {
+            try
+            {
+                var submissionMessage =  await iBusServiceFactory.SubmissionInboxService().GetSubmissionMessageBodyById(submissionid);
+
+                //JsonResult result = Json(submissionMessage, JsonRequestBehavior.AllowGet);
+                //result.MaxJsonLength = Int32.MaxValue;
+                return submissionMessage;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: {0}", ex.Message);
+                return null;
+            }
+        }
     }
 }

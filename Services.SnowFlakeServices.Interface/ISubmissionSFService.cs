@@ -14,5 +14,6 @@ namespace Services.SnowFlakeServices.Interface
         Task<OperationResult<List<DataResult>>> GetSubmissionHeader(string type, string clientId, string submissionId, string userEmail);
         Task<OperationResult<Submission>> GetSubmissionSummary(string type, string clientId, string submissionId, string userEmail);
         Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(string email, string clientId, string subGuid);
+
     }
 }

@@ -34,6 +34,6 @@ namespace Services.MsSqlServices.Interface
         //DownloadFileData Download(string type, string guid);
 
         IEnumerable<Submission> GetAllSubmission(InboxFilter ObjInboxFilter);
-
+        string GetSubmissionEmail(long submissionID);
     }
 }

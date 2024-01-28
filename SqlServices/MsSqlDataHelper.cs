@@ -565,5 +565,15 @@ namespace SqlServices
             }
             return SubmissionList;
         }
+        public string GetSubmissionEmail(long submissionID)
+        {
+            var dst = Database.GetSubmissionEmailBody(submissionID);
+            string messageBody = "";
+            if (dst.Tables[0].Rows.Count > 0)
+            {
+                messageBody = string.Format("{0}", dst.Tables[0].Rows[0]["MessageBody"]);
+            }
+            return messageBody;
+        }
     }
 }

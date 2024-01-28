@@ -10,5 +10,7 @@ namespace Services.Repository.Interface
     public interface ISubmissionInboxService
     {
         Task<OperationResult<IEnumerable<Submission>>> GetAllSubmission(InboxFilter ObjinboxFilter);
+        Task<OperationResult<string>> GetSubmissionMessageBodyById(long submissionId);
+        
     }
 }
