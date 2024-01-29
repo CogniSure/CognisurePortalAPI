@@ -374,5 +374,95 @@ namespace SnowFlakeAdapter
 
             return BaseDatabase.GetData("call SP_AutoTotalLossess", parameters);
         }
+
+        public DataSet Sub_Summary_WC_Exposure(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_WorkersCompensationExposure", parameters);
+        }
+
+        public DataSet Sub_Summary_WC_PayRollEmployee(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_WorkersCompensationPayrollandEmployeeCount", parameters);
+        }
+
+        public DataSet Sub_Summary_WC_Losses(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_WorkersCompensationTotalLossess", parameters);
+        }
+
+        public DataSet Sub_Summary_GL_ScheduleOfHazards(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_GeneralLiabilityScheduleOfHazards", parameters);
+        }
+
+        public DataSet Sub_Summary_GL_Coverage(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_GENERALLIABILITYCOVERAGE", parameters);
+        }
+
+        public DataSet Sub_Summary_GL_Losses(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_GeneralLiabilityTotalLossess", parameters);
+        }
+
+        public DataSet Sub_Summary_Umbrella_Exposure(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_UmbrellaUnderlyingCovCarrierName", parameters);
+        }
+
+        public DataSet Sub_Summary_Umbrella_Coverages(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_UmbrellaUnderlyingCoverages", parameters);
+        }
+
+        public DataSet Sub_Summary_Umbrella_Losses(string clientId, string userEmailId, string submissionId)
+        {
+            List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+            parameters.Add(BaseDatabase.Param("SUBMISSIONGUID", submissionId));
+            parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
+            parameters.Add(BaseDatabase.Param("USERID", userEmailId));
+
+            return BaseDatabase.GetData("call SP_UmbrellaTotalLossess", parameters);
+        }
     }
 }

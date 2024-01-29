@@ -76,5 +76,17 @@ namespace SnowFlakeAdapter.Interface
         DataSet Sub_Summary_Auto_Exposure(string clientId, string userEmailId, string submissionId);
         DataSet Sub_Summary_Auto_Coverages(string clientId, string userEmailId, string submissionId);
         DataSet Sub_Summary_Auto_Losses(string clientId, string userEmailId, string submissionId);
+
+        DataSet Sub_Summary_WC_Exposure(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_WC_PayRollEmployee(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_WC_Losses(string clientId, string userEmailId, string submissionId);
+
+        DataSet Sub_Summary_GL_ScheduleOfHazards(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_GL_Coverage(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_GL_Losses(string clientId, string userEmailId, string submissionId);
+
+        DataSet Sub_Summary_Umbrella_Exposure(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_Umbrella_Coverages(string clientId, string userEmailId, string submissionId);
+        DataSet Sub_Summary_Umbrella_Losses(string clientId, string userEmailId, string submissionId);
     }
 }

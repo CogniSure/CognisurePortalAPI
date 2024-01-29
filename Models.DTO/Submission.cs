@@ -49,10 +49,10 @@ namespace Models.DTO
         public Agency Agency { get; set; }
         public BusinessOperation BusinessOperation { get; set; }
         public List<SubmissionLosses> TotalLosses { get; set; }
-        public PropertyExposure PropertyExposure { get; set; }
+        public Exposure PropertyExposure { get; set; }
         public List<PropertyCoverages> PropertyCoverages { get; set; }
         public List<SubmissionLosses> PropertyLosses { get; set; }
-        public List<AutoExposure> AutoExposure { get; set; }
+        public List<Exposure> AutoExposure { get; set; }
         public List<PropertyCoverages> AutoCoverages { get; set; }
         public List<SubmissionLosses> AutoLosses { get; set; }
     }

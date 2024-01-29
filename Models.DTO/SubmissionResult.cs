@@ -34,20 +34,31 @@ namespace Models.DTO
         public string? TotalNoOfClaims { get; set; }
         public string? NoOfOpenClaims { get; set; }
     }
-    public class PropertyExposure
+    public class Exposure
     {
-        public string? TIV { get; set; }
-        public string? BuildingsCount { get; set; }
-        public string? LocationsCount { get; set; }
-        public string? StatesCount { get; set; }
+        public string? Total { get; set; }
+        public string? ExposureValue1 { get; set; }
+        public string? ExposureValue2 { get; set; }
+        public string? ExposureValue3 { get; set; }
+
+        //public string? BuildingsCount { get; set; }
+        //public string? LocationsCount { get; set; }
+        //public string? StatesCount { get; set; }
     }
-    public class AutoExposure
-    {
-        public string? BodyType { get; set; }
-        public string? VehicleCount { get; set; }
-        public string? DriverCount { get; set; }
-        public string? BodyTypeCount { get; set; }
-    }
+    //public class AutoExposure
+    //{
+    //    public string? BodyType { get; set; }
+    //    public string? VehicleCount { get; set; }
+    //    public string? DriverCount { get; set; }
+    //    public string? BodyTypeCount { get; set; }
+    //}
+    //public class WorkerCompExposure
+    //{
+    //    public string? TotalCount { get; set; }
+    //    public string? ClassCode { get; set; }
+    //    public string? ClassCodeDescription { get; set; }
+    //    public string? Payroll { get; set; }
+    //}
     public class PropertyCoverages
     {
         public string CoverageName { get; set; }
