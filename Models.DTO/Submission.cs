@@ -50,11 +50,20 @@ namespace Models.DTO
         public BusinessOperation BusinessOperation { get; set; }
         public List<SubmissionLosses> TotalLosses { get; set; }
         public Exposure PropertyExposure { get; set; }
-        public List<PropertyCoverages> PropertyCoverages { get; set; }
+        public List<Coverages> PropertyCoverages { get; set; }
         public List<SubmissionLosses> PropertyLosses { get; set; }
         public List<Exposure> AutoExposure { get; set; }
-        public List<PropertyCoverages> AutoCoverages { get; set; }
+        public List<Coverages> AutoCoverages { get; set; }
         public List<SubmissionLosses> AutoLosses { get; set; }
+        public List<Exposure> WorkersCompExposure { get; set; }
+        public List<Coverages> WorkersCompCoverages { get; set; }
+        public List<SubmissionLosses> WorkersCompLosses { get; set; }
+        public List<Exposure> GeneralLiablityExposure { get; set; }
+        public List<Coverages> GeneralLiablityCoverages { get; set; }
+        public List<SubmissionLosses> GeneralLiablityLosses { get; set; }
+        public List<Exposure> UmbrellaExposure { get; set; }
+        public List<Coverages> UmbrellaCoverages { get; set; }
+        public List<SubmissionLosses> UmbrellaLosses { get; set; }
     }
 
     public class SubmissionData

@@ -478,14 +478,14 @@ namespace SnowFlakeServices
                 case "sub_coverage_property":
                     {
                         DS = Database.Sub_Summary_Property_Coverages(clientId, email, subGuid);
-                        List<PropertyCoverages> propertyCoverages = new List<PropertyCoverages>();
+                        List<Coverages> propertyCoverages = new List<Coverages>();
 
                         DS.Tables[0].AsEnumerable().ToList().ForEach(data =>
                         {
                             //var key = data.Field<string>("HEADERS").ToLower();
                             if (data.Field<string>("BUILDINGLIMIT") != null)
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Building",
                                     CoverageValue = Convert.ToDouble(string.Format("{0}", data.Field<string>("BUILDINGLIMIT"))).ToString("#,##0"),
@@ -494,7 +494,7 @@ namespace SnowFlakeServices
                             }
                             else
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Building",
                                     CoverageValue = "0",
@@ -503,7 +503,7 @@ namespace SnowFlakeServices
                             }
                             if (data.Field<string>("CONTENTLIMIT") != null)
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Content",
                                     CoverageValue = Convert.ToDouble(string.Format("{0}", data.Field<string>("CONTENTLIMIT"))).ToString("#,##0"),
@@ -513,16 +513,16 @@ namespace SnowFlakeServices
                             }
                             else
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
-                                    CoverageName = "CONTENTLIMIT",
+                                    CoverageName = "Content",
                                     CoverageValue = "0",
                                     CoverageType = ""
                                 });
                             }
                             if (data.Field<string>("BUSINESSINCOMELIMIT") != null)
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Business Income",
                                     CoverageValue = Convert.ToDouble(string.Format("{0}", data.Field<string>("BUSINESSINCOMELIMIT"))).ToString("#,##0"),
@@ -531,7 +531,7 @@ namespace SnowFlakeServices
                             }
                             else
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Business Income",
                                     CoverageValue = "0",
@@ -540,7 +540,7 @@ namespace SnowFlakeServices
                             }
                             if (data.Field<string>("OTHERLIMIT") != null)
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Others",
                                     CoverageValue = Convert.ToDouble(string.Format("{0}", data.Field<string>("OTHERLIMIT"))).ToString("#,##0"),
@@ -549,7 +549,7 @@ namespace SnowFlakeServices
                             }
                             else
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Others",
                                     CoverageValue = "0",
@@ -559,9 +559,20 @@ namespace SnowFlakeServices
 
 
                         });
-                        if (propertyCoverages != null)
+                        if (propertyCoverages != null && propertyCoverages.Count > 0)
                         {
                             submissionData.PropertyCoverages = propertyCoverages;
+                        }
+                        else //if (DS.Tables[0].AsEnumerable().ToList().Count == 0)
+                        {
+                            submissionData.AutoCoverages = new List<Coverages>
+                            {
+                                new Coverages { CoverageName = "Building", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Content", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Business Income", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Others", CoverageValue = "0", CoverageType = "" }
+                            };
+
                         }
                     }
                     break;
@@ -596,56 +607,83 @@ namespace SnowFlakeServices
                         }
                     }
                     break;
-                case "sub_vehicle_auto":
+                case "sub_coverage_auto":
                     {
                         DS = Database.Sub_Summary_Auto_Coverages(clientId, email, subGuid);
-                        List<PropertyCoverages> propertyCoverages = new List<PropertyCoverages>();
-
+                        List<Coverages> propertyCoverages = new List<Coverages>();
+                        
                         DS.Tables[0].AsEnumerable().ToList().ForEach(data =>
                         {
                             //var key = data.Field<string>("HEADERS").ToLower();
-                            if (data.Field<string>("BUILDINGLIMIT") != null)
+                            if (data.Field<string>("VINNUM") != null)
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
-                                    CoverageName = "Building",
-                                    CoverageValue = string.Format("{0}", data.Field<string>("BUILDINGLIMIT")),
+                                    CoverageName = "VIN #",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("VINNUM")),
                                     CoverageType = ""
                                 });
                             }
-                            if (data.Field<string>("CONTENTLIMIT") != null)
+                            else
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
-                                    CoverageName = "Content",
-                                    CoverageValue = string.Format("{0}", data.Field<string>("CONTENTLIMIT")),
+                                    CoverageName = "VIN #",
+                                    CoverageValue = "0",
                                     CoverageType = ""
                                 });
                             }
-                            if (data.Field<string>("BUSINESSINCOMELIMIT") != null)
+                            if (data.Field<string>("VEHICLETYPE") != null)
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
-                                    CoverageName = "Business Income",
-                                    CoverageValue = string.Format("{0}", data.Field<string>("BUSINESSINCOMELIMIT")),
+                                    CoverageName = "Vehicle Type",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("VEHICLETYPE")),
                                     CoverageType = ""
                                 });
                             }
-                            if (data.Field<string>("OTHERLIMIT") != null)
+                            else
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
-                                    CoverageName = "Others",
-                                    CoverageValue = string.Format("{0}", data.Field<string>("OTHERLIMIT")),
+                                    CoverageName = "Vehicle Type",
+                                    CoverageValue = "0",
                                     CoverageType = ""
                                 });
                             }
-
+                            if (data.Field<string>("LICENCESTATE") != null)
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Licences State",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("LICENCESTATE")),
+                                    CoverageType = ""
+                                });
+                            }
+                            else
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Licences State",
+                                    CoverageValue = "0",
+                                    CoverageType = ""
+                                });
+                            }
 
                         });
-                        if (propertyCoverages != null)
+                        if (propertyCoverages != null && propertyCoverages.Count > 0)
                         {
                             submissionData.AutoCoverages = propertyCoverages;
+                        }
+                        else //if (DS.Tables[0].AsEnumerable().ToList().Count == 0)
+                        {
+                            submissionData.AutoCoverages = new List<Coverages>
+                            {
+                                new Coverages { CoverageName = "VIN #", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Vehicle Type", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Licences State", CoverageValue = "0", CoverageType = "" }
+                            };
+                            
                         }
                     }
                     break;
@@ -669,74 +707,355 @@ namespace SnowFlakeServices
                         var data = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new Exposure
                                     {
-                                        Total = "",//string.Format("{0}", dataRow.Field<string>("TIV")),
-                                        ExposureValue1 = string.Format("{0}", dataRow.Field<string>("TOTALCOUNTOFVEHICLES")),
-                                        ExposureValue2 = string.Format("{0}", dataRow.Field<string>("TOTALCOUNTOFDRIVERS")),
-                                        ExposureValue3 = string.Format("{0}", dataRow.Field<string>("TOTALCOUNTOFBODYTYPE"))
+                                        Total = "0",//string.Format("{0}", dataRow.Field<string>("TIV")),
+                                        ExposureValue1 = string.Format("{0}", dataRow.Field<string>("CLASSCODE")),
+                                        ExposureValue2 = string.Format("{0}", dataRow.Field<string>("CLASSCODEDESCRIPTION")),
+                                        ExposureValue3 = string.Format("{0}", dataRow.Field<string>("PAYROLL"))
                                     });
                         if (data != null)
                         {
-                            submissionData.AutoExposure = data.ToList();
+                            submissionData.WorkersCompExposure = data.ToList();
                         }
                     }
                     break;
-                case "sub_vehicle_wc":
+                case "sub_coverage_wc":
                     {
                         DS = Database.Sub_Summary_WC_PayRollEmployee(clientId, email, subGuid);
-                        List<PropertyCoverages> propertyCoverages = new List<PropertyCoverages>();
+                        List<Coverages> propertyCoverages = new List<Coverages>();
 
                         DS.Tables[0].AsEnumerable().ToList().ForEach(data =>
                         {
                             //var key = data.Field<string>("HEADERS").ToLower();
-                            if (data.Field<string>("BUILDINGLIMIT") != null)
+                            if (data.Field<string>("TOTALPAYROLL") != null)
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
-                                    CoverageName = "Building",
-                                    CoverageValue = string.Format("{0}", data.Field<string>("BUILDINGLIMIT")),
+                                    CoverageName = "Total Payroll",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("TOTALPAYROLL")),
                                     CoverageType = ""
                                 });
                             }
-                            if (data.Field<string>("CONTENTLIMIT") != null)
+                            else
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
-                                    CoverageName = "Content",
-                                    CoverageValue = string.Format("{0}", data.Field<string>("CONTENTLIMIT")),
+                                    CoverageName = "Total Payroll",
+                                    CoverageValue = "0",
                                     CoverageType = ""
                                 });
                             }
-                            if (data.Field<string>("BUSINESSINCOMELIMIT") != null)
+                            if (data.Field<string>("COVEREDSTATES") != null)
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
-                                    CoverageName = "Business Income",
-                                    CoverageValue = string.Format("{0}", data.Field<string>("BUSINESSINCOMELIMIT")),
+                                    CoverageName = "Covered States",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("COVEREDSTATES")),
                                     CoverageType = ""
                                 });
                             }
-                            if (data.Field<string>("OTHERLIMIT") != null)
+                            else
                             {
-                                propertyCoverages.Add(new PropertyCoverages
+                                propertyCoverages.Add(new Coverages
                                 {
-                                    CoverageName = "Others",
-                                    CoverageValue = string.Format("{0}", data.Field<string>("OTHERLIMIT")),
+                                    CoverageName = "Covered States",
+                                    CoverageValue = "0",
                                     CoverageType = ""
                                 });
                             }
-
+                            if (data.Field<string>("FULLTIMEEMPLOYEECOUNT") != null)
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "# Full Time Employee",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("FULLTIMEEMPLOYEECOUNT")),
+                                    CoverageType = ""
+                                });
+                            }
+                            else
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "# Full Time Employee",
+                                    CoverageValue = "0",
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("PARTTIMEEMPLOYEECOUNT") != null)
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "# Part Time Employee",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("PARTTIMEEMPLOYEECOUNT")),
+                                    CoverageType = ""
+                                });
+                            }
+                            else
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "# Part Time Employee",
+                                    CoverageValue = "0",
+                                    CoverageType = ""
+                                });
+                            }
 
                         });
-                        if (propertyCoverages != null)
+                        if (propertyCoverages != null && propertyCoverages.Count>0)
                         {
-                            submissionData.AutoCoverages = propertyCoverages;
+                            submissionData.WorkersCompCoverages = propertyCoverages;
+                        }
+                        else //if (DS.Tables[0].AsEnumerable().ToList().Count == 0)
+                        {
+                            submissionData.GeneralLiablityCoverages = new List<Coverages>
+                            {
+                                new Coverages { CoverageName = "Total Payroll", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Covered States", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "# Full Time Employee", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "# Part Time Employee", CoverageValue = "0", CoverageType = "" }
+                            };
+
                         }
                     }
                     break;
                 case "sub_losses_wc":
                     {
                         DS = Database.Sub_Summary_WC_Losses(clientId, email, subGuid);
-                        submissionData.AutoLosses = DS.Tables[0].AsEnumerable()
+                        submissionData.WorkersCompLosses = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new SubmissionLosses
+                                    {
+                                        Year = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        GrossAmount = string.Format("{0}", dataRow.Field<string>("GROSSINCURRED")),
+                                        TotalNoOfClaims = string.Format("{0}", dataRow.Field<string>("CLAIMNUMBER")),
+                                        NoOfOpenClaims = string.Format("{0}", dataRow.Field<string>("COUNTOFOPENCLAIMS"))
+                                    }).ToList();
+                    }
+                    break;
+                case "sub_exposure_gl":
+                    {
+                        DS = Database.Sub_Summary_GL_ScheduleOfHazards(clientId, email, subGuid);
+
+                        var data = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new Exposure
+                                    {
+                                        Total = "0",//string.Format("{0}", dataRow.Field<string>("TIV")),
+                                        ExposureValue1 = string.Format("{0}", dataRow.Field<string>("CLASSCODE")),
+                                        ExposureValue2 = string.Format("{0}", dataRow.Field<string>("EXPOSURE")),
+                                        ExposureValue3 = string.Format("{0}", dataRow.Field<string>("EXPOSURETYPE"))
+                                    });
+                        if (data != null)
+                        {
+                            submissionData.GeneralLiablityExposure = data.ToList();
+                        }
+                    }
+                    break;
+                case "sub_coverage_gl":
+                    {
+                        DS = Database.Sub_Summary_GL_Coverage(clientId, email, subGuid);
+                        List<Coverages> propertyCoverages = new List<Coverages>();
+
+                        DS.Tables[0].AsEnumerable().ToList().ForEach(data =>
+                        {
+                            //var key = data.Field<string>("HEADERS").ToLower();
+                            if (data.Field<string>("EACHOCCURRENCE") != null)
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Each Occurrence",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("EACHOCCURRENCE")),
+                                    CoverageType = ""
+                                });
+                            }
+                            else
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Each Occurrence",
+                                    CoverageValue = "0",
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("AGGREGATE") != null)
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Aggregate",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("AGGREGATE")),
+                                    CoverageType = ""
+                                });
+                            }
+                            else
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Aggregate",
+                                    CoverageValue = "0",
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("PRODUCTSCOMPLETEDOPERATIONSAGGREGATE") != null)
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Products-Completed Operations Aggregate",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("PRODUCTSCOMPLETEDOPERATIONSAGGREGATE")),
+                                    CoverageType = ""
+                                });
+                            }
+                            else
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Products-Completed Operations Aggregate",
+                                    CoverageValue = "0",
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("PERSONALANDADVERTISINGINJURY") != null)
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Personal and Advertising Injury",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("PERSONALANDADVERTISINGINJURY")),
+                                    CoverageType = ""
+                                });
+                            }
+                            else
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Personal and Advertising Injury",
+                                    CoverageValue = "0",
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("FIREDAMAGE") != null)
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Fire Damage",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("FIREDAMAGE")),
+                                    CoverageType = ""
+                                });
+                            }
+                            else
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Fire Damage",
+                                    CoverageValue = "0",
+                                    CoverageType = ""
+                                });
+                            }
+                            if (data.Field<string>("MEDICALEXPENSE") != null)
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Medical Expense",
+                                    CoverageValue = string.Format("{0}", data.Field<string>("MEDICALEXPENSE")),
+                                    CoverageType = ""
+                                });
+                            }
+                            else
+                            {
+                                propertyCoverages.Add(new Coverages
+                                {
+                                    CoverageName = "Medical Expense",
+                                    CoverageValue = "0",
+                                    CoverageType = ""
+                                });
+                            }
+
+                        });
+                        if (propertyCoverages != null && propertyCoverages.Count > 0)
+                        {
+                            submissionData.GeneralLiablityCoverages = propertyCoverages;
+                        }
+                        else //if (DS.Tables[0].AsEnumerable().ToList().Count == 0)
+                        {
+                            submissionData.GeneralLiablityCoverages = new List<Coverages>
+                            {
+                                new Coverages { CoverageName = "Each Occurrence", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Aggregate", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Products-Completed Operations Aggregate", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Personal and Advertising Injury", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Fire Damage", CoverageValue = "0", CoverageType = "" },
+                                new Coverages { CoverageName = "Medical Expense", CoverageValue = "0", CoverageType = "" }
+                            };
+
+                        }
+                    }
+                    break;
+                case "sub_losses_gl":
+                    {
+                        DS = Database.Sub_Summary_GL_Losses(clientId, email, subGuid);
+                        submissionData.GeneralLiablityLosses = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new SubmissionLosses
+                                    {
+                                        Year = string.Format("{0}", dataRow.Field<string>("YEAR")),
+                                        GrossAmount = string.Format("{0}", dataRow.Field<string>("GROSSINCURRED")),
+                                        TotalNoOfClaims = string.Format("{0}", dataRow.Field<string>("CLAIMNUMBER")),
+                                        NoOfOpenClaims = string.Format("{0}", dataRow.Field<string>("COUNTOFOPENCLAIMS"))
+                                    }).ToList();
+                    }
+                    break;
+                case "sub_exposure_umbrella":
+                    {
+                        DS = Database.Sub_Summary_Umbrella_Exposure(clientId, email, subGuid);
+
+                        var data = DS.Tables[0].AsEnumerable()
+                                    .Select(dataRow => new Exposure
+                                    {
+                                        Total = string.Format("{0}", dataRow.Field<string>("PAYROLL")) == "" ? "0" : string.Format("{0}", dataRow.Field<string>("PAYROLL")),
+                                        ExposureValue1 = string.Format("{0}", dataRow.Field<string>("ANNUALGROSSSALES")),
+                                        ExposureValue2 = string.Format("{0}", dataRow.Field<string>("FOREIGNGROSSSALES")),
+                                        ExposureValue3 = string.Format("{0}", dataRow.Field<string>("COUNTOFEMPLOYEE")),
+                                    });
+                        if (data != null)
+                        {
+                            submissionData.UmbrellaExposure = data.ToList();
+                        }
+                    }
+                    break;
+                case "sub_coverage_umbrella":
+                    {
+                        DS = Database.Sub_Summary_Umbrella_Coverages(clientId, email, subGuid);
+                        List<Coverages> propertyCoverages = new List<Coverages>();
+
+                        string coverages = "";
+                        string carriers = "";
+                        DS.Tables[0].AsEnumerable().ToList().ForEach(data =>
+                        {
+                            //var key = data.Field<string>("HEADERS").ToLower();
+
+                            Coverages cov = new Coverages();
+                            if (data.Field<string>("UNDERLYINGCOVERAGES") != null)
+                                coverages += string.Format("{0}", data.Field<string>("UNDERLYINGCOVERAGES")) +", ";
+                            if (data.Field<string>("CARRIERNAME") != null)
+                                carriers += string.Format("{0}", data.Field<string>("CARRIERNAME")) + ", ";
+                        });
+
+                        propertyCoverages.Add(new Coverages (){ CoverageName = "Underlying Coverages", CoverageValue = coverages.TrimEnd(' ').TrimEnd(','), CoverageType = "" });
+                        propertyCoverages.Add(new Coverages() { CoverageName = "Carrier Name", CoverageValue = carriers.TrimEnd(' ').TrimEnd(','), CoverageType = "" });
+
+                        if (propertyCoverages != null && propertyCoverages.Count > 0)
+                        {
+                            submissionData.UmbrellaCoverages = propertyCoverages;
+                        }
+                        else //if (DS.Tables[0].AsEnumerable().ToList().Count == 0)
+                        {
+                            submissionData.UmbrellaCoverages = new List<Coverages>
+                            {
+                                new Coverages { CoverageName = "Underlying Coverages", CoverageValue = "", CoverageType = "" },
+                                new Coverages { CoverageName = "Carrier Name", CoverageValue = "0", CoverageType = "" }
+                            };
+
+                        }
+                    }
+                    break;
+                case "sub_losses_umbrella":
+                    {
+                        DS = Database.Sub_Summary_Umbrella_Losses(clientId, email, subGuid);
+                        submissionData.UmbrellaLosses = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new SubmissionLosses
                                     {
                                         Year = string.Format("{0}", dataRow.Field<string>("YEAR")),

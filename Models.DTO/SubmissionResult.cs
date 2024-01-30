@@ -59,7 +59,7 @@ namespace Models.DTO
     //    public string? ClassCodeDescription { get; set; }
     //    public string? Payroll { get; set; }
     //}
-    public class PropertyCoverages
+    public class Coverages
     {
         public string CoverageName { get; set; }
         public string CoverageValue { get; set; }

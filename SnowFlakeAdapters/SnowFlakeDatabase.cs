@@ -442,7 +442,7 @@ namespace SnowFlakeAdapter
             parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
             parameters.Add(BaseDatabase.Param("USERID", userEmailId));
 
-            return BaseDatabase.GetData("call SP_UmbrellaUnderlyingCovCarrierName", parameters);
+            return BaseDatabase.GetData("call SP_UmbrellaExposure", parameters);
         }
 
         public DataSet Sub_Summary_Umbrella_Coverages(string clientId, string userEmailId, string submissionId)
@@ -452,7 +452,7 @@ namespace SnowFlakeAdapter
             parameters.Add(BaseDatabase.Param("CLIENTID", clientId));
             parameters.Add(BaseDatabase.Param("USERID", userEmailId));
 
-            return BaseDatabase.GetData("call SP_UmbrellaUnderlyingCoverages", parameters);
+            return BaseDatabase.GetData("call SP_UmbrellaUnderlyingCovCarrierName", parameters);
         }
 
         public DataSet Sub_Summary_Umbrella_Losses(string clientId, string userEmailId, string submissionId)
