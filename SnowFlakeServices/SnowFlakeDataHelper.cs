@@ -39,6 +39,31 @@ namespace SnowFlakeServices
                         }).ToList();
             return lstDasboardgraph;
         }
+
+        private List<DataResult> GetPercentage(List<DataResult> inputData)
+        {
+
+            List<DataResult> data = new List<DataResult>();
+            int AllSubmissionCount = inputData.Where(i=>i.Dimension != "SubmissionIdCount").Sum(x => Convert.ToInt32(x.Measure));
+            foreach (var dataRow in inputData) {
+                if(dataRow.Dimension == "SubmissionIdCount")
+                {
+                    data.Add(dataRow);
+                }
+                else
+                {
+                    int msr = Convert.ToInt32(dataRow.Measure);
+                    DataResult res = new DataResult
+                    {
+                        Category = dataRow.Category,
+                        Dimension = dataRow.Dimension,
+                        Measure = (msr * 100 / AllSubmissionCount).ToString()
+                    };
+                    data.Add(res);
+                }
+            }
+            return data;
+        }
         public List<DataResult> GetDashboardGraphData(DashboardFilter dashboardFilter, string Type)
         {
             List<DataResult> lstDasboardgraph = new List<DataResult>();
@@ -49,41 +74,66 @@ namespace SnowFlakeServices
                     {
                         DS = Database.DashboardGraph_CountByTurnaroundTime(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
                             dashboardFilter.StartDate, dashboardFilter.EndDate);
-                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                        List<DataResult> graphData = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DataResult
                                     {
-                                        Dimension = string.Format("{0}", dataRow.Field<string>("TAT")),
-                                        Measure = string.Format("{0}", dataRow.Field<string>("SUBMISSIONID"))
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("SUBMISSIONID")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("TAT"))
                                     }).ToList();
-                        List<DataResult> dashboard = new List<DataResult>();
-                        List<DataResult> distinctDashboard = new List<DataResult>();
-                        distinctDashboard = lstDasboardgraph.DistinctBy(x => x.Dimension).ToList();
-                        foreach (var row in distinctDashboard)
+                        //List<DataResult> dashboard = new List<DataResult>();
+                        //List<DataResult> distinctDashboard = new List<DataResult>();
+
+                        if(graphData != null && graphData.Count > 0)
                         {
-                            DataResult graph = new DataResult
-                            {
-                                Category = "Days",
-                                Dimension = row.Dimension + " min",
-                                Measure = lstDasboardgraph.Where(msr => msr.Dimension == row.Dimension).ToList().Count().ToString()
+
+                            int zeroToFiveMin = graphData.Where(x => Convert.ToInt32(x.Measure) <= 5).Sum(m => Convert.ToInt32(m.Measure));
+                            int fiveToTenMin = graphData.Where(x => Convert.ToInt32(x.Measure) > 5 && Convert.ToInt32(x.Measure) <= 10 ).Count();
+                            int tenToThirtyMin = graphData.Where(x => Convert.ToInt32(x.Measure) > 10 && Convert.ToInt32(x.Measure) <= 30).Count();
+                            int thirtyToOneHour = graphData.Where(x => Convert.ToInt32(x.Measure) > 30 && Convert.ToInt32(x.Measure) <= 60).Count();
+                            int oneToOneDay = graphData.Where(x => Convert.ToInt32(x.Measure) > 60 && Convert.ToInt32(x.Measure) <= 1440).Count();
+                            int moreThanOneDay = graphData.Where(x => Convert.ToInt32(x.Measure) > 1440).Count();
+
+                            lstDasboardgraph = new List<DataResult> { 
+                                new DataResult { Category = "Days", Dimension = "0 - 5min", Measure = zeroToFiveMin.ToString() },
+                                new DataResult { Category = "Days", Dimension = "5 - 10min", Measure = fiveToTenMin.ToString() },
+                                new DataResult { Category = "Days", Dimension = "10 - 30min", Measure = tenToThirtyMin.ToString() },
+                                new DataResult { Category = "Days", Dimension = "30min - 1hr", Measure = thirtyToOneHour.ToString() },
+                                new DataResult { Category = "Days", Dimension = "1hr - 1day", Measure = oneToOneDay.ToString() },
+                                new DataResult { Category = "Days", Dimension = "> 1day", Measure = moreThanOneDay.ToString() },
                             };
-
-                            dashboard.Add(graph);
-
                         }
-                        int a = 1;
-                        lstDasboardgraph = dashboard;
+                        //distinctDashboard = lstDasboardgraph.DistinctBy(x => x.Dimension).ToList();
+
+                        //foreach (var row in distinctDashboard)
+                        //{
+                        //    var msrValue = lstDasboardgraph.Where(msr => msr.Dimension == row.Dimension).ToList().Count().ToString();
+
+                        //    DataResult graph = new DataResult
+                        //    {
+                        //        Category = "Days",
+                        //        Dimension = row.Dimension + " min",
+                        //        Measure = msrValue
+                        //    };
+
+                        //    dashboard.Add(graph);
+
+                        //}
+                        //lstDasboardgraph = dashboard;
                     }
                     break;
                 case "countbylob":
                     {
                         DS = Database.DashboardGraph_CountByLOB(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
                             dashboardFilter.StartDate, dashboardFilter.EndDate);
-                        lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                        var data = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DataResult
                                     {
                                         Dimension = string.Format("{0}", dataRow.Field<string>("LOB")),
                                         Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                     }).ToList();
+                        lstDasboardgraph = GetPercentage(data);
+                        lstDasboardgraph = lstDasboardgraph.OrderByDescending(x => Convert.ToInt32(x.Measure)).Take(5).ToList();
+                        
                     }
                     break;
                 case "countbybroker":
@@ -96,6 +146,8 @@ namespace SnowFlakeServices
                                        Dimension = string.Format("{0}", dataRow.Field<string>("BROKERNAME")),
                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
+                        lstDasboardgraph = GetPercentage(lstDasboardgraph);
+                        lstDasboardgraph = lstDasboardgraph.OrderByDescending(x => Convert.ToInt32(x.Measure)).Take(5).ToList();
                     }
                     break;
                 case "countbycity":
@@ -108,6 +160,8 @@ namespace SnowFlakeServices
                                        Dimension = string.Format("{0}", dataRow.Field<string>("CITYNAME")),
                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
+                        lstDasboardgraph = GetPercentage(lstDasboardgraph);
+                        lstDasboardgraph = lstDasboardgraph.OrderByDescending(x => Convert.ToInt32(x.Measure)).Take(5).ToList();
                     }
                     break;
                 case "countbystate":
@@ -120,6 +174,8 @@ namespace SnowFlakeServices
                                        Dimension = string.Format("{0}", dataRow.Field<string>("STATENAME")),
                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
+                        lstDasboardgraph = GetPercentage(lstDasboardgraph);
+                        lstDasboardgraph = lstDasboardgraph.OrderByDescending(x => Convert.ToInt32(x.Measure)).Take(5).ToList();
                     }
                     break;
                 case "countbyindustries":
@@ -132,6 +188,8 @@ namespace SnowFlakeServices
                                        Dimension = string.Format("{0}", dataRow.Field<string>("NAICCODE")),
                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
+                        lstDasboardgraph = GetPercentage(lstDasboardgraph);
+                        lstDasboardgraph = lstDasboardgraph.OrderByDescending(x => Convert.ToInt32(x.Measure)).Take(5).ToList();
                     }
                     break;
                 case "countofsubmissionprofileandvolume":
@@ -157,7 +215,7 @@ namespace SnowFlakeServices
                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList()
                             );
-                       
+                        lstDasboardgraph = GetPercentage(lstDasboardgraph); 
                     }
                     break;
 
