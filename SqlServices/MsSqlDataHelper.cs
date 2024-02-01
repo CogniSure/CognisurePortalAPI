@@ -538,6 +538,7 @@ namespace SqlServices
                     SubmissionId = Convert.ToInt32(dr["SubmissionId"]),
                     MessageId = string.Format("{0}", dr["MessageId"]),
                     SubmissionGUID = string.Format("{0}", dr["SubmissionGUID"]),
+                    ClientSubmissionGUID = string.Format("{0}", dr["ClientSubmissionGUID"]),
                     SubmissionDate = string.Format("{0}", dr["SubmissionDate"]),
                     FileReceivedChanelId = Convert.ToInt32(dr["FileReceivedChanelId"]),
                     FileReceivedChanelName = string.Format("{0}", dr["FileReceivedChanelName"]),

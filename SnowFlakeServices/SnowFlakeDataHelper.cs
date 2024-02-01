@@ -77,8 +77,8 @@ namespace SnowFlakeServices
                         List<DataResult> graphData = DS.Tables[0].AsEnumerable()
                                     .Select(dataRow => new DataResult
                                     {
-                                        Dimension = string.Format("{0}", dataRow.Field<string>("SUBMISSIONID")),
-                                        Measure = string.Format("{0}", dataRow.Field<string>("TAT"))
+                                        Dimension = string.Format("{0}", dataRow.Field<string>("TAT")),
+                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                     }).ToList();
                         //List<DataResult> dashboard = new List<DataResult>();
                         //List<DataResult> distinctDashboard = new List<DataResult>();
@@ -86,20 +86,20 @@ namespace SnowFlakeServices
                         if(graphData != null && graphData.Count > 0)
                         {
 
-                            int zeroToFiveMin = graphData.Where(x => Convert.ToInt32(x.Measure) <= 5).Sum(m => Convert.ToInt32(m.Measure));
-                            int fiveToTenMin = graphData.Where(x => Convert.ToInt32(x.Measure) > 5 && Convert.ToInt32(x.Measure) <= 10 ).Count();
-                            int tenToThirtyMin = graphData.Where(x => Convert.ToInt32(x.Measure) > 10 && Convert.ToInt32(x.Measure) <= 30).Count();
-                            int thirtyToOneHour = graphData.Where(x => Convert.ToInt32(x.Measure) > 30 && Convert.ToInt32(x.Measure) <= 60).Count();
-                            int oneToOneDay = graphData.Where(x => Convert.ToInt32(x.Measure) > 60 && Convert.ToInt32(x.Measure) <= 1440).Count();
-                            int moreThanOneDay = graphData.Where(x => Convert.ToInt32(x.Measure) > 1440).Count();
+                            var zeroToFiveMin = graphData.Where(x => x.Dimension == "0 to 5 Min").FirstOrDefault();
+                            var fiveToTenMin = graphData.Where(x => x.Dimension == "5 to 10 min").FirstOrDefault();
+                            var tenToThirtyMin = graphData.Where(x => x.Dimension == "10 to 30 Min").FirstOrDefault();
+                            var thirtyToOneHour = graphData.Where(x => x.Dimension == "30 min to 1 hour").FirstOrDefault();
+                            var oneToOneDay = graphData.Where(x => x.Dimension == "1 hr to 1 Day").FirstOrDefault();
+                            var moreThanOneDay = graphData.Where(x => x.Dimension == "> 1 Day").FirstOrDefault();
 
                             lstDasboardgraph = new List<DataResult> { 
-                                new DataResult { Category = "Days", Dimension = "0 - 5min", Measure = zeroToFiveMin.ToString() },
-                                new DataResult { Category = "Days", Dimension = "5 - 10min", Measure = fiveToTenMin.ToString() },
-                                new DataResult { Category = "Days", Dimension = "10 - 30min", Measure = tenToThirtyMin.ToString() },
-                                new DataResult { Category = "Days", Dimension = "30min - 1hr", Measure = thirtyToOneHour.ToString() },
-                                new DataResult { Category = "Days", Dimension = "1hr - 1day", Measure = oneToOneDay.ToString() },
-                                new DataResult { Category = "Days", Dimension = "> 1day", Measure = moreThanOneDay.ToString() },
+                                new DataResult { Category = "Days", Dimension = "0 - 5min", Measure = zeroToFiveMin != null ? zeroToFiveMin.Measure.ToString():"0" },
+                                new DataResult { Category = "Days", Dimension = "5 - 10min", Measure = fiveToTenMin != null ? fiveToTenMin.Measure.ToString():"0" },
+                                new DataResult { Category = "Days", Dimension = "10 - 30min", Measure = tenToThirtyMin != null ? tenToThirtyMin.Measure.ToString():"0" },
+                                new DataResult { Category = "Days", Dimension = "30min - 1hr", Measure = thirtyToOneHour != null ? thirtyToOneHour.Measure.ToString():"0" },
+                                new DataResult { Category = "Days", Dimension = "1hr - 1day", Measure = oneToOneDay != null ? oneToOneDay.Measure.ToString():"0"  },
+                                new DataResult { Category = "Days", Dimension = "> 1day", Measure = moreThanOneDay != null ? moreThanOneDay.Measure.ToString():"0"  },
                             };
                         }
                         //distinctDashboard = lstDasboardgraph.DistinctBy(x => x.Dimension).ToList();
@@ -201,13 +201,14 @@ namespace SnowFlakeServices
                         DataSet DSDocType = new DataSet();
                         DSDocType = Database.DashboardGraph_CountOfDocType(dashboardFilter.TopNumber, dashboardFilter.CLIENTID, dashboardFilter.UserEmailId,
                             dashboardFilter.StartDate, dashboardFilter.EndDate);
+                        List<DataResult> dataResult = new List<DataResult>();
                         lstDasboardgraph = DS.Tables[0].AsEnumerable()
                                    .Select(dataRow => new DataResult
                                    {
                                        Dimension = "SubmissionIdCount",
                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList();
-                        lstDasboardgraph.AddRange(
+                        dataResult.AddRange(
                             DSDocType.Tables[0].AsEnumerable()
                                    .Select(dataRow => new DataResult
                                    {
@@ -215,6 +216,59 @@ namespace SnowFlakeServices
                                        Measure = string.Format("{0}", dataRow.Field<string>("COUNTOFSUBMISSIONID"))
                                    }).ToList()
                             );
+                        foreach(var row in dataResult)
+                        {
+                            if(row.Dimension.ToLower().Replace(" ", string.Empty) == "lossrun")
+                            {
+                                var tempdata = lstDasboardgraph.Find(x=>x.Dimension == "Loss Run");
+                                if (tempdata != null)
+                                {
+                                    tempdata.Measure = (Convert.ToInt32(tempdata.Measure) + Convert.ToInt32(row.Measure)).ToString();
+                                }
+                                else
+                                {
+                                    lstDasboardgraph.Add(new DataResult { Dimension = "Loss Run", Measure = row.Measure });
+                                }
+                            }
+                            else if (row.Dimension.ToLower().Replace(" ", string.Empty) == "sov" 
+                                || row.Dimension.ToLower().Replace(" ", string.Empty) == "statement" 
+                                || row.Dimension.ToLower().Replace(" ", string.Empty) == "schedules")
+                            {
+                                var tempdata = lstDasboardgraph.Find(x => x.Dimension == "SOV");
+                                if (tempdata != null)
+                                {
+                                    tempdata.Measure = (Convert.ToInt32(tempdata.Measure) + Convert.ToInt32(row.Measure)).ToString();
+                                }
+                                else
+                                {
+                                    lstDasboardgraph.Add(new DataResult { Dimension = "SOV", Measure = row.Measure });
+                                }
+                            }
+                            else if (row.Dimension.ToLower().Replace(" ", string.Empty) == "acord")
+                            {
+                                var tempdata = lstDasboardgraph.Find(x => x.Dimension == "ACORD");
+                                if (tempdata != null)
+                                {
+                                    tempdata.Measure = (Convert.ToInt32(tempdata.Measure) + Convert.ToInt32(row.Measure)).ToString();
+                                }
+                                else
+                                {
+                                    lstDasboardgraph.Add(new DataResult { Dimension = "ACORD", Measure = row.Measure });
+                                }
+                            }
+                            else
+                            {
+                                var tempdata = lstDasboardgraph.Find(x => x.Dimension == "Others");
+                                if (tempdata != null)
+                                {
+                                    tempdata.Measure = (Convert.ToInt32(tempdata.Measure) + Convert.ToInt32(row.Measure)).ToString();
+                                }
+                                else
+                                {
+                                    lstDasboardgraph.Add(new DataResult { Dimension = "Others", Measure = row.Measure });
+                                }
+                            }
+                        }
                         lstDasboardgraph = GetPercentage(lstDasboardgraph); 
                     }
                     break;
@@ -513,6 +567,10 @@ namespace SnowFlakeServices
                                         TotalNoOfClaims = string.Format("{0}", dataRow.Field<string>("CLAIMNUMBER")),
                                         NoOfOpenClaims = string.Format("{0}", dataRow.Field<string>("COUNTOFOPENCLAIMS"))
                                     }).ToList();
+                        submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2020", GrossAmount = "100", NoOfOpenClaims = "10", TotalNoOfClaims = "110" });
+                        submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2021", GrossAmount = "200", NoOfOpenClaims = "20", TotalNoOfClaims = "120" });
+                        submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2022", GrossAmount = "300", NoOfOpenClaims = "30", TotalNoOfClaims = "130" });
+                        submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2023", GrossAmount = "400", NoOfOpenClaims = "40", TotalNoOfClaims = "140" });
                     }
                     break;
                 case "sub_exposure_property":
@@ -1054,6 +1112,10 @@ namespace SnowFlakeServices
                                         TotalNoOfClaims = string.Format("{0}", dataRow.Field<string>("CLAIMNUMBER")),
                                         NoOfOpenClaims = string.Format("{0}", dataRow.Field<string>("COUNTOFOPENCLAIMS"))
                                     }).ToList();
+                        //submissionData.GeneralLiablityLosses.Add(new SubmissionLosses { Year = "2020", GrossAmount = "100", NoOfOpenClaims = "10", TotalNoOfClaims = "110" });
+                        //submissionData.GeneralLiablityLosses.Add(new SubmissionLosses { Year = "2021", GrossAmount = "200", NoOfOpenClaims = "20", TotalNoOfClaims = "120" });
+                        //submissionData.GeneralLiablityLosses.Add(new SubmissionLosses { Year = "2022", GrossAmount = "300", NoOfOpenClaims = "30", TotalNoOfClaims = "130" });
+                        //submissionData.GeneralLiablityLosses.Add(new SubmissionLosses { Year = "2023", GrossAmount = "400", NoOfOpenClaims = "40", TotalNoOfClaims = "140" });
                     }
                     break;
                 case "sub_exposure_umbrella":
