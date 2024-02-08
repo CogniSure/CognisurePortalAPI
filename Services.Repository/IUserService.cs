@@ -16,6 +16,7 @@ namespace Services.Repository.Interface
         Task<OperationResult<string>> ResetPassword(string email, string newPassword);
         Task<OperationResult<string>> ChangePassword(int userId, string currentPassword, string newPassword);
         Task<OperationResult<List<Account>>> GetAccountDetails(int userId);
+        Task<OperationResult<string>> GetZOHOToken(string email);
 
     }
 }

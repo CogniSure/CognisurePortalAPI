@@ -269,4 +269,23 @@ public class UserController : ControllerBase
         }
         
     }
+
+    [Route("zohotoken")]
+    [HttpGet]
+
+    public async Task<OperationResult<string>> ZOHOToken()
+    {
+        try
+        {
+            var useremail = "arabindam@cognisure.ai";
+            return await iBusServiceFactory.UserService().GetZOHOToken(useremail);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return null;
+            //return await iBusServiceFactorySQL.ExceptionService<Submission360>().AddError("", Convert.ToString(ex.InnerException), ex.Message, ex.Source, ex.StackTrace, Convert.ToString(ex.TargetSite),
+            //    "0", "SubmissionController", "DownloadSubmission360");
+        }
+    }
 }

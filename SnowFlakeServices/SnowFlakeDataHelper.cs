@@ -567,10 +567,10 @@ namespace SnowFlakeServices
                                         TotalNoOfClaims = string.Format("{0}", dataRow.Field<string>("CLAIMNUMBER")),
                                         NoOfOpenClaims = string.Format("{0}", dataRow.Field<string>("COUNTOFOPENCLAIMS"))
                                     }).ToList();
-                        submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2020", GrossAmount = "100", NoOfOpenClaims = "10", TotalNoOfClaims = "110" });
-                        submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2021", GrossAmount = "200", NoOfOpenClaims = "20", TotalNoOfClaims = "120" });
-                        submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2022", GrossAmount = "300", NoOfOpenClaims = "30", TotalNoOfClaims = "130" });
-                        submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2023", GrossAmount = "400", NoOfOpenClaims = "40", TotalNoOfClaims = "140" });
+                        //submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2020", GrossAmount = "100", NoOfOpenClaims = "10", TotalNoOfClaims = "110" });
+                        //submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2021", GrossAmount = "200", NoOfOpenClaims = "20", TotalNoOfClaims = "120" });
+                        //submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2022", GrossAmount = "300", NoOfOpenClaims = "30", TotalNoOfClaims = "130" });
+                        //submissionData.TotalLosses.Add(new SubmissionLosses { Year = "2023", GrossAmount = "400", NoOfOpenClaims = "40", TotalNoOfClaims = "140" });
                     }
                     break;
                 case "sub_exposure_property":
@@ -604,7 +604,7 @@ namespace SnowFlakeServices
                                 propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Building",
-                                    CoverageValue = Convert.ToDouble(string.Format("{0}", data.Field<string>("BUILDINGLIMIT"))).ToString("#,##0"),
+                                    CoverageValue = string.Format("{0}", data.Field<string>("BUILDINGLIMIT")),
                                     CoverageType = ""
                                 });
                             }
@@ -622,7 +622,7 @@ namespace SnowFlakeServices
                                 propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Content",
-                                    CoverageValue = Convert.ToDouble(string.Format("{0}", data.Field<string>("CONTENTLIMIT"))).ToString("#,##0"),
+                                    CoverageValue = string.Format("{0}", data.Field<string>("CONTENTLIMIT")),
                                     CoverageType = ""
                                 });
 
@@ -641,7 +641,7 @@ namespace SnowFlakeServices
                                 propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Business Income",
-                                    CoverageValue = Convert.ToDouble(string.Format("{0}", data.Field<string>("BUSINESSINCOMELIMIT"))).ToString("#,##0"),
+                                    CoverageValue = string.Format("{0}", data.Field<string>("BUSINESSINCOMELIMIT")),
                                     CoverageType = ""
                                 });
                             }
@@ -659,7 +659,7 @@ namespace SnowFlakeServices
                                 propertyCoverages.Add(new Coverages
                                 {
                                     CoverageName = "Others",
-                                    CoverageValue = Convert.ToDouble(string.Format("{0}", data.Field<string>("OTHERLIMIT"))).ToString("#,##0"),
+                                    CoverageValue = string.Format("{0}", data.Field<string>("OTHERLIMIT")),
                                     CoverageType = ""
                                 });
                             }
