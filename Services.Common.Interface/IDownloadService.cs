@@ -8,5 +8,6 @@ namespace Services.Common.Interface
 {
     public interface IDownloadService
     {
+
     }
 }

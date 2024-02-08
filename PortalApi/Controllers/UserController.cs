@@ -273,12 +273,11 @@ public class UserController : ControllerBase
     [Route("zohotoken")]
     [HttpGet]
 
-    public async Task<OperationResult<string>> ZOHOToken()
+    public async Task<OperationResult<string>> ZOHOToken(string email)
     {
         try
         {
-            var useremail = "arabindam@cognisure.ai";
-            return await iBusServiceFactory.UserService().GetZOHOToken(useremail);
+            return await iBusServiceFactory.UserService().GetZOHOToken(email);
         }
         catch (Exception ex)
         {

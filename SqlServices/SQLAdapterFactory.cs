@@ -106,7 +106,7 @@ namespace MsSqlServices
 
         public ISubmissionService SubmissionService()
         {
-            throw new NotImplementedException();
+            return new SubmissionService(null, msSqlDataHelper, null, configuration);
         }
 
         public ISubmissionInboxService SubmissionInboxService()

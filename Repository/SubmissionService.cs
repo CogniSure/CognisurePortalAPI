@@ -157,5 +157,11 @@ namespace Portal.Repository.Inbox
             }
             return apiToken;
         }
+
+        public async Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(long submissionId, string userEmail)
+        {
+            List<SubmissionFile> submissionData = msSqlDataHelper.GetSubmissionFiles( submissionId);
+            return new OperationResult<List<SubmissionFile>>(submissionData, true);
+        }
     }
 }

@@ -24,6 +24,7 @@ public class SubmissionController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly IBusServiceFactory iBusServiceFactoryAPI;
     private readonly IBusServiceFactory iBusServiceFactorySFDB;
+    private readonly IBusServiceFactory iBusServiceFactorySQL;
 
     public SubmissionController(ILogger<SubmissionController> logger,
         ISubmissionService inboxRepository, IConfiguration configuration,
@@ -34,6 +35,7 @@ public class SubmissionController : ControllerBase
         _inboxRepository = inboxRepository;
         this.iBusServiceFactoryAPI = iBusServiceFactoryResolver("api");
         this.iBusServiceFactorySFDB = iBusServiceFactoryResolver("sfdb");
+        this.iBusServiceFactorySQL = iBusServiceFactoryResolver("mssql");
         _configuration = configuration;
     }
     [Route("submission")]
@@ -99,7 +101,7 @@ public class SubmissionController : ControllerBase
             //submissionid = "a44413ee-1c8e-446a-843f-e51b6a2c4c51";
             //email = "QBEsub@gmail.com";
             var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
-            return await iBusServiceFactorySFDB.SubmissionSFService().GetSubmissionFiles(clientid, submissionid, email);
+            return await iBusServiceFactorySQL.SubmissionService().GetSubmissionFiles(Convert.ToInt32(submissionid), email);
         }
         catch (Exception ex)
         {

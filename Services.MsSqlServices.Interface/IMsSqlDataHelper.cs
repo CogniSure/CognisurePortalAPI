@@ -35,5 +35,6 @@ namespace Services.MsSqlServices.Interface
 
         IEnumerable<Submission> GetAllSubmission(InboxFilter ObjInboxFilter);
         string GetSubmissionEmail(long submissionID);
+        List<SubmissionFile> GetSubmissionFiles(long submissionId);
     }
 }

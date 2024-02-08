@@ -249,5 +249,14 @@ namespace MsSqlAdapter
             };
             return BaseDatabase.GetData("sp_GetSubmissionMessageBody", parameters);
         }
+
+        public DataSet GetSubmissionFilesBySubmissionID(long submissionID)
+        {
+            var parameters = new List<IDataParameter>
+            {
+                BaseDatabase.Param("@SubmissionID", submissionID)
+            };
+            return BaseDatabase.GetData("sp_GetSubmissionFilesBySubmissionID", parameters);
+        }
     }
 }

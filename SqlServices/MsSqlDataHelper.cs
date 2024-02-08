@@ -4,11 +4,14 @@ using MsSqlAdapter.Interface;
 using Services.MsSqlServices.Interface;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Security.Principal;
+using static QRCoder.PayloadGenerator;
 
 namespace SqlServices
 {
@@ -594,6 +597,39 @@ namespace SqlServices
                 messageBody = string.Format("{0}", dst.Tables[0].Rows[0]["MessageBody"]);
             }
             return messageBody;
+        }
+        public List<SubmissionFile> GetSubmissionFiles(long submissionId)
+        {
+            List<SubmissionFile> lstDasboardgraph = new List<SubmissionFile>();
+            DataSet DS = new DataSet();
+            DS = Database.GetSubmissionFilesBySubmissionID(submissionId);
+            lstDasboardgraph = DS.Tables[0].AsEnumerable()
+                        .Select(dataRow => new SubmissionFile
+                        {
+                            SlNo = string.Format("{0}", dataRow.Field<int>("SubmissionID")),
+                            FileGUID = string.Format("{0}", dataRow.Field<string>("FileGUID")),
+                            FileName = string.Format("{0}", dataRow.Field<string>("FileOriginalName")),
+                            DocumentType = string.Format("{0}", dataRow.Field<string>("DocumentType")),
+                            Carrier = string.Format("{0}", dataRow.Field<string>("Carriers")),
+                            LineOfBusiness = string.Format("{0}", dataRow.Field<string>("LineOfBusiness")),
+                            Status = string.Format("{0}", dataRow.Field<string>("FileStatus")),
+                            FileData = GetFileData(string.Format("{0}", dataRow.Field<string>("FileGUID")), string.Format("{0}", dataRow.Field<string>("FileOriginalName")))
+                        }).ToList();
+            return lstDasboardgraph;
+        }
+
+        private string GetFileData(string fileguid, string fileOriginalName)
+        {
+            string fileStr = "";
+            string fileName = Path.Combine(Configuration["ArchiveFolderPath"], string.Format("{0}", fileguid + Path.GetExtension(string.Format("{0}", fileOriginalName))));
+
+            if (File.Exists(fileName))
+            {
+                var bytes = File.ReadAllBytes(fileName);
+                var file = Convert.ToBase64String(bytes);
+                fileStr = file;
+            }
+            return fileStr;
         }
     }
 }

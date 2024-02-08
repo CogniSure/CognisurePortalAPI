@@ -33,7 +33,7 @@ namespace SnowFlakeServices
                         {
                             SlNo = string.Format("{0}", dataRow.Field<string>("SLNO")),
                             FileName = string.Format("{0}", dataRow.Field<string>("FILENAME")),
-                            Type = string.Format("{0}", dataRow.Field<string>("TYPE")),
+                            DocumentType = string.Format("{0}", dataRow.Field<string>("TYPE")),
                             LineOfBusiness = string.Format("{0}", dataRow.Field<string>("LOB")),
                             Status = string.Format("{0}", dataRow.Field<string>("STATUS"))
                         }).ToList();

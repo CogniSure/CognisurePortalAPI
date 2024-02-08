@@ -34,5 +34,6 @@ namespace MsSqlAdapter.Interface
             string interests, out string generalMessage, out string technicalMessage);
         DataSet GetAllSubmission(int userID, int UploadedUserID, int FileReceivedChannelID, string keyword, DateTime? SubmissionFromDate, DateTime? submissionTodate);
         DataSet GetSubmissionEmailBody(long submissionID);
+        DataSet GetSubmissionFilesBySubmissionID(long submissionID);
     }
 }
