@@ -133,7 +133,7 @@ namespace MsSqlAdapter
                                 command.Parameters.Add(parameter);
                             }
                         }
-
+                        command.CommandTimeout=100000;
                         IDataAdapter dataAdapter = CreateDataAdapter(command);
                         dataAdapter.Fill(ObtainedData);
                     }

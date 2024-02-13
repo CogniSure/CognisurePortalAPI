@@ -61,41 +61,41 @@ namespace Repository
             try
             {
                 string chatToken = "";
-                var custparams = new
+                if( data != null && data.Count>0 && data[0].FileType == "application/json")
                 {
-                    value = data[0].FileContent.Split(',')[data[0].FileContent.Split(',').Length-1]
-                };
+                    var custparams = new
+                    {
+                        filename = data[0].FileName,
+                        value = data[0].FileContent
+                    };
 
-                //string body = JsonConvert.SerializeObject(custparams);
+                    var client = clientFactory.CreateClient("chatclient");
+                    HttpResponseMessage response = await client.PostAsJsonAsync($"api/upload_json", custparams);
 
-                //var dataItemJson = new StringContent(body);
-                ////dataItemJson.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                //var request = new HttpRequestMessage(HttpMethod.Post,
-                //    ApiURl+ "api/upload_document")
-                //{
-                //    Headers =
-                //{
-                //    { HeaderNames.Accept, "application/json" }
-                //},
-                //    Content = dataItemJson
-                //};
-
-
-                //var clientHandler = new HttpClientHandler();
-                var client = clientFactory.CreateClient("chatclient");
-                //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                HttpResponseMessage response = await client.PostAsJsonAsync($"api/upload_document", custparams);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    chatToken = await response.Content.ReadAsStringAsync();
-
-                    //var obj = JObject.Parse(result);
-
-                    //submissions = JsonConvert.DeserializeObject<Submission360>(obj.ToString());
-
+                    if (response.IsSuccessStatusCode)
+                    {
+                        chatToken = await response.Content.ReadAsStringAsync();
+                    }
                 }
+                else
+                {
+                    var custparams = new
+                    {
+                        filename = data[0].FileName,
+                        value = data[0].FileContent.Split(',')[data[0].FileContent.Split(',').Length - 1]
+                    };
+
+                    var client = clientFactory.CreateClient("chatclient");
+                    HttpResponseMessage response = await client.PostAsJsonAsync($"api/upload_document", custparams);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var val = await response.Content.ReadAsStringAsync();
+                        chatToken = ((Newtonsoft.Json.Linq.JValue)(JsonConvert.DeserializeObject(val) as JArray).FirstOrDefault()).Value.ToString();
+                        int a = 0;
+                    }
+                }
+                
                 return chatToken;
 
             }
@@ -124,11 +124,15 @@ namespace Repository
             string body = JsonConvert.SerializeObject(custparams);
 
             var client = clientFactory.CreateClient("chatclient");
-            HttpResponseMessage response = await client.PostAsJsonAsync($"api/get_chat_history", custparams);
+            HttpResponseMessage response = await client.PostAsJsonAsync($"api/get_answer", custparams);
 
             if (response.IsSuccessStatusCode)
             {
                 chatToken = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                chatToken = "{answer:No Result Found}";
             }
             return chatToken;
         }

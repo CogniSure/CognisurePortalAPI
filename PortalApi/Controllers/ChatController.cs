@@ -48,7 +48,7 @@ namespace PortalApi.Controllers
         }
         [Route("AskCopilot")]
         [HttpGet]
-        public async Task<OperationResult<string>> AskCoPilot(string uniqId,string message)
+        public async Task<OperationResult<string>> AskCoPilot(string message, string uniqId = "")
         {
             try
             {
