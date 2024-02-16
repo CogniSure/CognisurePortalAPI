@@ -598,12 +598,26 @@ namespace SqlServices
             }
             return messageBody;
         }
-        public List<SubmissionFile> GetSubmissionFiles(long submissionId)
+        public List<SubmissionFile> GetSubmissionFiles(long submissionId, bool s360Required)
         {
             List<SubmissionFile> lstDasboardgraph = new List<SubmissionFile>();
             DataSet DS = new DataSet();
             DS = Database.GetSubmissionFilesBySubmissionID(submissionId);
-            lstDasboardgraph = DS.Tables[0].AsEnumerable()
+            if (s360Required)
+            {
+                lstDasboardgraph.Add(new SubmissionFile
+                {
+                    SlNo = "0",
+                    FileGUID = submissionId + "_9300_20" + ".json",
+                    FileName = submissionId + ".json",
+                    DocumentType = "s360",
+                    Carrier = "",
+                    LineOfBusiness = "",
+                    Status = "Completed",
+                    FileData = GetFileJSONData(submissionId + "_9300_20", submissionId + ".json")
+                });
+            }
+            lstDasboardgraph.AddRange(DS.Tables[0].AsEnumerable()
                         .Select(dataRow => new SubmissionFile
                         {
                             SlNo = string.Format("{0}", dataRow.Field<int>("SubmissionID")),
@@ -614,7 +628,7 @@ namespace SqlServices
                             LineOfBusiness = string.Format("{0}", dataRow.Field<string>("LineOfBusiness")),
                             Status = string.Format("{0}", dataRow.Field<string>("FileStatus")),
                             FileData = GetFileData(string.Format("{0}", dataRow.Field<string>("FileGUID")), string.Format("{0}", dataRow.Field<string>("FileOriginalName")))
-                        }).ToList();
+                        }).ToList());
             return lstDasboardgraph;
         }
 
@@ -627,6 +641,20 @@ namespace SqlServices
             {
                 var bytes = File.ReadAllBytes(fileName);
                 var file = Convert.ToBase64String(bytes);
+                fileStr = file;
+            }
+            return fileStr;
+        }
+
+        private string GetFileJSONData(string fileguid, string fileOriginalName)
+        {
+            string fileStr = "";
+            string fileName = Path.Combine(Configuration["ArchiveFolderPath"], string.Format("{0}", fileguid + Path.GetExtension(string.Format("{0}", fileOriginalName))));
+
+            if (File.Exists(fileName))
+            {
+                var file = File.ReadAllText(fileName);
+                
                 fileStr = file;
             }
             return fileStr;

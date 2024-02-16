@@ -92,7 +92,7 @@ public class SubmissionController : ControllerBase
     }
     [Route("submissionfiles")]
     [HttpGet]
-    public async Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(string clientid, string submissionid, string email)
+    public async Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(string clientid, string submissionid, string email, bool s360Required)
     {
         try
         {
@@ -101,7 +101,7 @@ public class SubmissionController : ControllerBase
             //submissionid = "a44413ee-1c8e-446a-843f-e51b6a2c4c51";
             //email = "QBEsub@gmail.com";
             var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
-            return await iBusServiceFactorySQL.SubmissionService().GetSubmissionFiles(Convert.ToInt32(submissionid), email);
+            return await iBusServiceFactorySQL.SubmissionService().GetSubmissionFiles(Convert.ToInt32(submissionid), email, s360Required);
         }
         catch (Exception ex)
         {
