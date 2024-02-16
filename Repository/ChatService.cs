@@ -70,11 +70,18 @@ namespace Repository
                     };
 
                     var client = clientFactory.CreateClient("chatclient");
-                    HttpResponseMessage response = await client.PostAsJsonAsync($"api/upload_json", custparams);
+                    var content = JsonContent.Create(custparams);
+                    await content.LoadIntoBufferAsync();
+                    //content.Headers.ContentLength = 10000000;
+                    //client.DefaultRequestHeaders.AcceptEncoding = Encoding.UTF8;
+                    client.DefaultRequestHeaders.TransferEncodingChunked = false;
+                    HttpResponseMessage response = await client.PostAsync($"api/upload_json", content);
 
                     if (response.IsSuccessStatusCode)
                     {
-                        chatToken = await response.Content.ReadAsStringAsync();
+                        var val = await response.Content.ReadAsStringAsync();
+                        chatToken = ((Newtonsoft.Json.Linq.JValue)(JsonConvert.DeserializeObject(val) as JArray).FirstOrDefault()).Value.ToString();
+                        int a = 0;
                     }
                 }
                 else
@@ -86,7 +93,11 @@ namespace Repository
                     };
 
                     var client = clientFactory.CreateClient("chatclient");
-                    HttpResponseMessage response = await client.PostAsJsonAsync($"api/upload_document", custparams);
+                    //client.DefaultRequestHeaders.Add("Co")
+                    //var content = new StringContent(custparams.ToString());
+                    var content = JsonContent.Create(custparams);
+                    await content.LoadIntoBufferAsync();
+                    HttpResponseMessage response = await client.PostAsync($"api/upload_document", content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -122,9 +133,10 @@ namespace Repository
             };
 
             string body = JsonConvert.SerializeObject(custparams);
-
+            var content = JsonContent.Create(custparams);
+            await content.LoadIntoBufferAsync();
             var client = clientFactory.CreateClient("chatclient");
-            HttpResponseMessage response = await client.PostAsJsonAsync($"api/get_answer", custparams);
+            HttpResponseMessage response = await client.PostAsync($"api/get_answer", content);
 
             if (response.IsSuccessStatusCode)
             {
