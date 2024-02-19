@@ -27,7 +27,7 @@ namespace PortalApi.Controllers
             _configuration = configuration;
         }
 
-        [Route("UploadCopilotFIles")]
+        [Route("UploadCopilotFiles")]
         [HttpPost]
         
         public async Task<OperationResult<string>> UploadCopilotFIles(UploadData files)

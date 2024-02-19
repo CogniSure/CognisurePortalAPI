@@ -608,7 +608,7 @@ namespace SqlServices
                 lstDasboardgraph.Add(new SubmissionFile
                 {
                     SlNo = "0",
-                    FileGUID = submissionId + "_9300_20" + ".json",
+                    FileGUID = Guid.NewGuid().ToString(),
                     FileName = submissionId + ".json",
                     DocumentType = "s360",
                     Carrier = "",

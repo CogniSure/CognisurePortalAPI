@@ -18,6 +18,9 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Net.Http.Headers;
 
 namespace Repository
 {
@@ -57,25 +60,26 @@ namespace Repository
             return new OperationResult<string>(chatData, true); ;
         }
         private async Task<string> UploadCopilotFile(List<UploadData> data)
-        {
+         {
             try
             {
+                
                 string chatToken = "";
                 if( data != null && data.Count>0 && data[0].FileType == "application/json")
                 {
                     var custparams = new
                     {
                         filename = data[0].FileName,
-                        value = data[0].FileContent
+                        fileGUID = data[0].FileGUID,
+                        value = //data[0].FileContent
+                        JsonConvert.DeserializeObject(data[0].FileContent.ToString())//((Newtonsoft.Json.Linq.JContainer)JsonConvert.DeserializeObject(data[0].FileContent)).First
                     };
 
                     var client = clientFactory.CreateClient("chatclient");
-                    var content = JsonContent.Create(custparams);
+                    var content = new StringContent(JsonConvert.SerializeObject(custparams), null, "application/json");
                     await content.LoadIntoBufferAsync();
-                    //content.Headers.ContentLength = 10000000;
-                    //client.DefaultRequestHeaders.AcceptEncoding = Encoding.UTF8;
-                    client.DefaultRequestHeaders.TransferEncodingChunked = false;
-                    HttpResponseMessage response = await client.PostAsync($"api/upload_json", content);
+
+                    HttpResponseMessage response = await client.PostAsync($"api/upload_json",content);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -89,6 +93,7 @@ namespace Repository
                     var custparams = new
                     {
                         filename = data[0].FileName,
+                        fileGUID = data[0].FileGUID,
                         value = data[0].FileContent.Split(',')[data[0].FileContent.Split(',').Length - 1]
                     };
 
