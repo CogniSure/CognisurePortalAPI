@@ -149,7 +149,10 @@ namespace Repository
             }
             else
             {
-                chatToken = "{answer:No Result Found}";
+                chatToken = JsonConvert.SerializeObject(new
+                {
+                    answer = "No Result Found"
+                });
             }
             return chatToken;
         }
