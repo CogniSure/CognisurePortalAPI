@@ -103,6 +103,7 @@ namespace Repository
                     var content = JsonContent.Create(custparams);
                     await content.LoadIntoBufferAsync();
                     HttpResponseMessage response = await client.PostAsync($"api/upload_document", content);
+                    var val1 = await response.Content.ReadAsStringAsync();
 
                     if (response.IsSuccessStatusCode)
                     {

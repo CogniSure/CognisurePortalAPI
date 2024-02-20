@@ -30,6 +30,8 @@ namespace MsSqlServices
         private readonly ICacheService _memoryCache;
         private readonly IIpAddressServices _ipAddressServices;
         readonly BaseAuthenticationFactory _baseAuthenticationFactory;
+
+        IHttpClientFactory clientFactory;
         public IConfiguration configuration { get; }
         public IMsSqlDatabaseException _iMsSqlDatabaseException { get; }
         public IMsSqlDatabaseConfiguration _iMsSqlDatabaseConfiguration { get; }
@@ -40,7 +42,8 @@ namespace MsSqlServices
                 IMsSqlDatabaseException iMsSqlDatabaseException,
                 IMsSqlDatabaseConfiguration iMsSqlDatabaseConfiguration,
                 IIpAddressServices ipAddressServices,
-                BaseAuthenticationFactory baseAuthenticationFactory
+                BaseAuthenticationFactory baseAuthenticationFactory,
+                IHttpClientFactory clientFactory
               )
         {
             this.loggerFactory = loggerFactory;
@@ -52,12 +55,14 @@ namespace MsSqlServices
             _iMsSqlDatabaseConfiguration = iMsSqlDatabaseConfiguration;
             this._ipAddressServices = ipAddressServices;
             this._baseAuthenticationFactory = baseAuthenticationFactory;
+            
+            this.clientFactory = clientFactory;
         }
         ITokenService IBusServiceFactory.TokenService()
         {
             return new TokenService(msSqlDataHelper,
                  configuration,
-                 loggerFactory.CreateLogger<TokenService>(), _memoryCache, _ipAddressServices, _baseAuthenticationFactory);
+                 loggerFactory.CreateLogger<TokenService>(), _memoryCache, _ipAddressServices, _baseAuthenticationFactory,clientFactory);
         }
         IConfigurationService IBusServiceFactory.ConfigurationService()
         {

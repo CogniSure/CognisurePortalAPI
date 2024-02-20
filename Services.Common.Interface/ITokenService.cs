@@ -15,5 +15,6 @@ namespace Services.Common.Interface
         Task<OperationResult<OAuthTokenResponse>> GetUserRefreshToken(User user, string AccessToken, string refreshToken);
         Task<OperationResult<OAuthTokenResponse>> RevokeToken(string Email, string AuthorizationToken);
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        Task<OperationResult<string>> GetZOHOAPIToken(string email);
     }
 }

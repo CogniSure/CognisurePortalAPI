@@ -19,6 +19,7 @@ using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 using Org.BouncyCastle.OpenSsl;
+using Microsoft.Net.Http.Headers;
 
 namespace Portal.Repository.Login
 {
@@ -106,6 +107,7 @@ namespace Portal.Repository.Login
                 return new OperationResult<List<Account>>(accountList, true);
             }
         }
+        
         public async Task<OperationResult<string>> GetZOHOToken(string email)
         {
             try
