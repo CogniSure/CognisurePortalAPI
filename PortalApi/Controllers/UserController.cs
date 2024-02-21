@@ -277,7 +277,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            return await iBusServiceFactory.TokenService().GetZOHOAPIToken(email);
+            return await iBusServiceFactory.UserService().GetZOHOToken(email);
         }
         catch (Exception ex)
         {

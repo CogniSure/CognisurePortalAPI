@@ -86,20 +86,18 @@ namespace SnowFlakeServices
                         if(graphData != null && graphData.Count > 0)
                         {
 
-                            var zeroToFiveMin = graphData.Where(x => x.Dimension == "0 to 5 Min").FirstOrDefault();
-                            var fiveToTenMin = graphData.Where(x => x.Dimension == "5 to 10 min").FirstOrDefault();
-                            var tenToThirtyMin = graphData.Where(x => x.Dimension == "10 to 30 Min").FirstOrDefault();
+                            var zeroToTenMin = graphData.Where(x => x.Dimension == "0 to 10 min").FirstOrDefault();
+                            var tenToThirtyMin = graphData.Where(x => x.Dimension == "10 to 30 min").FirstOrDefault();
                             var thirtyToOneHour = graphData.Where(x => x.Dimension == "30 min to 1 hour").FirstOrDefault();
-                            var oneToOneDay = graphData.Where(x => x.Dimension == "1 hr to 1 Day").FirstOrDefault();
-                            var moreThanOneDay = graphData.Where(x => x.Dimension == "> 1 Day").FirstOrDefault();
+                            var oneToOneDay = graphData.Where(x => x.Dimension == "1 hr to 1 day").FirstOrDefault();
+                            var moreThanOneDay = graphData.Where(x => x.Dimension == "> 1 day").FirstOrDefault();
 
                             lstDasboardgraph = new List<DataResult> { 
-                                new DataResult { Category = "Days", Dimension = "0 - 5min", Measure = zeroToFiveMin != null ? zeroToFiveMin.Measure.ToString():"0" },
-                                new DataResult { Category = "Days", Dimension = "5 - 10min", Measure = fiveToTenMin != null ? fiveToTenMin.Measure.ToString():"0" },
-                                new DataResult { Category = "Days", Dimension = "10 - 30min", Measure = tenToThirtyMin != null ? tenToThirtyMin.Measure.ToString():"0" },
-                                new DataResult { Category = "Days", Dimension = "30min - 1hr", Measure = thirtyToOneHour != null ? thirtyToOneHour.Measure.ToString():"0" },
-                                new DataResult { Category = "Days", Dimension = "1hr - 1day", Measure = oneToOneDay != null ? oneToOneDay.Measure.ToString():"0"  },
-                                new DataResult { Category = "Days", Dimension = "> 1day", Measure = moreThanOneDay != null ? moreThanOneDay.Measure.ToString():"0"  },
+                                new DataResult { Category = "Days", Dimension = "0 - 10 min", Measure = zeroToTenMin != null ? zeroToTenMin.Measure.ToString():"0" },
+                                new DataResult { Category = "Days", Dimension = "10 - 30 min", Measure = tenToThirtyMin != null ? tenToThirtyMin.Measure.ToString():"0" },
+                                new DataResult { Category = "Days", Dimension = "30 min - 1 hr", Measure = thirtyToOneHour != null ? thirtyToOneHour.Measure.ToString():"0" },
+                                new DataResult { Category = "Days", Dimension = "1 hr - 1 day", Measure = oneToOneDay != null ? oneToOneDay.Measure.ToString():"0"  },
+                                new DataResult { Category = "Days", Dimension = "> 1 day", Measure = moreThanOneDay != null ? moreThanOneDay.Measure.ToString():"0"  },
                             };
                         }
                         //distinctDashboard = lstDasboardgraph.DistinctBy(x => x.Dimension).ToList();
