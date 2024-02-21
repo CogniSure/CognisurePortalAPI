@@ -588,15 +588,17 @@ namespace SqlServices
             distinctLob = string.Join(',', distinctLOBArr);
             return distinctLob;
         }
-        public string GetSubmissionEmail(long submissionID)
+        public SubmissionMessage GetSubmissionEmail(long submissionID)
         {
             var dst = Database.GetSubmissionEmailBody(submissionID);
-            string messageBody = "";
+            SubmissionMessage message = new SubmissionMessage();
             if (dst.Tables[0].Rows.Count > 0)
             {
-                messageBody = string.Format("{0}", dst.Tables[0].Rows[0]["MessageBody"]);
+                message.MessageReceivedFromEmail = string.Format("{0}", dst.Tables[0].Rows[0]["MessageReceivedFromEmail"]);
+                message.MessageSubject = string.Format("{0}", dst.Tables[0].Rows[0]["MessageSubject"]);
+                message.MessageBody = string.Format("{0}", dst.Tables[0].Rows[0]["MessageBody"]);
             }
-            return messageBody;
+            return message;
         }
         public List<SubmissionFile> GetSubmissionFiles(long submissionId, bool s360Required)
         {

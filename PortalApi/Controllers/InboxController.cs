@@ -46,7 +46,7 @@ namespace PortalApi.Controllers
 
         [Route("submissionmessagebyid")]
         [HttpGet]
-        public async Task<OperationResult<string>> GetSubmissionMessageBodyById(long submissionid)
+        public async Task<OperationResult<SubmissionMessage>> GetSubmissionMessageBodyById(long submissionid)
         {
             try
             {

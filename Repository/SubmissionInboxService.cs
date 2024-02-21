@@ -32,10 +32,10 @@ namespace Portal.Repository.Inbox
             var Data = msSqlDataHelper.GetAllSubmission(ObjinboxFilter);
             return new OperationResult<IEnumerable<Submission>>(Data, true);
         }
-        public async Task<OperationResult<string>> GetSubmissionMessageBodyById(long submissionID)
+        public async Task<OperationResult<SubmissionMessage>> GetSubmissionMessageBodyById(long submissionID)
         {
             var Data = msSqlDataHelper.GetSubmissionEmail(submissionID);
-            return new OperationResult<string>(Data, true);
+            return new OperationResult<SubmissionMessage>(Data, true);
         }
     }
 }
