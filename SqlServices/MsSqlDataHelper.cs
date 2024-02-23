@@ -2,6 +2,7 @@
 using Models.DTO;
 using MsSqlAdapter.Interface;
 using Services.MsSqlServices.Interface;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
@@ -34,6 +35,61 @@ namespace SqlServices
         {
             var dst = Database.GetUser(email);
             return UserList(dst);
+        }
+        public List<Department> GetUserDepartments(int userID)
+        {
+            DataSet dst = Database.GetUserDepartmentRoleActions(userID);
+            List<Department> departments = new List<Department>();
+
+            if (dst.Tables.Count != 0 && dst.Tables[0].Rows.Count != 0)
+            {
+                for (int item = 0; item < dst.Tables[0].Rows.Count; item++)
+                {
+                    int did = Convert.ToInt32(dst.Tables[0].Rows[item]["DepartmentID"])
+                        , rid = Convert.ToInt32(dst.Tables[0].Rows[item]["RoleID"])
+                        , cid = Convert.ToInt32(dst.Tables[0].Rows[item]["ControllerID"])
+                        , aid = Convert.ToInt32(dst.Tables[0].Rows[item]["ActionID"]);
+
+                    if (!departments.Exists(x => x.DepartmentID == did))
+                    {
+                        Department department = new Department();
+                        department.DepartmentID = did;
+                        department.DepartmentName = (dst.Tables[0].Rows[item]["DepartmentName"]).ToString();
+                        departments.Add(department);
+                    }
+
+                    if (!departments.Find(x => x.DepartmentID == did).Roles.Exists(y => y.RoleID == rid))
+                    {
+                        Role role = new Role();
+                        role.RoleID = rid;
+                        role.RoleName = (dst.Tables[0].Rows[item]["RoleName"]).ToString();
+                        departments.Find(x => x.DepartmentID == did).Roles.Add(role);
+                    }
+
+                    if (!departments.Find(x => x.DepartmentID == did).Roles.Find(y => y.RoleID == rid)
+                        .Controllers.Exists(z => z.ControllerID == cid))
+                    {
+                        Controller_ controller = new Controller_();
+                        controller.ControllerID = cid;
+                        controller.ControllerName = (dst.Tables[0].Rows[item]["ControllerName"]).ToString();
+                        departments.Find(x => x.DepartmentID == did).Roles.Find(y => y.RoleID == rid)
+                        .Controllers.Add(controller);
+                    }
+
+                    if (!departments.Find(x => x.DepartmentID == did).Roles.Find(y => y.RoleID == rid)
+                        .Controllers.Find(z => z.ControllerID == cid).Actions.Exists(a => a.ActionID == aid))
+                    {
+                        Action_ action = new Action_();
+                        action.ActionID = aid;
+                        action.ActionName = (dst.Tables[0].Rows[item]["ActionName"]).ToString();
+                        action.IsAnonymous = Convert.ToBoolean(dst.Tables[0].Rows[item]["IsAnonymous"]);
+                        departments.Find(x => x.DepartmentID == did).Roles.Find(y => y.RoleID == rid)
+                        .Controllers.Find(z => z.ControllerID == cid).Actions.Add(action);
+                    }
+                }
+            }
+
+            return departments;
         }
         private static WidgetConfiguration WidgetList(DataSet dst)
         {
@@ -523,7 +579,7 @@ namespace SqlServices
             var listdates = DP.GetDates(string.Format("{0}", date));
             if (listdates.Count > 0)
             {
-                minDate =  Convert.ToString(listdates.Min());
+                minDate = Convert.ToString(listdates.Min());
             }
             return minDate;
         }
@@ -564,7 +620,7 @@ namespace SqlServices
                     TotalNoOfAttachment = Convert.ToInt32(dr["TotalNumberOfAttachments"]),
                     TotalNoOfValidAttachment = Convert.ToInt32(dr["TotalNumberOfValidAttachments"])
                 });
-                
+
                 return result;
             }
             return SubmissionList;
@@ -600,40 +656,171 @@ namespace SqlServices
             }
             return message;
         }
-        public List<SubmissionFile> GetSubmissionFiles(long submissionId, bool s360Required)
+        public List<SubmissionFile> GetSubmissionFiles(long submissionId, bool s360Required, int userId)
         {
             List<SubmissionFile> lstDasboardgraph = new List<SubmissionFile>();
             DataSet DS = new DataSet();
+            List<Department> departments = GetUserDepartments(userId);
+
             DS = Database.GetSubmissionFilesBySubmissionID(submissionId);
             if (s360Required)
             {
                 lstDasboardgraph.Add(new SubmissionFile
                 {
-                    SlNo = "0",
+                    ID = 0,
                     FileGUID = Guid.NewGuid().ToString(),
-                    FileName = submissionId + ".json",
+                    FileOriginalName = submissionId + ".json",
                     DocumentType = "s360",
-                    Carrier = "",
-                    LineOfBusiness = "",
-                    Status = "Completed",
+                    Carriers = "",
+                    LineOfBusinesses = "",
+                    FileStatus = "Completed",
                     FileData = GetFileJSONData(submissionId + "_9300_20", submissionId + ".json")
                 });
             }
             lstDasboardgraph.AddRange(DS.Tables[0].AsEnumerable()
-                        .Select(dataRow => new SubmissionFile
-                        {
-                            SlNo = string.Format("{0}", dataRow.Field<int>("SubmissionID")),
-                            FileGUID = string.Format("{0}", dataRow.Field<string>("FileGUID")),
-                            FileName = string.Format("{0}", dataRow.Field<string>("FileOriginalName")),
-                            DocumentType = string.Format("{0}", dataRow.Field<string>("DocumentType")),
-                            Carrier = string.Format("{0}", dataRow.Field<string>("Carriers")),
-                            LineOfBusiness = string.Format("{0}", dataRow.Field<string>("LineOfBusiness")),
-                            Status = string.Format("{0}", dataRow.Field<string>("FileStatus")),
-                            FileData = GetFileData(string.Format("{0}", dataRow.Field<string>("FileGUID")), string.Format("{0}", dataRow.Field<string>("FileOriginalName")))
-                        }).ToList());
+                        .Select(dataRow =>
+                        GetSubmissionFiles(dataRow, departments)
+                        //new SubmissionFile
+                        //{
+                        //    ID =  dataRow.Field<int>("SubmissionID"),
+                        //    FileGUID = string.Format("{0}", dataRow.Field<string>("FileGUID")),
+                        //    FileOriginalName = string.Format("{0}", dataRow.Field<string>("FileOriginalName")),
+                        //    DocumentType = string.Format("{0}", dataRow.Field<string>("DocumentType")),
+                        //    Carriers = string.Format("{0}", dataRow.Field<string>("Carriers")),
+                        //    LineOfBusinesses = string.Format("{0}", dataRow.Field<string>("LineOfBusiness")),
+                        //    FileStatus = string.Format("{0}", dataRow.Field<string>("FileStatus")),
+                        //    FileData = GetFileData(string.Format("{0}", dataRow.Field<string>("FileGUID")), string.Format("{0}", dataRow.Field<string>("FileOriginalName")))
+                        //}
+
+                        ).ToList());
             return lstDasboardgraph;
         }
+        private SubmissionFile GetSubmissionFiles(DataRow r, List<Department> userDepartments)
+        {
+            bool allowCommonjsonDownloads = false;
+            bool allowCustomJsonDownloads = false;
+            bool submissionexcel = false;
 
+            if (userDepartments.Exists(X =>
+                 X.Roles.Exists(y =>
+                     y.Controllers.Exists(z => z.ControllerName.ToLower() == "download"
+                          && z.Actions.Exists(a => a.ActionName.ToLower() == "commonjson")
+                     )
+                  )
+              )
+          )
+            { allowCommonjsonDownloads = true; }
+
+            if (userDepartments.Exists(X =>
+                       X.Roles.Exists(y =>
+                           y.Controllers.Exists(z => z.ControllerName.ToLower() == "submission"
+                                && z.Actions.Exists(a => a.ActionName.ToLower() == "download")
+                           )
+                        )
+                    )
+                )
+            { submissionexcel = true; }
+
+            if (userDepartments.Exists(X =>
+                    X.Roles.Exists(y =>
+                        y.Controllers.Exists(z => z.ControllerName.ToLower() == "download"
+                             && z.Actions.Exists(a => a.ActionName.ToLower() == "customjson")
+                        )
+                     )
+                 )
+             )
+            { allowCustomJsonDownloads = true; }
+
+            var subFile = new SubmissionFile
+            {
+                ID = Convert.ToInt32(r["UploadedFileReferenceID"]),
+                FileGUID = string.Format("{0}", r["FileGUID"]),
+                FileOriginalName = string.Format("{0}", r["FileOriginalName"]),
+                DocumentType = string.Format("{0}", r["DocumentType"]),
+                DocumentCategoryID = Convert.ToInt32(r["DocumentCategoryID"]),
+                DocumentCategory = string.Format("{0}", r["DocumentCategory"]),
+                FormNumber = string.Format("{0}", r["FormNumber"]),
+                FormVersion = string.Format("{0}", r["FormVersion"]),
+                FormEdition = string.Format("{0}", r["FormEdition"]),
+                LineOfBusinesses = string.Format("{0}", r["LineOfBusiness"]),
+                Rule_InsuredName = string.Format("{0}", r["Rule_InsuredName"]),
+                Rule_CarrierName = string.Format("{0}", r["Rule_CarrierName"]),
+                Carriers = string.Format("{0}", r["Carriers"]),
+                ExtractionTime = string.Format("{0}", r["ExtractionTime"]),
+                FileStatusID = Convert.ToInt32(r["FileStatusID"]),
+                FileStatus = string.Format("{0}", r["FileStatus"]),
+                StatusFlag = string.Format("{0}", r["StatusFlag"]),
+                ValidationMessages = string.Format("{0}", r["ValidationMessages"]),
+                IsOCRed = Convert.ToBoolean(r["IsOCRed"]),
+                IsMerged = Convert.ToBoolean(r["IsMerged"]),
+                IsScanned = Convert.ToBoolean(r["IsScanned"]),
+                IsJ2E7Succeeded = Convert.ToBoolean(r["IsJ2E_7_Succeeded"]),
+                IsJ2E5Succeeded = Convert.ToBoolean(r["IsJ2E_5_Succeeded"]),
+                IsOrigamiFileGenerated = Convert.ToBoolean(r["IsOrigamiFileGenerated"]),
+                IsUnknownMetaDataGenerated = Convert.ToBoolean(r["IsUnknownMetaDataGenerated"]),
+                IsMongoJsonDownloaded = Convert.ToBoolean(r["IsMongoJsonDownloaded"]),
+                IsInsightsReportDownloaded = Convert.ToBoolean(r["IsInsightsReportDownloaded"]),
+                IsInsightsReportDownloadAttempted = Convert.ToBoolean(r["IsInsightsReportDownloadAttempted"]),
+                FileData = GetFileData(string.Format("{0}", r.Field<string>("FileGUID")), string.Format("{0}", r.Field<string>("FileOriginalName")))
+            };
+            subFile.Options = GetDownloadOptions(subFile.FileStatusID, subFile.IsJ2E7Succeeded, subFile.IsJ2E5Succeeded, false, false,
+                allowCommonjsonDownloads, allowCustomJsonDownloads, subFile.IsMongoJsonDownloaded);
+            DateTime _m = DateTime.Now;
+
+            if (r.Table.Columns.Contains("ModifiedOn") && DateTime.TryParse(string.Format("{0}", r["ModifiedOn"]), out _m))
+            {
+                subFile.ModifiedOn = _m;
+            }
+
+            return subFile;
+        }
+
+        private List<DownloadOption> GetDownloadOptions(int statusId, bool isJ2E7Succeeded, bool isJ2E5Succeeded, bool isJ2E_6_Succeeded, bool isJ2J6Succeeded,
+            bool allowcommonjsondownloads, bool allowCustomJsonDownloads, bool isMongoJsonDownloaded
+            )
+        {
+            List<DownloadOption> options = new List<DownloadOption>();
+            if (statusId == 12 || statusId == 15 || statusId == 19 || statusId == 20 || statusId == 21)
+            {
+                options.Add(new DownloadOption { DownloadCode = "carrierjson", Format = "json", DownloadText = "JSON file", Tooltip = "JSON file, click to download it.", DownloadPath = "" });
+                options.Add(new DownloadOption { DownloadCode = "originalfile", Format = "download", DownloadText = "Original File", Tooltip = "Original file, click to download it.", DownloadPath = "" });
+                if (isJ2E7Succeeded)
+                    options.Add(new DownloadOption { DownloadCode = "j2ecommon", Format = "j2e_common", DownloadText = "Common Excel", Tooltip = "Common Excel, click to download it.", DownloadPath = "" });
+                if (isJ2E5Succeeded || isJ2E_6_Succeeded)
+                    options.Add(new DownloadOption { DownloadCode = "j2ecustom", Format = "j2e_custom", DownloadText = "Common Excel", Tooltip = "Custom Excel, click to download it.", DownloadPath = "" });
+                if (allowcommonjsondownloads && isMongoJsonDownloaded)
+                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "commonjson", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
+                if (allowCustomJsonDownloads && isJ2J6Succeeded)
+                    options.Add(new DownloadOption { DownloadCode = "customjson", Format = "customjson", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
+                if (allowCustomJsonDownloads && isJ2J6Succeeded)
+                    options.Add(new DownloadOption { DownloadCode = "xmlfile", Format = "xml", DownloadText = "XML File", Tooltip = "XML file, click to download it.", DownloadPath = "" });
+                //if (validationSummary)
+                //    options.Add(new DownloadOption { DownloadCode = "validationsummary", Format = "validationsummary", DownloadText = "Validation Summary", Tooltip = "Validation Summary files, click to download it.", DownloadPath = "" });
+
+            }
+            else if (statusId == 4 || statusId == 7 || statusId == 13 || statusId == 17 || statusId == 19)
+            {
+                options.Add(new DownloadOption { DownloadCode = "carrierjson", Format = "json", DownloadText = "JSON file", Tooltip = "JSON file, click to download it.", DownloadPath = "" });
+                options.Add(new DownloadOption { DownloadCode = "originalfile", Format = "download", DownloadText = "Original File", Tooltip = "Original file, click to download it.", DownloadPath = "" });
+                if (allowcommonjsondownloads && isMongoJsonDownloaded)
+                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "commonjson", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
+                if (allowCustomJsonDownloads && isJ2J6Succeeded)
+                    options.Add(new DownloadOption { DownloadCode = "customjson", Format = "customjson", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
+
+            }
+            else
+            {
+                options.Add(new DownloadOption { DownloadCode = "originalfile", Format = "download", DownloadText = "Original File", Tooltip = "Original file, click to download it.", DownloadPath = "" });
+                if (allowcommonjsondownloads && isMongoJsonDownloaded)
+                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "commonjson", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
+                if (allowCustomJsonDownloads && isJ2J6Succeeded)
+                    options.Add(new DownloadOption { DownloadCode = "customjson", Format = "customjson", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
+
+            }
+
+
+            return options;
+        }
         private string GetFileData(string fileguid, string fileOriginalName)
         {
             string fileStr = "";
@@ -656,9 +843,11 @@ namespace SqlServices
             if (File.Exists(fileName))
             {
                 var file = File.ReadAllText(fileName);
-                
+
                 fileStr = file;
             }
+            //else
+            //    fileStr = fileName;
             return fileStr;
         }
     }

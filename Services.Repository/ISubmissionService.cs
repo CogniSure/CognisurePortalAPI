@@ -11,7 +11,7 @@ namespace Services.Repository.Interface
     {
         Task<OperationResult<SubmissionData>> GetSubmissionData(string submissionId,string userEmail);
         Task<OperationResult<Submission360>> DownloadSubmission360(string submissionId, string userEmail);
-        Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(long submissionId, string userEmail, bool s360Required);
+        Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(long submissionId, int userId, bool s360Requiredx);
         
     }
 }

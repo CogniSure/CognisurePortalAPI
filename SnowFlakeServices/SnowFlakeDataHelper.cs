@@ -28,15 +28,15 @@ namespace SnowFlakeServices
             List<SubmissionFile> lstDasboardgraph = new List<SubmissionFile>();
             DataSet DS = new DataSet();
             DS = Database.Sub_Submission_Files(clientId, email, subGuid);
-            lstDasboardgraph = DS.Tables[0].AsEnumerable()
-                        .Select(dataRow => new SubmissionFile
-                        {
-                            SlNo = string.Format("{0}", dataRow.Field<string>("SLNO")),
-                            FileName = string.Format("{0}", dataRow.Field<string>("FILENAME")),
-                            DocumentType = string.Format("{0}", dataRow.Field<string>("TYPE")),
-                            LineOfBusiness = string.Format("{0}", dataRow.Field<string>("LOB")),
-                            Status = string.Format("{0}", dataRow.Field<string>("STATUS"))
-                        }).ToList();
+            //lstDasboardgraph = DS.Tables[0].AsEnumerable()
+            //            .Select(dataRow => new SubmissionFile
+            //            {
+            //                SlNo = string.Format("{0}", dataRow.Field<string>("SLNO")),
+            //                FileName = string.Format("{0}", dataRow.Field<string>("FILENAME")),
+            //                DocumentType = string.Format("{0}", dataRow.Field<string>("TYPE")),
+            //                LineOfBusiness = string.Format("{0}", dataRow.Field<string>("LOB")),
+            //                Status = string.Format("{0}", dataRow.Field<string>("STATUS"))
+            //            }).ToList();
             return lstDasboardgraph;
         }
 

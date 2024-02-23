@@ -16,6 +16,7 @@ namespace MsSqlAdapter.Interface
         bool ValidateOrCreateOTP(string Email, string AuthOTP, string secretkey, out string generalMessage, out string technicalMessage);
         bool EmailPassword(string toEmail);
         DataSet GetAccountDetails(int userID);
+        DataSet GetUserDepartmentRoleActions(int userID);
         bool InsertIpAddressLog(string ipAddress, bool isSuccess, int ipAddressTypeID);
         bool Enable2fa(string username, string twoFactorAuthenticationSecretKey, string TwoFactorAuthenticationQRCodeFilePath, string QRcodebase64, string Type, out string generalMessage, out string technicalMessage);
         DataSet GetKeyValuesByKeyCategoryName(string keyCategoryName);

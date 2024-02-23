@@ -91,7 +91,7 @@ namespace Repository
                 else
                 {
                     var custparams = new
-                    {
+                    {   
                         filename = data[0].FileName,
                         fileGUID = data[0].FileGUID,
                         value = data[0].FileContent.Split(',')[data[0].FileContent.Split(',').Length - 1]

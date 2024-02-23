@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models.DTO;
+using Org.BouncyCastle.Bcpg;
 using Portal.Repository.Inbox;
 using Services.Factory.Interface;
 using Services.Repository.Interface;
 using System;
+using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PortalApi.Controllers.Inbox;
@@ -101,7 +103,12 @@ public class SubmissionController : ControllerBase
             //submissionid = "a44413ee-1c8e-446a-843f-e51b6a2c4c51";
             //email = "QBEsub@gmail.com";
             var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
-            return await iBusServiceFactorySQL.SubmissionService().GetSubmissionFiles(Convert.ToInt32(submissionid), email, s360Required);
+            var userObj = HttpContext.User.Claims.ToList().Find(x => x.Type.Split('/').Last()== "nameidentifier");
+            int userId = 0;
+            if(userId != null) {
+                userId = Convert.ToInt32(userObj.Value);
+            }
+            return await iBusServiceFactorySQL.SubmissionService().GetSubmissionFiles(Convert.ToInt32(submissionid), userId, s360Required);
         }
         catch (Exception ex)
         {

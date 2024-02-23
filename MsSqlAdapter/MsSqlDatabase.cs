@@ -101,6 +101,12 @@ namespace MsSqlAdapter
             parameters.Add(BaseDatabase.Param("@userID", userID));
             return BaseDatabase.GetData("sp_GetAccountDetails", parameters);
         }
+        public DataSet GetUserDepartmentRoleActions(int userID)
+        {
+            List<IDataParameter> parameters = new List<IDataParameter>();
+            parameters.Add(BaseDatabase.Param("@UserID", userID));
+            return BaseDatabase.GetData("sp_GetEmployeeDepartmentRoleActions", parameters);
+        }
         public bool InsertIpAddressLog(string ipAddress, bool isSuccess, int ipAddressTypeID)
         {
             List<IDataParameter> parameters = new List<IDataParameter>();

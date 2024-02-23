@@ -158,9 +158,9 @@ namespace Portal.Repository.Inbox
             return apiToken;
         }
 
-        public async Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(long submissionId, string userEmail, bool s360Required)
+        public async Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(long submissionId, int userId, bool s360Required)
         {
-            List<SubmissionFile> submissionData = msSqlDataHelper.GetSubmissionFiles( submissionId,s360Required);
+            List<SubmissionFile> submissionData = msSqlDataHelper.GetSubmissionFiles( submissionId,s360Required, userId);
             return new OperationResult<List<SubmissionFile>>(submissionData, true);
         }
     }
