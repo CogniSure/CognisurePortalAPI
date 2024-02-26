@@ -118,7 +118,7 @@ public class SubmissionController : ControllerBase
     }
     [Route("downloadfiles")]
     [HttpGet]
-    public async Task<OperationResult<DownloadResult>> DownloadFiles(string submissionid,string filename, string downloadCode, string format = "", string extension = "")
+    public async Task<OperationResult<DownloadResult>> DownloadFiles(string submissionid,string filename, string downloadCode, string format = "", string extension = "",string readas = "")
     {
         try
         {
@@ -133,7 +133,7 @@ public class SubmissionController : ControllerBase
             {
                 userId = Convert.ToInt32(userObj.Value);
             }
-            return await iBusServiceFactorySQL.SubmissionService().DownloadSubmissionFiles(submissionid, filename, downloadCode, format, extension);
+            return await iBusServiceFactorySQL.SubmissionService().DownloadSubmissionFiles(submissionid, filename, downloadCode, format, extension, readas);
         }
         catch (Exception ex)
         {

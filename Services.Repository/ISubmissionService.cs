@@ -12,7 +12,7 @@ namespace Services.Repository.Interface
         Task<OperationResult<SubmissionData>> GetSubmissionData(string submissionId,string userEmail);
         Task<OperationResult<Submission360>> DownloadSubmission360(string submissionId, string userEmail);
         Task<OperationResult<List<SubmissionFile>>> GetSubmissionFiles(long submissionId, int userId, bool s360Requiredx);
-        Task<OperationResult<DownloadResult>> DownloadSubmissionFiles(string submissionid, string filename, string downloadCode, string format,  string extension);
+        Task<OperationResult<DownloadResult>> DownloadSubmissionFiles(string submissionid, string filename, string downloadCode, string format,  string extension, string readas);
 
 
     }

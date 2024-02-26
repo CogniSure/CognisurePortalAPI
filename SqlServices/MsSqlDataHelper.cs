@@ -766,6 +766,10 @@ namespace SqlServices
             };
             subFile.Options = GetDownloadOptions(subFile.FileStatusID,subFile.FileOriginalName.Split(".").LastOrDefault(), subFile.IsJ2E7Succeeded, subFile.IsJ2E5Succeeded, false, false,
                 allowCommonjsonDownloads, allowCustomJsonDownloads, subFile.IsMongoJsonDownloaded);
+
+            subFile.Flags = GetFlags(false, subFile.IsOCRed, subFile.IsMerged, "0", subFile.IsOrigamiFileGenerated, false, false, subFile.FileStatusID, false,
+                subFile.DocumentCategory, false, subFile.DocumentCategoryID, subFile.IsScanned, subFile.ValidationMessages, subFile.StatusFlag);
+
             DateTime _m = DateTime.Now;
 
             if (r.Table.Columns.Contains("ModifiedOn") && DateTime.TryParse(string.Format("{0}", r["ModifiedOn"]), out _m))
@@ -775,7 +779,77 @@ namespace SqlServices
 
             return subFile;
         }
+        private List<Flags> GetFlags(
+            bool IsRotated, bool IsOCRed, bool IsMerged, string ConfidenceScore, bool IsOrigamiFileGenerated,
+            bool isSplitted, bool isDerived, int FileStatusID, bool NoOCR, string DocumentCategory
+        , bool isGuidewireFile, int DocumentCategoryID, bool IsScanned, string ValidationMessages, string Flag)
+        {
+            var result = new List<Flags>();
 
+            if (IsOrigamiFileGenerated)
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrorigami", FlagName = "OR", Tooltip = "Origami file generated" });
+            }
+
+            if (IsRotated)
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrRed", FlagName = "R", Tooltip = "Rotated file."});
+            }
+
+            if (IsOCRed)
+            {
+                var ocrScore = Convert.ToDouble(ConfidenceScore);
+                if (ocrScore != null) { ocrScore = 0; }
+
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrOrange", FlagName = "O", Tooltip = "OCR quality: " + ocrScore });
+            }
+
+            if (FileStatusID != 21 && IsMerged)
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrOrange", FlagName = "M", Tooltip = "Merged file." });
+            }
+            if (isSplitted)
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrsplit", FlagName = "S", Tooltip = "Split File." });
+            }
+            if (isDerived)
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrsplit", FlagName = "D", Tooltip = "Derived File." });
+            }
+            if (FileStatusID == 7 && NoOCR == true && (DocumentCategory == null || DocumentCategory == ""))
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrRed", FlagName = " ", Tooltip = "PDF Version is not supported." });
+            }
+            if (isGuidewireFile)
+            {
+                result.Add(new Flags { CSSType = "img", CSSProperty = "gw.png", FlagName = " ", Tooltip = "Received from Guidewire tool." });
+            }
+            if (Flag.ToLower() == "n")
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrOrange", FlagName = "N", Tooltip = "Not Recognized Doc." });
+            }
+            if (FileStatusID != 21 && IsScanned)
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrOrange", FlagName = "S", Tooltip = "Scanned Document." });
+            }
+            if (FileStatusID != 21 && Flag.ToLower() == "c")
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrOrange", FlagName = "C", Tooltip = "New Carrier." });
+            }
+            if (ValidationMessages.Split("|").ToList().Find(x => x =="Insured Name Missing") != null)
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrsplit", FlagName = "I", Tooltip = "Insured Name Missing." });
+            }
+            if (ValidationMessages.Split("|").ToList().Find(x => x == "Unknown LOB") != null)
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrsplit", FlagName = "U", Tooltip = "Unknown LOB/Type." });
+            }
+            if (FileStatusID != 21 && Flag.ToLower() == "p")
+            {
+                result.Add(new Flags { CSSType = "css", CSSProperty = "circle clrOrange", FlagName = "P", Tooltip = "New Pattern." });
+            }
+            return result;
+        }
         private List<DownloadOption> GetDownloadOptions(int statusId,string fileExtension, bool isJ2E7Succeeded, bool isJ2E5Succeeded, bool isJ2E_6_Succeeded, bool isJ2J6Succeeded,
             bool allowcommonjsondownloads, bool allowCustomJsonDownloads, bool isMongoJsonDownloaded
             )
@@ -852,7 +926,7 @@ namespace SqlServices
             return fileStr;
         }
 
-        public DownloadResult DownloadSubmissionFiles(string submissionId, string filename, string downloadCode, string format, string extension)
+        public DownloadResult DownloadSubmissionFiles(string submissionId, string filename, string downloadCode, string format, string extension, string readas)
         {
             string submissionData = "";//msSqlDataHelper.DownloadSubmissionFiles(submissionId, format, downloadCode);
             DownloadResult dr = new DownloadResult();
@@ -865,12 +939,12 @@ namespace SqlServices
                     FileName = String.Join(".", tempFIleName.Take(tempFIleName.Count-1))+"." + extension,
                     IsSuccess = true,
                     Message = string.Format("Success"),
-                    Base64Result = GetAnyFileData(submissionId, format,extension)
+                    Base64Result = GetAnyFileData(submissionId, format,extension,readas)
                 };
             //}
             return dr;
         }
-        private string GetAnyFileData(string submissionId, string format, string extension)
+        private string GetAnyFileData(string submissionId, string format, string extension,string readas)
         {
             string filePath = "";
             string base64Data = "";
@@ -891,10 +965,19 @@ namespace SqlServices
                extension));
                 if (File.Exists(filePath))
                 {
-                    //var file = File.ReadAllText(filePath);
-                    var bytes = File.ReadAllBytes(filePath);
-                    var file = Convert.ToBase64String(bytes);
-                    base64Data = file;
+                    
+                    if(readas == "json")
+                    {
+                        var file = File.ReadAllText(filePath);
+                        base64Data = file;
+                    }
+                    else
+                    {
+                        var bytes = File.ReadAllBytes(filePath);
+                        var file = Convert.ToBase64String(bytes);
+                        base64Data = file;
+                    }
+                    
                 }
             }
             else

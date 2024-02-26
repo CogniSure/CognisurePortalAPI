@@ -50,5 +50,6 @@ namespace Models.DTO
         public string FileData { get; set; }
         //public FileType FileType { get; set; }
         public List<DownloadOption> Options { get; set; }
+        public List<Flags>  Flags { get; set; }
     }
 }

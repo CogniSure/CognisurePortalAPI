@@ -29,6 +29,6 @@ namespace Services.MsSqlServices.Interface
         IEnumerable<Submission> GetAllSubmission(InboxFilter ObjInboxFilter);
         SubmissionMessage GetSubmissionEmail(long submissionID);
         List<SubmissionFile> GetSubmissionFiles(long submissionId, bool s360Required, int userId);
-        DownloadResult DownloadSubmissionFiles(string submissionid, string filename, string downloadCode, string format,  string extension);
+        DownloadResult DownloadSubmissionFiles(string submissionid, string filename, string downloadCode, string format,  string extension, string readas);
     }
 }

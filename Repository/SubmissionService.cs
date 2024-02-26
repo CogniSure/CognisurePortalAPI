@@ -163,9 +163,9 @@ namespace Portal.Repository.Inbox
             List<SubmissionFile> submissionData = msSqlDataHelper.GetSubmissionFiles( submissionId,s360Required, userId);
             return new OperationResult<List<SubmissionFile>>(submissionData, true);
         }
-        public async Task<OperationResult<DownloadResult>> DownloadSubmissionFiles(string submissionId, string filename, string downloadCode, string format,string extension)
+        public async Task<OperationResult<DownloadResult>> DownloadSubmissionFiles(string submissionId, string filename, string downloadCode, string format,string extension, string readas)
         {
-            DownloadResult dr = msSqlDataHelper.DownloadSubmissionFiles(submissionId, filename, downloadCode, format, extension);
+            DownloadResult dr = msSqlDataHelper.DownloadSubmissionFiles(submissionId, filename, downloadCode, format, extension,readas);
            
             return new OperationResult<DownloadResult>(dr, true);
         }
