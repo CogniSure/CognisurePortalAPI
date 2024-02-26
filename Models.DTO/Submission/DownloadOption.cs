@@ -10,6 +10,7 @@ namespace Models.DTO
     {
         public string DownloadCode { get; set; }
         public string Format { get; set; }
+        public string Extension { get; set; }
         public string DownloadText { get; set; }
         public string Tooltip { get; set; }
         public string DownloadPath { get; set; }

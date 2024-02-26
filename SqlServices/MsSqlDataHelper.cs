@@ -9,6 +9,7 @@ using System.Data.SqlTypes;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Principal;
@@ -763,7 +764,7 @@ namespace SqlServices
                 IsInsightsReportDownloadAttempted = Convert.ToBoolean(r["IsInsightsReportDownloadAttempted"]),
                 FileData = GetFileData(string.Format("{0}", r.Field<string>("FileGUID")), string.Format("{0}", r.Field<string>("FileOriginalName")))
             };
-            subFile.Options = GetDownloadOptions(subFile.FileStatusID, subFile.IsJ2E7Succeeded, subFile.IsJ2E5Succeeded, false, false,
+            subFile.Options = GetDownloadOptions(subFile.FileStatusID,subFile.FileOriginalName.Split(".").LastOrDefault(), subFile.IsJ2E7Succeeded, subFile.IsJ2E5Succeeded, false, false,
                 allowCommonjsonDownloads, allowCustomJsonDownloads, subFile.IsMongoJsonDownloaded);
             DateTime _m = DateTime.Now;
 
@@ -775,46 +776,46 @@ namespace SqlServices
             return subFile;
         }
 
-        private List<DownloadOption> GetDownloadOptions(int statusId, bool isJ2E7Succeeded, bool isJ2E5Succeeded, bool isJ2E_6_Succeeded, bool isJ2J6Succeeded,
+        private List<DownloadOption> GetDownloadOptions(int statusId,string fileExtension, bool isJ2E7Succeeded, bool isJ2E5Succeeded, bool isJ2E_6_Succeeded, bool isJ2J6Succeeded,
             bool allowcommonjsondownloads, bool allowCustomJsonDownloads, bool isMongoJsonDownloaded
             )
         {
             List<DownloadOption> options = new List<DownloadOption>();
             if (statusId == 12 || statusId == 15 || statusId == 19 || statusId == 20 || statusId == 21)
             {
-                options.Add(new DownloadOption { DownloadCode = "carrierjson", Format = "json", DownloadText = "JSON file", Tooltip = "JSON file, click to download it.", DownloadPath = "" });
-                options.Add(new DownloadOption { DownloadCode = "originalfile", Format = "download", DownloadText = "Original File", Tooltip = "Original file, click to download it.", DownloadPath = "" });
+                options.Add(new DownloadOption { DownloadCode = "carrierjson", Format = "json", Extension ="json", DownloadText = "JSON file", Tooltip = "JSON file, click to download it.", DownloadPath = "" });
+                options.Add(new DownloadOption { DownloadCode = "originalfile", Format = "download", Extension = fileExtension, DownloadText = "Original File", Tooltip = "Original file, click to download it.", DownloadPath = "" });
                 if (isJ2E7Succeeded)
-                    options.Add(new DownloadOption { DownloadCode = "j2ecommon", Format = "j2e_common", DownloadText = "Common Excel", Tooltip = "Common Excel, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "j2e_common", Format = "_7", Extension = "xlsx", DownloadText = "Common Excel", Tooltip = "Common Excel, click to download it.", DownloadPath = "" });
                 if (isJ2E5Succeeded || isJ2E_6_Succeeded)
-                    options.Add(new DownloadOption { DownloadCode = "j2ecustom", Format = "j2e_custom", DownloadText = "Common Excel", Tooltip = "Custom Excel, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "j2e_custom", Format = "_5", Extension = "xlsx", DownloadText = "Common Excel", Tooltip = "Custom Excel, click to download it.", DownloadPath = "" });
                 if (allowcommonjsondownloads && isMongoJsonDownloaded)
-                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "commonjson", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "_commonjson", Extension = "xlsx", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
                 if (allowCustomJsonDownloads && isJ2J6Succeeded)
-                    options.Add(new DownloadOption { DownloadCode = "customjson", Format = "customjson", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "customjson", Format = "_customjson", Extension = "json", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
                 if (allowCustomJsonDownloads && isJ2J6Succeeded)
-                    options.Add(new DownloadOption { DownloadCode = "xmlfile", Format = "xml", DownloadText = "XML File", Tooltip = "XML file, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "xmlfile", Format = "xml", Extension = "xml", DownloadText = "XML File", Tooltip = "XML file, click to download it.", DownloadPath = "" });
                 //if (validationSummary)
                 //    options.Add(new DownloadOption { DownloadCode = "validationsummary", Format = "validationsummary", DownloadText = "Validation Summary", Tooltip = "Validation Summary files, click to download it.", DownloadPath = "" });
 
             }
             else if (statusId == 4 || statusId == 7 || statusId == 13 || statusId == 17 || statusId == 19)
             {
-                options.Add(new DownloadOption { DownloadCode = "carrierjson", Format = "json", DownloadText = "JSON file", Tooltip = "JSON file, click to download it.", DownloadPath = "" });
-                options.Add(new DownloadOption { DownloadCode = "originalfile", Format = "download", DownloadText = "Original File", Tooltip = "Original file, click to download it.", DownloadPath = "" });
+                options.Add(new DownloadOption { DownloadCode = "carrierjson", Format = "json", Extension = "json", DownloadText = "JSON file", Tooltip = "JSON file, click to download it.", DownloadPath = "" });
+                options.Add(new DownloadOption { DownloadCode = "originalfile", Format = "download", Extension = fileExtension, DownloadText = "Original File", Tooltip = "Original file, click to download it.", DownloadPath = "" });
                 if (allowcommonjsondownloads && isMongoJsonDownloaded)
-                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "commonjson", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "_commonjson", Extension = "json", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
                 if (allowCustomJsonDownloads && isJ2J6Succeeded)
-                    options.Add(new DownloadOption { DownloadCode = "customjson", Format = "customjson", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "customjson", Format = "_customjson", Extension = "json", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
 
             }
             else
             {
-                options.Add(new DownloadOption { DownloadCode = "originalfile", Format = "download", DownloadText = "Original File", Tooltip = "Original file, click to download it.", DownloadPath = "" });
+                options.Add(new DownloadOption { DownloadCode = "originalfile", Format = "download", Extension = fileExtension, DownloadText = "Original File", Tooltip = "Original file, click to download it.", DownloadPath = "" });
                 if (allowcommonjsondownloads && isMongoJsonDownloaded)
-                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "commonjson", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "_commonjson", Extension = "json", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
                 if (allowCustomJsonDownloads && isJ2J6Succeeded)
-                    options.Add(new DownloadOption { DownloadCode = "customjson", Format = "customjson", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "customjson", Format = "_customjson", Extension = "json", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
 
             }
 
@@ -849,6 +850,66 @@ namespace SqlServices
             //else
             //    fileStr = fileName;
             return fileStr;
+        }
+
+        public DownloadResult DownloadSubmissionFiles(string submissionId, string filename, string downloadCode, string format, string extension)
+        {
+            string submissionData = "";//msSqlDataHelper.DownloadSubmissionFiles(submissionId, format, downloadCode);
+            DownloadResult dr = new DownloadResult();
+            //if (downloadCode == "originalfile")
+            //{
+            var tempFIleName = filename.Split(".").ToList();
+                //Take(array.Length - 1)
+                dr = new DownloadResult
+                {
+                    FileName = String.Join(".", tempFIleName.Take(tempFIleName.Count-1))+"." + extension,
+                    IsSuccess = true,
+                    Message = string.Format("Success"),
+                    Base64Result = GetAnyFileData(submissionId, format,extension)
+                };
+            //}
+            return dr;
+        }
+        private string GetAnyFileData(string submissionId, string format, string extension)
+        {
+            string filePath = "";
+            string base64Data = "";
+            if (format == "download")
+            {
+                filePath = Path.Combine(Configuration["ArchiveFolderPath"], string.Format("{0}.{1}", submissionId,
+                extension));
+                if (File.Exists(filePath))
+                {
+                    var bytes = File.ReadAllBytes(filePath);
+                    var file = Convert.ToBase64String(bytes);
+                    base64Data = file;
+                }
+            }
+            else if(format == "json")
+            {
+                filePath = Path.Combine(Configuration["ArchiveFolderPath"], string.Format("{0}.{1}", submissionId,
+               extension));
+                if (File.Exists(filePath))
+                {
+                    //var file = File.ReadAllText(filePath);
+                    var bytes = File.ReadAllBytes(filePath);
+                    var file = Convert.ToBase64String(bytes);
+                    base64Data = file;
+                }
+            }
+            else
+            {
+                filePath = Path.Combine(Configuration["ArchiveFolderPath"], string.Format("{0}{1}.{2}", submissionId,format,
+               extension));
+                if (File.Exists(filePath))
+                {
+                    var bytes = File.ReadAllBytes(filePath);
+                    var file = Convert.ToBase64String(bytes);
+                    base64Data = file;
+                }
+            }
+            
+            return base64Data;
         }
     }
 }

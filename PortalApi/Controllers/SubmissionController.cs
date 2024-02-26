@@ -116,6 +116,31 @@ public class SubmissionController : ControllerBase
             return null;
         }
     }
+    [Route("downloadfiles")]
+    [HttpGet]
+    public async Task<OperationResult<DownloadResult>> DownloadFiles(string submissionid,string filename, string downloadCode, string format = "", string extension = "")
+    {
+        try
+        {
+            //type = "loss_incurredbylobbyyear";
+            //clientid = "1074";
+            //submissionid = "a44413ee-1c8e-446a-843f-e51b6a2c4c51";
+            //email = "QBEsub@gmail.com";
+            var useremail = HttpContext.User.Claims.FirstOrDefault().Value;
+            var userObj = HttpContext.User.Claims.ToList().Find(x => x.Type.Split('/').Last() == "nameidentifier");
+            int userId = 0;
+            if (userId != null)
+            {
+                userId = Convert.ToInt32(userObj.Value);
+            }
+            return await iBusServiceFactorySQL.SubmissionService().DownloadSubmissionFiles(submissionid, filename, downloadCode, format, extension);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error: {0}", ex.Message);
+            return null;
+        }
+    }
     [Route("submissionheadersbyid")]
     [HttpGet]
     public async Task<OperationResult<List<DataResult>>> GetSubmissionHeaderId(string type, string clientid, string submissionid, string email)
