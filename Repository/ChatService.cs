@@ -71,7 +71,6 @@ namespace Repository
                     {
                         filename = data[0].FileName,
                         fileGUID = data[0].FileGUID,
-                        isScanned = false,
                         value = //data[0].FileContent
                         JsonConvert.DeserializeObject(data[0].FileContent.ToString())//((Newtonsoft.Json.Linq.JContainer)JsonConvert.DeserializeObject(data[0].FileContent)).First
                     };
@@ -95,7 +94,7 @@ namespace Repository
                     {   
                         filename = data[0].FileName,
                         fileGUID = data[0].FileGUID,
-                        isScanned = false,
+                        isScanned = "false",
                         value = data[0].FileContent.Split(',')[data[0].FileContent.Split(',').Length - 1]
                     };
 

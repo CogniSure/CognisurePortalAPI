@@ -654,6 +654,7 @@ namespace SqlServices
                 message.MessageReceivedFromEmail = string.Format("{0}", dst.Tables[0].Rows[0]["MessageReceivedFromEmail"]);
                 message.MessageSubject = string.Format("{0}", dst.Tables[0].Rows[0]["MessageSubject"]);
                 message.MessageBody = string.Format("{0}", dst.Tables[0].Rows[0]["MessageBody"]);
+                message.MessageReceivedOn = string.Format("{0}", dst.Tables[0].Rows[0]["MessageReceivedOn"]);
             }
             return message;
         }
@@ -862,9 +863,9 @@ namespace SqlServices
                 if (isJ2E7Succeeded)
                     options.Add(new DownloadOption { DownloadCode = "j2e_common", Format = "_7", Extension = "xlsx", DownloadText = "Common Excel", Tooltip = "Common Excel, click to download it.", DownloadPath = "" });
                 if (isJ2E5Succeeded || isJ2E_6_Succeeded)
-                    options.Add(new DownloadOption { DownloadCode = "j2e_custom", Format = "_5", Extension = "xlsx", DownloadText = "Common Excel", Tooltip = "Custom Excel, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "j2e_custom", Format = "_5", Extension = "xlsx", DownloadText = "Custom Excel", Tooltip = "Custom Excel, click to download it.", DownloadPath = "" });
                 if (allowcommonjsondownloads && isMongoJsonDownloaded)
-                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "_commonjson", Extension = "xlsx", DownloadText = "Common Excel", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
+                    options.Add(new DownloadOption { DownloadCode = "commonjson", Format = "_commonjson", Extension = "json", DownloadText = "Common JSON", Tooltip = "Common JSON file, click to download it.", DownloadPath = "" });
                 if (allowCustomJsonDownloads && isJ2J6Succeeded)
                     options.Add(new DownloadOption { DownloadCode = "customjson", Format = "_customjson", Extension = "json", DownloadText = "Custom JSON", Tooltip = "Custom JSON file, click to download it.", DownloadPath = "" });
                 if (allowCustomJsonDownloads && isJ2J6Succeeded)

@@ -11,5 +11,6 @@ namespace Models.DTO
         public string MessageReceivedFromEmail { get; set; }
         public string MessageSubject { get; set; }
         public string MessageBody { get; set; }
+        public string MessageReceivedOn { get; set; }
     }
 }
