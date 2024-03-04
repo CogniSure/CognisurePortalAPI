@@ -20,6 +20,7 @@ using System.Security.Principal;
 using System.Text;
 using Org.BouncyCastle.OpenSsl;
 using Microsoft.Net.Http.Headers;
+using System.Text.RegularExpressions;
 
 namespace Portal.Repository.Login
 {
@@ -114,10 +115,12 @@ namespace Portal.Repository.Login
             {
                 DataSet dstKeyValue = msSqlDataHelper.GetKeyValuesByKeyCategoryName("Zoho");
                 string privateRsaKey = GetKeyValue(dstKeyValue, "Zoho-token-key");
-                string RedirectUrl = GetKeyValue(dstKeyValue, "Zoho-Redirect-Url");
+                //string RedirectUrl = GetKeyValue(dstKeyValue, "Zoho-Redirect-Url");
+                string InsightsUrl = GetKeyValue(dstKeyValue, "Zoho-Insights-Url");
+                
                 string Zohotoken = GetJWTTokenZoho(email, privateRsaKey);
-                RedirectUrl = RedirectUrl.Replace("Zohotoken", Zohotoken);
-                return new OperationResult<string>(Zohotoken, true);
+                InsightsUrl = InsightsUrl.Replace("Zohotoken", Zohotoken);
+                return new OperationResult<string>(InsightsUrl, true);
                 //return Redirect(RedirectUrl);
                 //return Zohotoken;
             }

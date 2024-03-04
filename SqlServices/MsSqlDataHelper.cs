@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Models.DTO;
 using MsSqlAdapter.Interface;
+using Org.BouncyCastle.Utilities.Zlib;
 using Services.MsSqlServices.Interface;
 using System;
 using System.Data;
@@ -11,6 +12,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using static QRCoder.PayloadGenerator;
@@ -995,5 +997,621 @@ namespace SqlServices
             
             return base64Data;
         }
+
+        //public string Download(int UserID, string fileGUID, string format, string bundleGUID, string reportName, string reportGUID)
+        //{
+        //    DataSet dst = Database.GetFileDetailsByGuid(UserID, fileGUID);
+        //    string base64Data = "";
+        //    string jsonText = "", fileName = "", guid = "", docType = "";
+        //    int docid = 0;
+
+        //    if (dst != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
+        //    {
+        //        guid = dst.Tables[0].Rows[0].Field<string>("FileGUID");
+        //        fileName = dst.Tables[0].Rows[0].Field<string>("FileOriginalName");
+        //        docid = dst.Tables[0].Rows[0].Field<int>("DocumentTypeID");
+        //        docType = dst.Tables[0].Rows[0].Field<string>("DocumentType");
+        //        string jsonFilePath = Path.Combine(Configuration["JsonFolder"], guid + ".json");
+
+        //        if (System.IO.File.Exists(jsonFilePath))
+        //        {
+        //            //if (!CS.Configuration.UseImpersonation
+        //            //    || (CS.Configuration.UseImpersonation
+        //            //            &&
+        //            //        Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //            //                                                , CS.Configuration.DomainName
+        //            //                                                , CS.Configuration.ImpersonationPassword))
+        //            //    )
+        //            //{
+        //            jsonText = System.IO.File.ReadAllText(jsonFilePath);
+        //            base64Data = jsonText;
+        //            //}
+        //        }
+        //    }
+        //    else if (string.Format("{0}", bundleGUID).Length > 0)
+        //    {
+        //        fileName = string.Format("{0}", bundleGUID) + "_bundle.json";
+        //        string jsonFilePath = Path.Combine(Configuration["JsonFolder"], string.Format("{0}", bundleGUID) + "_bundle_4.json");
+
+        //        if (System.IO.File.Exists(jsonFilePath))
+        //        {
+                    
+        //            jsonText = System.IO.File.ReadAllText(jsonFilePath);
+        //            base64Data = jsonText;
+        //        }
+        //        else
+        //        {
+        //            string[] files = null;
+        //            files = System.IO.Directory.GetFiles(Configuration["JsonFolder"], bundleGUID + "_*_bundle_4.json");
+        //            if (files.Length > 0)
+        //            {
+        //                jsonFilePath = Path.Combine(CS.Configuration.JsonFolder, files[0]);
+        //                if (System.IO.File.Exists(jsonFilePath))
+        //                {
+        //                    jsonText = System.IO.File.ReadAllText(jsonFilePath);
+        //                    base64Data = jsonText;
+        //                }   
+        //            }
+        //        }
+        //    }
+
+        //    if (format.ToLower() == "xml")
+        //    {
+        //        try
+        //        {
+        //            fileName = Path.GetFileNameWithoutExtension(fileName) + ".xml";
+
+        //            string[] _j2eFiles = Directory.GetFiles(Configuration["PolicyArchiveFolder"], guid + ".xml");
+
+        //            var filePath = Path.Combine(Configuration["ArchiveFolderPath"], string.Format("{0}", guid));
+        //            if (File.Exists(filePath))
+        //            {
+        //                var bytes = File.ReadAllBytes(filePath);
+        //                var file = Convert.ToBase64String(bytes);
+        //                base64Data = file;
+        //            }
+
+        //            //if (_j2eFiles != null && _j2eFiles.Length > 0 && System.IO.File.Exists(_j2eFiles[0]))
+        //            //{
+                        
+        //            //    return File(_j2eFiles[0], "multipart/form-data", fileName);
+                        
+        //            //}
+        //            //else
+        //            //{
+        //            //    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //            //}
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //        }
+        //    }
+        //    else if (format.ToLower() == "json")
+        //    {
+        //        fileName = Path.GetFileNameWithoutExtension(fileName) + ".json";
+        //        if (!String.IsNullOrEmpty(jsonText))
+        //        {
+        //            return File(System.Text.Encoding.UTF8.GetBytes(jsonText), "text/plain", fileName);
+        //        }
+        //        else
+        //        {
+        //            return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //        }
+        //    }
+        //    else if (format.ToLower() == "email")
+        //    {
+        //        if (!IsAliased)
+        //        {
+        //            fileName = Path.GetFileNameWithoutExtension(fileName) + ".json";
+        //            string folderPath = Path.Combine(Server.MapPath(CS.Configuration.PolicyUploadFolder), guid);
+        //            fileName = Path.Combine(folderPath, fileName);
+
+        //            if (!CS.Configuration.UseImpersonation
+        //                                        || (CS.Configuration.UseImpersonation
+        //                                                && Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                                                        , CS.Configuration.DomainName
+        //                                                                                        , CS.Configuration.ImpersonationPassword))
+        //                                        )
+        //            {
+        //                if (!System.IO.Directory.Exists(folderPath))
+        //                {
+        //                    try
+        //                    {
+        //                        System.IO.Directory.CreateDirectory(folderPath);
+        //                    }
+        //                    catch { }
+        //                }
+
+        //                try
+        //                {
+        //                    System.IO.FileStream fs = System.IO.File.Create(fileName);
+        //                    fs.Close();
+        //                    System.IO.File.WriteAllText(fileName, jsonText);
+        //                }
+        //                catch { }
+        //            }
+
+        //            EmailDB.AddEmailRequest("SendAttachment", fileName, Email, UserID);
+
+        //            AlertEmailEngine();
+
+        //            return Json("Email sent successfully.", JsonRequestBehavior.AllowGet);
+        //        }
+        //        else
+        //        {
+        //            return Json("You are not authorized.", JsonRequestBehavior.AllowGet);
+        //        }
+        //    }
+        //    else if (format.ToLower() == "reprocess")
+        //    {
+        //        try
+        //        {
+        //            DataSet dstFile = DocumentDB.GetFileDetailsByGuid(UserID, fileGUID);
+        //            string filename = "";
+
+        //            if (dstFile != null && dstFile.Tables.Count > 0 && dstFile.Tables[0].Rows.Count > 0)
+        //            {
+        //                filename = Path.Combine(CS.Configuration.PolicyArchiveFolder, dstFile.Tables[0].Rows[0].Field<string>("FileGUIDName"));
+        //            }
+
+        //            if (System.IO.File.Exists(filename))
+        //            {
+        //                string TargetFileName = Path.Combine(CS.Configuration.ReprocessInFolder, dst.Tables[0].Rows[0].Field<string>("FileGUIDName"));
+
+        //                try
+        //                {
+        //                    if (!CS.Configuration.UseImpersonation
+        //                                    || (CS.Configuration.UseImpersonation
+        //                                            && Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                                                    , CS.Configuration.DomainName
+        //                                                                                    , CS.Configuration.ImpersonationPassword))
+        //                                    )
+        //                    {
+        //                        DocumentDB.UpdateFileOcredStatus(fileGUID, false, CS.Configuration.OCREngineName);
+        //                        DocumentDB.InsertUploadedFileOcrStatus(fileGUID, (int)CS.Extraction.Status.InQueue);
+        //                        AlertForFileUpload();
+        //                        DocumentDB.UpdateInsigtsFileDownloadStatus(fileGUID, false, false);
+        //                        System.IO.File.Copy(filename, TargetFileName, true);
+        //                        AlertForOCR();
+        //                        DocumentDB.ClearFlagForJsonType(fileGUID);
+        //                        DocumentDB.UpdateMongoFlag(fileGUID, false);
+        //                        DocumentDB.InsertReprocessDetails(fileGUID);
+        //                    }
+        //                    else
+        //                    {
+        //                        ExceptionDB.AddError(string.Format("File copy failed for reprocessing- Impersonation failed for the user {0} ", CS.Configuration.ImpersonationUserName));
+        //                    }
+        //                }
+        //                catch (Exception exe)
+        //                {
+        //                    ExceptionDB.AddError(exe);
+        //                }
+        //            }
+        //        }
+        //        catch (Exception exe)
+        //        {
+        //            ExceptionDB.AddError(exe);
+        //        }
+
+        //        return Json("File placed for re-processing.", JsonRequestBehavior.AllowGet);
+        //    }
+        //    else if (format.ToLower() == "download")
+        //    {
+        //        if (dst != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
+        //        {
+        //            fileName = Path.Combine(CS.Configuration.PolicyArchiveFolder, dst.Tables[0].Rows[0].Field<string>("FileGUIDName"));
+        //            string originalFileName = dst.Tables[0].Rows[0].Field<string>("FileOriginalName");
+
+        //            if (Path.GetExtension(fileName).ToLower() != Path.GetExtension(originalFileName).ToLower())
+        //            {
+        //                fileName = Path.Combine(CS.Configuration.PolicyArchiveFolder
+        //                    , dst.Tables[0].Rows[0].Field<string>("FileGUID")
+        //                    + Path.GetExtension(originalFileName).ToLower());
+        //            }
+
+        //            if (System.IO.File.Exists(fileName))
+        //            {
+        //                if (!CS.Configuration.UseImpersonation
+        //                    || (CS.Configuration.UseImpersonation
+        //                            &&
+        //                        Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                                , CS.Configuration.DomainName
+        //                                                                , CS.Configuration.ImpersonationPassword))
+        //                    )
+        //                {
+        //                    return File(fileName, "multipart/form-data", dst.Tables[0].Rows[0].Field<string>("FileOriginalName"));
+        //                }
+        //                else
+        //                {
+        //                    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //            }
+        //        }
+        //    }
+        //    else if (format.ToLower() == "j2e_common")
+        //    {
+        //        if (dst != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
+        //        {
+        //            try
+        //            {
+        //                string j2e = System.IO.Path.GetFileNameWithoutExtension(dst.Tables[0].Rows[0].Field<string>("FileOriginalName"));
+        //                j2e = j2e + "_CommonExcel.xlsx";
+
+        //                string[] _j2eFiles = Directory.GetFiles(Configuration["JsonFolder"], dst.Tables[0].Rows[0].Field<string>("FileGUID") + "_7.xlsx");
+
+        //                if (_j2eFiles != null && _j2eFiles.Length > 0 && System.IO.File.Exists(_j2eFiles[0]))
+        //                {
+        //                    if (!CS.Configuration.UseImpersonation
+        //                        || (CS.Configuration.UseImpersonation
+        //                                &&
+        //                            Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                                    , CS.Configuration.DomainName
+        //                                                                    , CS.Configuration.ImpersonationPassword))
+        //                        )
+        //                    {
+        //                        return File(_j2eFiles[0], "multipart/form-data", j2e);
+        //                    }
+        //                    else
+        //                    {
+        //                        return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                }
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //            }
+        //        }
+        //    }
+        //    else if (format.ToLower() == "j2e_custom")
+        //    {
+        //        if (dst != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
+        //        {
+        //            try
+        //            {
+        //                string j2e = System.IO.Path.GetFileNameWithoutExtension(dst.Tables[0].Rows[0].Field<string>("FileOriginalName"));
+        //                if (docid == 601 || docid == 602 || docid == 605 || docType.Trim().ToLower() == "statement of values")
+        //                {
+        //                    j2e = j2e + "_Custom.xlsm";
+        //                }
+        //                else
+        //                {
+        //                    j2e = j2e + "_Custom.xlsx";
+        //                }
+        //                string[] _j2eFiles = Directory.GetFiles(Configuration["JsonFolder"], dst.Tables[0].Rows[0].Field<string>("FileGUID") + "_6.xlsx");
+
+        //                if (!(_j2eFiles != null && _j2eFiles.Length > 0 && System.IO.File.Exists(_j2eFiles[0])))
+        //                    _j2eFiles = Directory.GetFiles(Configuration["JsonFolder"], dst.Tables[0].Rows[0].Field<string>("FileGUID") + "_5.xlsx");
+
+        //                if (docid == 601 || docid == 602 || docid == 605 || docType.Trim().ToLower() == "statement of values")
+        //                {
+        //                    _j2eFiles = Directory.GetFiles(Configuration["JsonFolder"], dst.Tables[0].Rows[0].Field<string>("FileGUID") + "_5.xlsm");
+        //                }
+
+        //                if (_j2eFiles != null && _j2eFiles.Length > 0 && System.IO.File.Exists(_j2eFiles[0]))
+        //                {
+        //                    if (!CS.Configuration.UseImpersonation
+        //                        || (CS.Configuration.UseImpersonation
+        //                                &&
+        //                            Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                                    , CS.Configuration.DomainName
+        //                                                                    , CS.Configuration.ImpersonationPassword))
+        //                        )
+        //                    {
+        //                        return File(_j2eFiles[0], "multipart/form-data", j2e);
+        //                    }
+        //                    else
+        //                    {
+        //                        return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                }
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //            }
+        //        }
+        //    }
+        //    else if (format.ToLower() == "origami")
+        //    {
+        //        if (dst != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
+        //        {
+        //            try
+        //            {
+        //                string origami = System.IO.Path.GetFileNameWithoutExtension(dst.Tables[0].Rows[0].Field<string>("FileOriginalName"));
+        //                origami = origami + "_Origami.xlsx";
+
+        //                //fileName = Path.Combine(Configuration["JsonFolder"], dst.Tables[0].Rows[0].Field<string>("FileGUID"));
+
+        //                string[] _origamiFiles = Directory.GetFiles(Configuration["JsonFolder"], dst.Tables[0].Rows[0].Field<string>("FileGUID") + "_Origami.xlsx");
+
+        //                if (_origamiFiles != null && _origamiFiles.Length > 0 && System.IO.File.Exists(_origamiFiles[0]))
+        //                {
+        //                    if (!CS.Configuration.UseImpersonation
+        //                        || (CS.Configuration.UseImpersonation
+        //                                &&
+        //                            Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                                    , CS.Configuration.DomainName
+        //                                                                    , CS.Configuration.ImpersonationPassword))
+        //                        )
+        //                    {
+        //                        return File(_origamiFiles[0], "multipart/form-data", origami);
+        //                    }
+        //                    else
+        //                    {
+        //                        return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                }
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //            }
+        //        }
+        //    }
+        //    else if (format.ToLower() == "csv")
+        //    {
+        //        try
+        //        {
+        //            DataSet dstFiles = Database.GetDownloadableOutputFormats(UserID, fileGUID);
+        //            string contents = string.Empty, excelFilePath = string.Empty, archiveFilePath = string.Empty;
+        //            string jsonFilePath = string.Empty;
+
+        //            if (dstFiles != null && dstFiles.Tables.Count > 0)
+        //            {
+        //                string downloadFileName = dstFiles.Tables[0].Rows[0].Field<string>("FileName");
+        //                string originalFileName = dstFiles.Tables[0].Rows[0].Field<string>("OriginalFileName");
+        //                string[] fileNames = downloadFileName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+        //                if (fileNames != null)
+        //                {
+        //                    for (int i = 0; i < fileNames.Length; i++)
+        //                    {
+        //                        jsonFilePath = Path.Combine(Configuration["JsonFolder"], fileNames[i] + ".json");
+
+                              
+        //                            contents = System.IO.File.ReadAllText(jsonFilePath);
+                              
+        //                        Json2Datatable json2Datatable = new Json2Datatable();
+        //                        DataTable dataTable = json2Datatable.GetTable(contents);
+
+        //                        if (dataTable != null && dataTable.Rows.Count > 0)
+        //                        {
+        //                            using (MemoryStream mem = new MemoryStream())
+        //                            {
+        //                                ExcelHelper.ExcelHelper.CreateExcelStream(mem, dataTable);
+
+        //                                return File(mem.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileNames[i].Replace(fileGUID, originalFileName) + ".xlsx");
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            return File(System.Text.Encoding.ASCII.GetBytes(string.Format("{0}{1}{2}{3}{4}", e.Message, Environment.NewLine, jsonText, Environment.NewLine, e.StackTrace)), "text/plain", "___file_not_found.txt");
+        //        }
+        //    }
+        //    else if (format.ToLower().Equals("commonjson"))
+        //    {
+        //        string jsonFilePath = Path.Combine(CS.Configuration.MongoJsonFolder, string.Format("{0}", fileGUID) + "_4.json");
+        //        fileName = Path.GetFileNameWithoutExtension(fileName) + "_CommonJSON.json";
+        //        var customjsontext = string.Empty;
+        //        if (System.IO.File.Exists(jsonFilePath))
+        //        {
+        //            if (!CS.Configuration.UseImpersonation
+        //                || (CS.Configuration.UseImpersonation
+        //                        &&
+        //                    Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                            , CS.Configuration.DomainName
+        //                                                            , CS.Configuration.ImpersonationPassword))
+        //                )
+        //            {
+        //                customjsontext = System.IO.File.ReadAllText(jsonFilePath);
+        //                if (!String.IsNullOrEmpty(customjsontext))
+        //                {
+        //                    return File(System.Text.Encoding.UTF8.GetBytes(customjsontext), "text/plain", fileName);
+        //                }
+        //                else
+        //                {
+        //                    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            string[] files = null;
+        //            files = System.IO.Directory.GetFiles(CS.Configuration.PolicyArchiveFolder, fileGUID + "_*_4.json");
+        //            if (files.Length > 0)
+        //            {
+        //                jsonFilePath = Path.Combine(CS.Configuration.PolicyArchiveFolder, files[0]);
+        //                fileName = Path.GetFileNameWithoutExtension(fileName) + "_Common.json";
+        //                if (System.IO.File.Exists(jsonFilePath))
+        //                {
+        //                    if (!CS.Configuration.UseImpersonation
+        //                        || (CS.Configuration.UseImpersonation
+        //                                &&
+        //                            Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                                    , CS.Configuration.DomainName
+        //                                                                    , CS.Configuration.ImpersonationPassword))
+        //                        )
+        //                    {
+        //                        customjsontext = System.IO.File.ReadAllText(jsonFilePath);
+        //                        if (!String.IsNullOrEmpty(customjsontext))
+        //                        {
+        //                            return File(System.Text.Encoding.UTF8.GetBytes(customjsontext), "text/plain", fileName);
+        //                        }
+        //                        else
+        //                        {
+        //                            return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+
+
+        //    }
+        //    else if (format.ToLower().Equals("customjson"))
+        //    {
+        //        string jsonFilePath = Path.Combine(CS.Configuration.PolicyArchiveFolder, string.Format("{0}", fileGUID) + "_6.json");
+        //        fileName = Path.GetFileNameWithoutExtension(fileName) + "_CustomJSON.json";
+        //        var customjsontext = string.Empty;
+
+        //        if (!System.IO.File.Exists(jsonFilePath))
+        //        {
+        //            DirectoryInfo directoryInfo = new DirectoryInfo(CS.Configuration.PolicyArchiveFolder);
+        //            FileInfo[] fileInfos = directoryInfo.GetFiles(string.Format("{0}", fileGUID) + "*_6.json");
+
+        //            if (fileInfos != null && fileInfos.Length > 0)
+        //                jsonFilePath = fileInfos[0].FullName;
+        //        }
+
+        //        if (System.IO.File.Exists(jsonFilePath))
+        //        {
+        //            if (!CS.Configuration.UseImpersonation
+        //                || (CS.Configuration.UseImpersonation
+        //                        &&
+        //                    Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                            , CS.Configuration.DomainName
+        //                                                            , CS.Configuration.ImpersonationPassword))
+        //                )
+        //            {
+        //                customjsontext = System.IO.File.ReadAllText(jsonFilePath);
+        //                if (!String.IsNullOrEmpty(customjsontext))
+        //                {
+        //                    return File(System.Text.Encoding.UTF8.GetBytes(customjsontext), "text/plain", fileName);
+        //                }
+        //                else
+        //                {
+        //                    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                }
+        //            }
+        //        }
+
+        //    }
+        //    else if (format.ToLower().Equals("beneview"))
+        //    {
+        //        try
+        //        {
+        //            string j2e = System.IO.Path.GetFileNameWithoutExtension(reportName);
+        //            j2e = j2e + "_BeneView.xlsx";
+
+        //            string[] _j2eFiles = Directory.GetFiles(CS.Configuration.PolicyArchiveFolder, reportGUID + "_Summary.xlsx");
+
+        //            if (_j2eFiles != null && _j2eFiles.Length > 0 && System.IO.File.Exists(_j2eFiles[0]))
+        //            {
+        //                if (!CS.Configuration.UseImpersonation
+        //                    || (CS.Configuration.UseImpersonation
+        //                            &&
+        //                        Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
+        //                                                                , CS.Configuration.DomainName
+        //                                                                , CS.Configuration.ImpersonationPassword))
+        //                    )
+        //                {
+        //                    return File(_j2eFiles[0], "multipart/form-data", j2e);
+        //                }
+        //                else
+        //                {
+        //                    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //                }
+        //            }
+        //            else
+        //            {
+        //                return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //            }
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //        }
+        //    }
+        //    else if (format.ToLower() == "validationsummary")
+        //    {
+        //        if (dst != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
+        //        {
+        //            try
+        //            {
+        //                fileName = string.Format("{0}_validationsummary.zip", Path.GetFileNameWithoutExtension(fileName));
+        //                var policyArchivePath = Path.Combine(Configuration.PolicyArchiveFolder, fileName);
+        //                using (var s = new ZipOutputStream(System.IO.File.Create(policyArchivePath)))
+        //                {
+        //                    s.SetLevel(9);
+        //                    byte[] buffer = new byte[4096];
+        //                    var zipList = new List<string>();
+        //                    if (Directory.GetFiles(CS.Configuration.PolicyArchiveFolder, fileGUID + "*_validationSummary.csv").Length > 0)
+        //                    {
+        //                        foreach (var file in Directory.GetFiles(CS.Configuration.PolicyArchiveFolder, fileGUID + "*_validationSummary.csv"))
+        //                        {
+        //                            zipList.Add(file);
+        //                        }
+        //                    }
+
+        //                    for (int i = 0; i < zipList.Count; i++)
+        //                    {
+        //                        var entry = new ZipEntry(Path.GetFileName(zipList[i]).Replace(fileGUID, Path.GetFileNameWithoutExtension(fileName)));
+        //                        entry.DateTime = DateTime.Now;
+        //                        entry.IsUnicodeText = true;
+        //                        s.PutNextEntry(entry);
+        //                        if (!Configuration.UseImpersonation
+        //                            || (CS.Configuration.UseImpersonation
+        //                            && Impersonate_User.ImpersonateValidUser(
+        //                            CS.Configuration.ImpersonationUserName, CS.Configuration.DomainName,
+        //                            CS.Configuration.ImpersonationPassword)))
+        //                        {
+        //                            using (var fs = System.IO.File.OpenRead(zipList[i]))
+        //                            {
+        //                                int sourceBytes;
+        //                                do
+        //                                {
+        //                                    sourceBytes = fs.Read(buffer, 0, buffer.Length);
+        //                                    s.Write(buffer, 0, sourceBytes);
+        //                                } while (sourceBytes > 0);
+        //                            }
+        //                        }
+        //                    }
+        //                    s.Finish();
+        //                    s.Flush();
+        //                    s.Close();
+        //                }
+
+        //                byte[] finalResult = System.IO.File.ReadAllBytes(policyArchivePath);
+        //                if (System.IO.File.Exists(policyArchivePath))
+        //                    System.IO.File.Delete(policyArchivePath);
+
+        //                return File(finalResult, "application/zip", fileName);
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //            }
+        //        }
+        //    }
+
+        //    return Json("", JsonRequestBehavior.AllowGet);
+        //}
+
     }
 }
