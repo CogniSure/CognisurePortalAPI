@@ -1000,60 +1000,10 @@ namespace SqlServices
 
         //public string Download(int UserID, string fileGUID, string format, string bundleGUID, string reportName, string reportGUID)
         //{
-        //    DataSet dst = Database.GetFileDetailsByGuid(UserID, fileGUID);
         //    string base64Data = "";
         //    string jsonText = "", fileName = "", guid = "", docType = "";
         //    int docid = 0;
 
-        //    if (dst != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
-        //    {
-        //        guid = dst.Tables[0].Rows[0].Field<string>("FileGUID");
-        //        fileName = dst.Tables[0].Rows[0].Field<string>("FileOriginalName");
-        //        docid = dst.Tables[0].Rows[0].Field<int>("DocumentTypeID");
-        //        docType = dst.Tables[0].Rows[0].Field<string>("DocumentType");
-        //        string jsonFilePath = Path.Combine(Configuration["JsonFolder"], guid + ".json");
-
-        //        if (System.IO.File.Exists(jsonFilePath))
-        //        {
-        //            //if (!CS.Configuration.UseImpersonation
-        //            //    || (CS.Configuration.UseImpersonation
-        //            //            &&
-        //            //        Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
-        //            //                                                , CS.Configuration.DomainName
-        //            //                                                , CS.Configuration.ImpersonationPassword))
-        //            //    )
-        //            //{
-        //            jsonText = System.IO.File.ReadAllText(jsonFilePath);
-        //            base64Data = jsonText;
-        //            //}
-        //        }
-        //    }
-        //    else if (string.Format("{0}", bundleGUID).Length > 0)
-        //    {
-        //        fileName = string.Format("{0}", bundleGUID) + "_bundle.json";
-        //        string jsonFilePath = Path.Combine(Configuration["JsonFolder"], string.Format("{0}", bundleGUID) + "_bundle_4.json");
-
-        //        if (System.IO.File.Exists(jsonFilePath))
-        //        {
-                    
-        //            jsonText = System.IO.File.ReadAllText(jsonFilePath);
-        //            base64Data = jsonText;
-        //        }
-        //        else
-        //        {
-        //            string[] files = null;
-        //            files = System.IO.Directory.GetFiles(Configuration["JsonFolder"], bundleGUID + "_*_bundle_4.json");
-        //            if (files.Length > 0)
-        //            {
-        //                jsonFilePath = Path.Combine(CS.Configuration.JsonFolder, files[0]);
-        //                if (System.IO.File.Exists(jsonFilePath))
-        //                {
-        //                    jsonText = System.IO.File.ReadAllText(jsonFilePath);
-        //                    base64Data = jsonText;
-        //                }   
-        //            }
-        //        }
-        //    }
 
         //    if (format.ToLower() == "xml")
         //    {
@@ -1071,16 +1021,16 @@ namespace SqlServices
         //                base64Data = file;
         //            }
 
-        //            //if (_j2eFiles != null && _j2eFiles.Length > 0 && System.IO.File.Exists(_j2eFiles[0]))
-        //            //{
-                        
-        //            //    return File(_j2eFiles[0], "multipart/form-data", fileName);
-                        
-        //            //}
-        //            //else
-        //            //{
-        //            //    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
-        //            //}
+        //            if (_j2eFiles != null && _j2eFiles.Length > 0 && System.IO.File.Exists(_j2eFiles[0]))
+        //            {
+
+        //                return File(_j2eFiles[0], "multipart/form-data", fileName);
+
+        //            }
+        //            else
+        //            {
+        //                return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
+        //            }
         //        }
         //        catch (Exception e)
         //        {
@@ -1142,59 +1092,6 @@ namespace SqlServices
         //        {
         //            return Json("You are not authorized.", JsonRequestBehavior.AllowGet);
         //        }
-        //    }
-        //    else if (format.ToLower() == "reprocess")
-        //    {
-        //        try
-        //        {
-        //            DataSet dstFile = DocumentDB.GetFileDetailsByGuid(UserID, fileGUID);
-        //            string filename = "";
-
-        //            if (dstFile != null && dstFile.Tables.Count > 0 && dstFile.Tables[0].Rows.Count > 0)
-        //            {
-        //                filename = Path.Combine(CS.Configuration.PolicyArchiveFolder, dstFile.Tables[0].Rows[0].Field<string>("FileGUIDName"));
-        //            }
-
-        //            if (System.IO.File.Exists(filename))
-        //            {
-        //                string TargetFileName = Path.Combine(CS.Configuration.ReprocessInFolder, dst.Tables[0].Rows[0].Field<string>("FileGUIDName"));
-
-        //                try
-        //                {
-        //                    if (!CS.Configuration.UseImpersonation
-        //                                    || (CS.Configuration.UseImpersonation
-        //                                            && Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
-        //                                                                                    , CS.Configuration.DomainName
-        //                                                                                    , CS.Configuration.ImpersonationPassword))
-        //                                    )
-        //                    {
-        //                        DocumentDB.UpdateFileOcredStatus(fileGUID, false, CS.Configuration.OCREngineName);
-        //                        DocumentDB.InsertUploadedFileOcrStatus(fileGUID, (int)CS.Extraction.Status.InQueue);
-        //                        AlertForFileUpload();
-        //                        DocumentDB.UpdateInsigtsFileDownloadStatus(fileGUID, false, false);
-        //                        System.IO.File.Copy(filename, TargetFileName, true);
-        //                        AlertForOCR();
-        //                        DocumentDB.ClearFlagForJsonType(fileGUID);
-        //                        DocumentDB.UpdateMongoFlag(fileGUID, false);
-        //                        DocumentDB.InsertReprocessDetails(fileGUID);
-        //                    }
-        //                    else
-        //                    {
-        //                        ExceptionDB.AddError(string.Format("File copy failed for reprocessing- Impersonation failed for the user {0} ", CS.Configuration.ImpersonationUserName));
-        //                    }
-        //                }
-        //                catch (Exception exe)
-        //                {
-        //                    ExceptionDB.AddError(exe);
-        //                }
-        //            }
-        //        }
-        //        catch (Exception exe)
-        //        {
-        //            ExceptionDB.AddError(exe);
-        //        }
-
-        //        return Json("File placed for re-processing.", JsonRequestBehavior.AllowGet);
         //    }
         //    else if (format.ToLower() == "download")
         //    {
@@ -1334,7 +1231,7 @@ namespace SqlServices
         //                string origami = System.IO.Path.GetFileNameWithoutExtension(dst.Tables[0].Rows[0].Field<string>("FileOriginalName"));
         //                origami = origami + "_Origami.xlsx";
 
-        //                //fileName = Path.Combine(Configuration["JsonFolder"], dst.Tables[0].Rows[0].Field<string>("FileGUID"));
+        //                fileName = Path.Combine(Configuration["JsonFolder"], dst.Tables[0].Rows[0].Field<string>("FileGUID"));
 
         //                string[] _origamiFiles = Directory.GetFiles(Configuration["JsonFolder"], dst.Tables[0].Rows[0].Field<string>("FileGUID") + "_Origami.xlsx");
 
@@ -1386,9 +1283,9 @@ namespace SqlServices
         //                    {
         //                        jsonFilePath = Path.Combine(Configuration["JsonFolder"], fileNames[i] + ".json");
 
-                              
-        //                            contents = System.IO.File.ReadAllText(jsonFilePath);
-                              
+
+        //                        contents = System.IO.File.ReadAllText(jsonFilePath);
+
         //                        Json2Datatable json2Datatable = new Json2Datatable();
         //                        DataTable dataTable = json2Datatable.GetTable(contents);
 
@@ -1511,103 +1408,6 @@ namespace SqlServices
         //            }
         //        }
 
-        //    }
-        //    else if (format.ToLower().Equals("beneview"))
-        //    {
-        //        try
-        //        {
-        //            string j2e = System.IO.Path.GetFileNameWithoutExtension(reportName);
-        //            j2e = j2e + "_BeneView.xlsx";
-
-        //            string[] _j2eFiles = Directory.GetFiles(CS.Configuration.PolicyArchiveFolder, reportGUID + "_Summary.xlsx");
-
-        //            if (_j2eFiles != null && _j2eFiles.Length > 0 && System.IO.File.Exists(_j2eFiles[0]))
-        //            {
-        //                if (!CS.Configuration.UseImpersonation
-        //                    || (CS.Configuration.UseImpersonation
-        //                            &&
-        //                        Impersonate_User.ImpersonateValidUser(CS.Configuration.ImpersonationUserName
-        //                                                                , CS.Configuration.DomainName
-        //                                                                , CS.Configuration.ImpersonationPassword))
-        //                    )
-        //                {
-        //                    return File(_j2eFiles[0], "multipart/form-data", j2e);
-        //                }
-        //                else
-        //                {
-        //                    return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
-        //                }
-        //            }
-        //            else
-        //            {
-        //                return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
-        //            }
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
-        //        }
-        //    }
-        //    else if (format.ToLower() == "validationsummary")
-        //    {
-        //        if (dst != null && dst.Tables.Count > 0 && dst.Tables[0].Rows.Count > 0)
-        //        {
-        //            try
-        //            {
-        //                fileName = string.Format("{0}_validationsummary.zip", Path.GetFileNameWithoutExtension(fileName));
-        //                var policyArchivePath = Path.Combine(Configuration.PolicyArchiveFolder, fileName);
-        //                using (var s = new ZipOutputStream(System.IO.File.Create(policyArchivePath)))
-        //                {
-        //                    s.SetLevel(9);
-        //                    byte[] buffer = new byte[4096];
-        //                    var zipList = new List<string>();
-        //                    if (Directory.GetFiles(CS.Configuration.PolicyArchiveFolder, fileGUID + "*_validationSummary.csv").Length > 0)
-        //                    {
-        //                        foreach (var file in Directory.GetFiles(CS.Configuration.PolicyArchiveFolder, fileGUID + "*_validationSummary.csv"))
-        //                        {
-        //                            zipList.Add(file);
-        //                        }
-        //                    }
-
-        //                    for (int i = 0; i < zipList.Count; i++)
-        //                    {
-        //                        var entry = new ZipEntry(Path.GetFileName(zipList[i]).Replace(fileGUID, Path.GetFileNameWithoutExtension(fileName)));
-        //                        entry.DateTime = DateTime.Now;
-        //                        entry.IsUnicodeText = true;
-        //                        s.PutNextEntry(entry);
-        //                        if (!Configuration.UseImpersonation
-        //                            || (CS.Configuration.UseImpersonation
-        //                            && Impersonate_User.ImpersonateValidUser(
-        //                            CS.Configuration.ImpersonationUserName, CS.Configuration.DomainName,
-        //                            CS.Configuration.ImpersonationPassword)))
-        //                        {
-        //                            using (var fs = System.IO.File.OpenRead(zipList[i]))
-        //                            {
-        //                                int sourceBytes;
-        //                                do
-        //                                {
-        //                                    sourceBytes = fs.Read(buffer, 0, buffer.Length);
-        //                                    s.Write(buffer, 0, sourceBytes);
-        //                                } while (sourceBytes > 0);
-        //                            }
-        //                        }
-        //                    }
-        //                    s.Finish();
-        //                    s.Flush();
-        //                    s.Close();
-        //                }
-
-        //                byte[] finalResult = System.IO.File.ReadAllBytes(policyArchivePath);
-        //                if (System.IO.File.Exists(policyArchivePath))
-        //                    System.IO.File.Delete(policyArchivePath);
-
-        //                return File(finalResult, "application/zip", fileName);
-        //            }
-        //            catch (Exception e)
-        //            {
-        //                return File(System.Text.Encoding.ASCII.GetBytes(""), "text/plain", "___file_not_found.txt");
-        //            }
-        //        }
         //    }
 
         //    return Json("", JsonRequestBehavior.AllowGet);
