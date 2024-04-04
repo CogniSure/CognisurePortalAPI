@@ -304,6 +304,7 @@ namespace Common
             string url = "https://accounts.zoho.com/oauth/v2/token?" + "refresh_token=1000.e97233a97b49e8815fe1dcb75f459985.6b061a1d48ac8ab2d9ff657a16366f9f"
                     + "&client_id=1000.P54BIVT88C2LH8Y8QBNW26LTEXTVEO" + "&client_secret=acca42f6bd42a8bb0d90de1000e66258fe2a483909"
                     + "&redirect_uri=https://analytics.cognisure.ai/zohoanalytics" + "&grant_type=refresh_token";
+                    //+ "&ZOHO_CUSTOMDOMAIN=true";
             var request = new HttpRequestMessage(HttpMethod.Post,
             url);
 
@@ -327,10 +328,12 @@ namespace Common
                 string token = await GetZOHOToken();
                 var config = new Dictionary<string, object>();
                 config.Add("criteria", "SUB_SUBMISSIONMETADATA.SUBMISSIONGUID=" + "'" + email + "'");
-                string url = "https://analyticsapi.zoho.com/restapi/v2/workspaces/" + "2701274000003945507"
-                    + "/views/" + "2701274000004285753"
+                string url = "https://analyticsapi.cognisure.ai/restapi/v2/workspaces/" + "2701274000003945507"
+                    + "/views/" + "2701274000004004374"
                     + "/publish/embed"
-                    + "?CONFIG=" + JsonConvert.SerializeObject(config);
+                    + "?CONFIG=" + JsonConvert.SerializeObject(config)
+                    + "&ZOHO_CUSTOMDOMAIN=true"
+                    ;
                 //string url = "https://analyticsapi.zoho.com/restapi/v2/orgs";
 
                 var request = new HttpRequestMessage(HttpMethod.Get,
