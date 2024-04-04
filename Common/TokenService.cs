@@ -328,7 +328,7 @@ namespace Common
                 string token = await GetZOHOToken();
                 var config = new Dictionary<string, object>();
                 config.Add("criteria", "SUB_SUBMISSIONMETADATA.SUBMISSIONGUID=" + "'" + email + "'");
-                string url = "https://analyticsapi.cognisure.ai/restapi/v2/workspaces/" + "2701274000003945507"
+                string url = "https://analyticsapi.zoho.com/restapi/v2/workspaces/" + "2701274000003945507"
                     + "/views/" + "2701274000004004374"
                     + "/publish/embed"
                     + "?CONFIG=" + JsonConvert.SerializeObject(config)
